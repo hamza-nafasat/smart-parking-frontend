@@ -1,0 +1,61 @@
+export const revenueOverviewData = [
+  { name: "Mon", uv: 1000 },
+  { name: "Tue", uv: 1200 },
+  { name: "Wed", uv: 1800 },
+  { name: "Thu", uv: 1200 },
+  { name: "Fri", uv: 1900 },
+  { name: "Sat", uv: 1000 },
+  { name: "Sun", uv: 1600 },
+  { name: "Mon", uv: 1000 },
+  { name: "Tue", uv: 1500 },
+  { name: "Wed", uv: 1100 },
+  { name: "Thu", uv: 800 },
+  { name: "Fri", uv: 1900 },
+  { name: "Sat", uv: 300 },
+  { name: "Sun", uv: 1500 },
+];
+
+export const watchlistData = [
+  {
+    name: "user 1",
+    id: "123",
+    arrow: "up",
+    blankChartData: [400, 150, 600, 100, 700, 50, 300],
+    areaColor: "#5DB48A",
+  },
+  {
+    name: "user 2",
+    id: "345",
+    arrow: "up",
+    blankChartData: [400, 500, 300, 100, 150, 500, 50],
+    areaColor: "#5DB48A",
+  },
+  {
+    name: "user 3",
+    id: "322",
+    arrow: "down",
+    blankChartData: [500, 900, 1100, 500, 150, 750, 200],
+    areaColor: "#EB7487",
+  },
+  {
+    name: "anonymous",
+    id: "682",
+    arrow: "up",
+    blankChartData: [400, 500, 300, 100, 150, 500, 50],
+    areaColor: "#5DB48A",
+  },
+  {
+    name: "user 1",
+    id: "211",
+    arrow: "down",
+    blankChartData: [400, 150, 600, 100, 700, 50, 300],
+    areaColor: "#EB7487",
+  },
+  {
+    name: "user 1",
+    id: "093",
+    arrow: "down",
+    blankChartData: [500, 900, 1100, 500, 150, 750, 200],
+    areaColor: "#EB7487",
+  },
+];

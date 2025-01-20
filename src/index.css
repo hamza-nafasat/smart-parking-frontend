@@ -1,0 +1,96 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  overflow-x: hidden;
+  font-family: "Nunito", sans-serif !important;
+}
+
+.user-dashboard::before {
+  content: "";
+  background: url("assets/images/default/user-dashboard.png") no-repeat
+    center/cover;
+  height: 200px;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+.slick-next {
+  right: 0% !important;
+}
+.slick-prev {
+  left: -4% !important;
+  z-index: 99;
+}
+.testimonial .slick-next {
+  right: -4% !important;
+}
+.slick-prev:before,
+.slick-next:before {
+  font-size: 30px !important;
+  color: #34bd9e !important;
+}
+
+.slick-dots {
+  bottom: 0px !important;
+}
+.slick-dots li {
+  margin: 0px !important;
+}
+.slick-dots li button:before {
+  font-size: 8px !important;
+  color: #FFFFFF80 !important;
+  opacity: 100% !important;
+}
+
+.slick-dots li.slick-active button:before {
+  color: #FFFFFF !important;
+}
+.building-slider .slick-arrow {
+  display: none !important;
+}
+
+.custom-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: #18bc9c;
+  border-radius: 12px;
+}
+.custom-scroll::-webkit-scrollbar-track {
+  background: #c1fff3;
+  border-radius: 12px;
+}
+
+@media (max-width: 991px) {
+  .slick-prev:before,
+  .slick-next:before {
+    display: none;
+  }
+}
+
+.map-container {
+  filter: grayscale(100%);
+}
+
+.leaflet-popup-tip {
+  display: none;
+}
+.leaflet-popup-close-button {
+  display: none;
+}
+.leaflet-popup-content-wrapper {
+  padding: 0;
+}
+.leaflet-popup-content {
+  margin: 0;
+}
