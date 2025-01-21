@@ -1,13 +1,12 @@
 import { useState } from "react";
-import AuthLayout from "./AuthLayout";
+import toast from "react-hot-toast";
+import { VscEye, VscEyeClosed } from "react-icons/vsc";
 import { Link } from "react-router-dom";
 import { GoogleIcon } from "../../assets/svgs/Icon";
 import Button from "../../components/shared/small/Button";
-import { VscEye, VscEyeClosed } from "react-icons/vsc";
 import Input from "../../components/shared/small/Input";
 import { useRegisterMutation } from "../../redux/apis/authApis";
-import toast from "react-hot-toast";
-import { areCookiesEnabled } from "../../utils/features";
+import AuthLayout from "./AuthLayout";
 
 const SignUp = () => {
   const [registerUser, { isLoading }] = useRegisterMutation();
@@ -25,7 +24,6 @@ const SignUp = () => {
 
   const registerHandler = async (e) => {
     e.preventDefault();
-    if (!areCookiesEnabled()) return toast.error("Third Party Cookies are disabled! Enable them for Authentication.");
     if (!form.firstName || !form.lastName || !form.email || !form.password || !form.confirmPassword)
       return toast.error("Please Select All Fields");
     if (!form.password == form.confirmPassword) return toast.error("Password and Confirm Password does not match");

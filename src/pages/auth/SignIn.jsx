@@ -1,16 +1,14 @@
 import { useState } from "react";
-import AuthLayout from "./AuthLayout";
-import { Link, useNavigate } from "react-router-dom";
-import Input from "../../components/shared/small/Input";
-import { VscEye } from "react-icons/vsc";
-import { VscEyeClosed } from "react-icons/vsc";
-import Button from "../../components/shared/small/Button";
-import { GoogleIcon } from "../../assets/svgs/Icon";
-import { useLoginMutation } from "../../redux/apis/authApis";
 import toast from "react-hot-toast";
+import { VscEye, VscEyeClosed } from "react-icons/vsc";
 import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { GoogleIcon } from "../../assets/svgs/Icon";
+import Button from "../../components/shared/small/Button";
+import Input from "../../components/shared/small/Input";
+import { useLoginMutation } from "../../redux/apis/authApis";
 import { userExist } from "../../redux/slices/authSlice";
-import { areCookiesEnabled } from "../../utils/features";
+import AuthLayout from "./AuthLayout";
 
 const SignIn = () => {
   const dispatch = useDispatch();
@@ -22,7 +20,6 @@ const SignIn = () => {
 
   const loginHandler = async (e) => {
     e.preventDefault();
-    if (!areCookiesEnabled()) return toast.error("Third Party Cookies are disabled! Enable them for Authentication.");
     if (!form.email || !form.password) return toast.error("Please Select Email and Password");
     try {
       const response = await loginUser(form).unwrap();

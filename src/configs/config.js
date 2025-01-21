@@ -1,5 +1,6 @@
 const config = Object.freeze({
   SERVER_URL: import.meta.env.VITE_SERVER_URL,
+  DOMAIN: import.meta.env.VITE_DOMAIN,
 });
 
 const getEnv = (key) => {
