@@ -151,7 +151,7 @@ const Profile = () => {
       await dispatch(userNotExist());
       return navigate("/login");
     } catch (error) {
-      toast.error(error?.data?.message);
+      toast.error(error?.data?.message || "Something went wrong");
       console.log("error in logout handler", error);
     }
   };

@@ -29,7 +29,7 @@ const ResetPassword = () => {
       return navigate("/login");
     } catch (error) {
       console.log("Error in resetPasswordHandler:", error);
-      toast.error(error?.data?.message);
+      toast.error(error?.data?.message || "Something went wrong");
     }
   };
   return (

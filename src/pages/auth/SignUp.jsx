@@ -32,7 +32,7 @@ const SignUp = () => {
       toast.success(response?.message);
       setForm({ firstName: "", lastName: "", email: "", password: "", confirmPassword: "" });
     } catch (error) {
-      toast.error(error?.data?.message);
+      toast.error(error?.data?.message || "Something went wrong");
       console.log("Error in registerHandler:", error);
     }
   };

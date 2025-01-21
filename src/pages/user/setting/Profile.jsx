@@ -51,7 +51,7 @@ const Profile = () => {
       setIsFormEdit(false);
     } catch (error) {
       console.log("Error in updateProfileHandler:", error);
-      toast.error(error?.data?.message);
+      toast.error(error?.data?.message || "Something went wrong");
     }
   };
   useEffect(() => {

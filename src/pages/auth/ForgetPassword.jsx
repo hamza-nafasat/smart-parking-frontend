@@ -17,7 +17,7 @@ const ForgetPassword = () => {
       setEmail("");
     } catch (error) {
       console.log("Error in forgetPassword:", error);
-      toast.error(error?.data?.message);
+      toast.error(error?.data?.message || "Something went wrong");
     }
   };
   return (

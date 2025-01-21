@@ -28,7 +28,7 @@ const SignIn = () => {
       await dispatch(userExist(response?.data));
       return navigate(`/${response?.data?.role?.toLowerCase()}`);
     } catch (error) {
-      toast.error(error?.data?.message);
+      toast.error(error?.data?.message || "Something went wrong");
       console.log("Error in loginHandler:", error);
     }
   };
