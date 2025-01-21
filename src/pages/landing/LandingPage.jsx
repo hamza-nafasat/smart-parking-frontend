@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useState } from "react";
+import { useState } from "react";
 import logo from "../../assets/images/logo.png";
 import parkImg from "../../assets/images/landing-page/park.png";
 import airportImg from "../../assets/images/landing-page/airport.png";
@@ -344,7 +344,7 @@ const Testimonials = () => {
       </h4>
       <p className="text-sm md:text-base font-medium text-[#3A4745] text-center mt-3">
         Discover what our satisfied users and building managers have to say about their experience with our platform.
-        See how we've made parking management easier and more efficient for everyone.
+        See how we&lsquo;ve made parking management easier and more efficient for everyone.
       </p>
       <div className="py-2 sm:py-8 testimonial">
         <Slider {...settings}>
@@ -457,9 +457,9 @@ const Form = () => {
         <h2 className="text-primary text-xl md:text-[28px] lg:text-[36px] font-extrabold font-lato text-center">
           Get in Touch!
         </h2>
-        <p className="text-sm md:text-base font-medium text-[#3A4745] text-center mt-3 text-center">
-          Have a question, concern, or need assistance? Drop us a message using the form below, and we'll get back to
-          you promptly.
+        <p className="text-sm md:text-base font-medium text-[#3A4745]  mt-3 text-center">
+          Have a question, concern, or need assistance? Drop us a message using the form below, and we&lsquo;ll get back
+          to you promptly.
         </p>
         <input
           type="email"
