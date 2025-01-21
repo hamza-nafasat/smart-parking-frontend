@@ -25,7 +25,7 @@ const SignUp = () => {
 
   const registerHandler = async (e) => {
     e.preventDefault();
-    if (!areCookiesEnabled()) return toast.error("Cookies are disabled! Enable them for a better experience.");
+    if (!areCookiesEnabled()) return toast.error("Third Party Cookies are disabled! Enable them for Authentication.");
     if (!form.firstName || !form.lastName || !form.email || !form.password || !form.confirmPassword)
       return toast.error("Please Select All Fields");
     if (!form.password == form.confirmPassword) return toast.error("Password and Confirm Password does not match");

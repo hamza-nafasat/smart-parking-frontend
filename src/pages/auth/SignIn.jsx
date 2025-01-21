@@ -22,8 +22,7 @@ const SignIn = () => {
 
   const loginHandler = async (e) => {
     e.preventDefault();
-    if (!areCookiesEnabled())
-      return toast.error("Third Party Cookies are disabled! Enable them for a better experience.");
+    if (!areCookiesEnabled()) return toast.error("Third Party Cookies are disabled! Enable them for Authentication.");
     if (!form.email || !form.password) return toast.error("Please Select Email and Password");
     try {
       const response = await loginUser(form).unwrap();
