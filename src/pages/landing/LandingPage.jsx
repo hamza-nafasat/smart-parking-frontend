@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from "react";
 import logo from "../../assets/images/logo.png";
 import parkImg from "../../assets/images/landing-page/park.png";
@@ -91,9 +92,7 @@ const Hero = () => {
         <h1 className="text-2xl md:text-[38px] lg:text-[44px] font-bold text-white font-lato text-center">
           FIND <span className="text-primary">PARKING</span> IN ONE CLICK
         </h1>
-        <h6 className="text-base md:text-xl text-white font-semibold text-center my-4">
-          SIMPLE, SECURED & SMART
-        </h6>
+        <h6 className="text-base md:text-xl text-white font-semibold text-center my-4">SIMPLE, SECURED & SMART</h6>
         <div className="flex flex-wrap items-center justify-center gap-4 md:gap-8">
           <Button text="Get Started" width="w-[215px]" />
           <Button
@@ -106,21 +105,9 @@ const Hero = () => {
       </div>
       {/* widgets */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 w-full lg:w-[60%]">
-        <HeroCard
-          title="Parking Spaces"
-          value="6,00,000+"
-          icon={<ParkingIcon />}
-        />
-        <HeroCard
-          title="Parking Spaces"
-          value="6,00,000+"
-          icon={<UsersIcon />}
-        />
-        <HeroCard
-          title="Parking Spaces"
-          value="6,00,000+"
-          icon={<CitiesIcon />}
-        />
+        <HeroCard title="Parking Spaces" value="6,00,000+" icon={<ParkingIcon />} />
+        <HeroCard title="Parking Spaces" value="6,00,000+" icon={<UsersIcon />} />
+        <HeroCard title="Parking Spaces" value="6,00,000+" icon={<CitiesIcon />} />
       </div>
     </section>
   );
@@ -130,9 +117,7 @@ const HeroCard = ({ icon, title, value }) => {
   return (
     <div className="flex flex-col items-center justify-center py-4 px-4 md:px-7 rounded-[28px] bg-primary min-h-[190px] w-[70%] md:w-auto">
       {icon}
-      <h6 className="text-white text-lg md:text-2xl font-bold mt-4 !leading-none">
-        {value}
-      </h6>
+      <h6 className="text-white text-lg md:text-2xl font-bold mt-4 !leading-none">{value}</h6>
       <p className="text-base md:text-lg font-semibold text-white">{title}</p>
     </div>
   );
@@ -177,8 +162,8 @@ const ParkingCarousel = () => {
         Our Top Parking Solutions
       </h2>
       <p className="text-sm md:text-base text-[#484848] mt-1 font-medium text-center">
-        Discover our efficient and affordable online parking services. Reserve
-        your spot with ease and convenience today!
+        Discover our efficient and affordable online parking services. Reserve your spot with ease and convenience
+        today!
       </p>
       <div className="mt-5">
         <Slider {...settings}>
@@ -199,11 +184,7 @@ const ParkingCarousel = () => {
 const ParkingCard = ({ img, title }) => {
   return (
     <div className="relative w-full md:w-[320px] h-[350px] sm:h-[320px] rounded-[18px]">
-      <img
-        src={img}
-        alt="image"
-        className="absolute inset-0 w-full h-full object-cover"
-      />
+      <img src={img} alt="image" className="absolute inset-0 w-full h-full object-cover" />
       <h6 className="text-white font-lato text-lg md:text-2xl font-extrabold absolute bottom-[6%] left-[50%] transform -translate-x-[50%] text-nowrap">
         {title}
       </h6>
@@ -261,10 +242,9 @@ const ManagerSection = () => {
             Become a Building Manager
           </h4>
           <p className="text-sm md:text-base font-medium text-[#3A4745]">
-            Connect with us to digitize your parking operations. Easily manage
-            bookings and payments online, enhancing efficiency and revenue.
-            Provide a seamless experience for your customers. Join us today to
-            streamline your parking management and maximize your potential.
+            Connect with us to digitize your parking operations. Easily manage bookings and payments online, enhancing
+            efficiency and revenue. Provide a seamless experience for your customers. Join us today to streamline your
+            parking management and maximize your potential.
           </p>
           <div className="mt-4 md:mt-6">
             <IconBox
@@ -315,18 +295,8 @@ const IconBox = ({ icon, title, value1, value2, color, listColor }) => {
     <div className="flex flex-wrap sm:flex-nowrap items-center gap-4 mt-4 md:mt-5">
       <div className="w-[70px]">{icon}</div>
       <div>
-        <h6
-          className={`${
-            color ? color : "text-white"
-          } font-lato text-lg md:text-2xl font-bold`}
-        >
-          {title}
-        </h6>
-        <ul
-          className={`${
-            listColor ? listColor : "text-white"
-          } text-xs font-semibold ml-4`}
-        >
+        <h6 className={`${color ? color : "text-white"} font-lato text-lg md:text-2xl font-bold`}>{title}</h6>
+        <ul className={`${listColor ? listColor : "text-white"} text-xs font-semibold ml-4`}>
           <li className="list-disc">{value1}</li>
           <li className="list-disc mt-[2px]">{value2}</li>
         </ul>
@@ -373,9 +343,8 @@ const Testimonials = () => {
         Customer & Manager Testimonials
       </h4>
       <p className="text-sm md:text-base font-medium text-[#3A4745] text-center mt-3">
-        Discover what our satisfied users and building managers have to say
-        about their experience with our platform. See how we've made parking
-        management easier and more efficient for everyone.
+        Discover what our satisfied users and building managers have to say about their experience with our platform.
+        See how we've made parking management easier and more efficient for everyone.
       </p>
       <div className="py-2 sm:py-8 testimonial">
         <Slider {...settings}>
@@ -408,12 +377,8 @@ const Testimonials = () => {
 const TestimonialCard = ({ name, icon, review }) => {
   return (
     <div className="py-4 md:py-8 pr-4 min-h-[200px] flex flex-col justify-center border-[4px] border-primary rounded-[15px] bg-white relative mt-12 sm:mt-0 sm:ml-20">
-      <p className="text-lg md:text-xl font-semibold text-[#263230] pt-10 sm:pt-0 pl-4 sm:pl-[100px]">
-        {review}
-      </p>
-      <h6 className="flex justify-end mt-4 md:mt-8 text-xl md:text-[22px] font-medium">
-        -{name}
-      </h6>
+      <p className="text-lg md:text-xl font-semibold text-[#263230] pt-10 sm:pt-0 pl-4 sm:pl-[100px]">{review}</p>
+      <h6 className="flex justify-end mt-4 md:mt-8 text-xl md:text-[22px] font-medium">-{name}</h6>
       <div className="absolute w-24 h-24 sm:w-[148px] sm:h-[148px] rounded-full top-[-20%] left-[50%] sm:top-[50%] sm:left-[0%] transform -translate-x-[50%] sm:-translate-y-[50%]">
         <img
           src={icon}
@@ -438,9 +403,8 @@ const FaqSection = () => {
         FAQs for Users & Managers
       </h4>
       <p className="text-sm md:text-base font-medium text-[#3A4745] text-center mt-3">
-        Explore answers to commonly asked questions tailored for both users and
-        managers of our Smart Parking application. Find solutions on booking
-        processes, payment methods, managing parking spaces, and more.
+        Explore answers to commonly asked questions tailored for both users and managers of our Smart Parking
+        application. Find solutions on booking processes, payment methods, managing parking spaces, and more.
       </p>
       <div className="mt-4 flex flex-col gap-4">
         {accordionList.map((faq, index) => (
@@ -464,9 +428,7 @@ const Faq = ({ title, value, accordionHandler, accordion }) => {
         className={`flex items-center justify-between gap-4 md:gap-6 cursor-pointer transition-all duration-500`}
         onClick={accordionHandler}
       >
-        <h6 className="text-base md:text-xl font-semibold text-white">
-          {title}
-        </h6>
+        <h6 className="text-base md:text-xl font-semibold text-white">{title}</h6>
         {accordion ? (
           <div className="w-[21px]">
             <MinusIcon />
@@ -496,8 +458,8 @@ const Form = () => {
           Get in Touch!
         </h2>
         <p className="text-sm md:text-base font-medium text-[#3A4745] text-center mt-3 text-center">
-          Have a question, concern, or need assistance? Drop us a message using
-          the form below, and we'll get back to you promptly.
+          Have a question, concern, or need assistance? Drop us a message using the form below, and we'll get back to
+          you promptly.
         </p>
         <input
           type="email"
@@ -509,11 +471,7 @@ const Form = () => {
           rows={3}
           className="border border-primary px-4 md:px-8 py-4 rounded-md w-full mt-4 focus:outline-none"
         ></textarea>
-        <Button
-          type="submit"
-          text="Submit"
-          width="w-full sm:w-[230px] mx-auto mt-2"
-        />
+        <Button type="submit" text="Submit" width="w-full sm:w-[230px] mx-auto mt-2" />
       </div>
     </section>
   );
@@ -528,8 +486,8 @@ const Footer = () => {
             <img src={footerLogo} alt="logo" className="w-[160px]" />
           </a>
           <p className="text-white text-sm sm:text-base md:text-lg font-semibold my-4 w-full lg:w-[50%]">
-            Transforming parking management with ease and efficiency. Book, pay,
-            and manage parking seamlessly with our innovative platform.
+            Transforming parking management with ease and efficiency. Book, pay, and manage parking seamlessly with our
+            innovative platform.
           </p>
           <div className="flex items-center gap-4">
             <a href="/">
@@ -544,45 +502,26 @@ const Footer = () => {
           </div>
         </div>
         <div className="col-span-12 lg:col-span-2">
-          <h6 className="text-white text-lg md:text-2xl font-extrabold">
-            Support
-          </h6>
+          <h6 className="text-white text-lg md:text-2xl font-extrabold">Support</h6>
           <div className="mt-4 flex flex-col gap-4 md:gap-5">
-            <a
-              href="#"
-              className="text-white text-base md:text-lg font-medium font-lato"
-            >
+            <a href="#" className="text-white text-base md:text-lg font-medium font-lato">
               Help Center
             </a>
-            <a
-              href="#"
-              className="text-white text-base md:text-lg font-medium font-lato"
-            >
+            <a href="#" className="text-white text-base md:text-lg font-medium font-lato">
               Tweet @ Us
             </a>
-            <a
-              href="#"
-              className="text-white text-base md:text-lg font-medium font-lato"
-            >
+            <a href="#" className="text-white text-base md:text-lg font-medium font-lato">
               Feedback
             </a>
           </div>
         </div>
         <div className="col-span-12 lg:col-span-2">
-          <h6 className="text-white text-lg md:text-2xl font-extrabold">
-            Contact Us
-          </h6>
+          <h6 className="text-white text-lg md:text-2xl font-extrabold">Contact Us</h6>
           <div className="mt-4 flex flex-col gap-4 md:gap-5">
-            <a
-              href="tel:91765432154"
-              className="text-white text-base md:text-lg font-medium font-lato"
-            >
+            <a href="tel:91765432154" className="text-white text-base md:text-lg font-medium font-lato">
               (91) 765 432 154
             </a>
-            <a
-              href="mailto:info@smartparking.com"
-              className="text-white text-base md:text-lg font-medium font-lato"
-            >
+            <a href="mailto:info@smartparking.com" className="text-white text-base md:text-lg font-medium font-lato">
               info@smartparking.com
             </a>
           </div>

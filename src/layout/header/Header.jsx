@@ -13,34 +13,29 @@ import Aside from "../aside/Aside";
 import Notification from "./Notification";
 import { useLogoutMutation } from "../../redux/apis/authApis";
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { userNotExist } from "../../redux/slices/authSlice";
 
 const Header = () => {
-  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [mobileNav, setMobileNav] = useState(false);
-  const notificationRef = useRef();
-  const profileRef = useRef();
   const { pathname } = useLocation();
   const pathSplit = pathname.split("/");
   const page = pathSplit[pathSplit.length - 1];
   const pageName = page.split("-").join(" ");
+  const profileRef = useRef();
+  const notificationRef = useRef();
+  const [mobileNav, setMobileNav] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
 
-  const mobileNavHandler = () => setMobileNav(!mobileNav);
+  const { user } = useSelector((state) => state.auth);
 
   const notificationOpenHandler = (e) => {
     setIsNotificationOpen(!isNotificationOpen);
-    if (profileRef.current && notificationRef.current.contains(e.target)) {
-      setIsProfileOpen(false);
-    }
+    if (profileRef.current && notificationRef.current.contains(e.target)) setIsProfileOpen(false);
   };
-
   const profileOpenHandler = (e) => {
     setIsProfileOpen(!isProfileOpen);
-    if (notificationRef.current && profileRef.current.contains(e.target)) {
-      setIsNotificationOpen(false);
-    }
+    if (notificationRef.current && profileRef.current.contains(e.target)) setIsNotificationOpen(false);
   };
 
   useEffect(() => {
@@ -65,7 +60,10 @@ const Header = () => {
     <header className="h-[220px] sm:h-[180px] p-4 flex flex-col justify-between gap-6">
       <div className="flex items-center justify-between gap-6">
         <div>
-          <div className="bg-primary p-2 rounded-md cursor-pointer block xl:hidden" onClick={mobileNavHandler}>
+          <div
+            className="bg-primary p-2 rounded-md cursor-pointer block xl:hidden"
+            onClick={() => setMobileNav(!mobileNav)}
+          >
             <HamburgerIcon />
           </div>
         </div>
@@ -87,7 +85,10 @@ const Header = () => {
           </div>
           <div className="bg-[#FFFFFF80] py-2 px-5 rounded-lg flex items-center justify-center gap-2 relative">
             <img
-              src="https://placehold.co/600x400/white/18bc9c?text=AZ"
+              src={
+                user?.image?.url ||
+                `https://placehold.co/600x400/white/18bc9c?text=${user?.firstName[0].toUpperCase()}${user?.lastName[0].toUpperCase()}`
+              }
               alt="image"
               className="w-6 h-6 rounded-full object-cover"
             />
@@ -96,7 +97,7 @@ const Header = () => {
               onClick={profileOpenHandler}
               ref={profileRef}
             >
-              MKS
+              {user?.firstName} {user?.lastName}
               <div className={`transition-all duration-400 ${isProfileOpen ? "rotate-180" : "rotate-0"}`}>
                 <HeaderChevronIcon />
               </div>
@@ -142,6 +143,7 @@ const Profile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [logout, { isLoading }] = useLogoutMutation();
+
   const logoutHandler = async () => {
     try {
       const res = await logout().unwrap();

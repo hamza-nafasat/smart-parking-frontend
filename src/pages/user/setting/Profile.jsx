@@ -4,23 +4,28 @@ import Input from "../../../components/shared/small/Input";
 import { useGetMyProfileQuery, useUpdateMyProfileMutation } from "../../../redux/apis/authApis";
 import toast from "react-hot-toast";
 import Loader from "../../../components/shared/small/Loader";
+import { userExist } from "../../../redux/slices/authSlice";
+import { useDispatch } from "react-redux";
 
 const Profile = () => {
+  const dispatch = useDispatch();
   const [isFormEdit, setIsFormEdit] = useState(false);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [address, setAddress] = useState("");
-  const [state, setState] = useState("");
-  const [country, setCountry] = useState("");
-  const [contact, setContact] = useState("");
-  const [email, setEmail] = useState("");
-  const [imgSrc, setImgSrc] = useState("https://placehold.co/113x113");
-  const [image, setImage] = useState(null);
+  const [form, setForm] = useState({
+    firstName: "",
+    lastName: "",
+    address: "",
+    state: "",
+    country: "",
+    contact: "",
+    email: "",
+    image: "",
+  });
+  const [imgSrc, setImgSrc] = useState("");
   const { data, isLoading, refetch } = useGetMyProfileQuery();
   const [updateProfile, { isLoading: isUpdating }] = useUpdateMyProfileMutation();
 
   const imgSrcHandler = (e) => {
-    setImage(e.target.files[0]);
+    setForm({ ...form, image: e.target.files[0] });
     const reader = new FileReader();
     reader.onload = () => {
       if (reader.readyState === 2) setImgSrc(reader.result);
@@ -32,15 +37,16 @@ const Profile = () => {
     e.preventDefault();
     try {
       const formData = new FormData();
-      formData.append("firstName", firstName);
-      formData.append("lastName", lastName);
-      formData.append("address", address);
-      formData.append("state", state);
-      formData.append("country", country);
-      formData.append("contact", contact);
-      if (image) formData.append("file", image);
+      formData.append("firstName", form.firstName);
+      formData.append("lastName", form.lastName);
+      formData.append("address", form.address);
+      formData.append("state", form.state);
+      formData.append("country", form.country);
+      formData.append("contact", form.contact);
+      if (form?.image) formData.append("file", form.image);
       const res = await updateProfile(formData).unwrap();
-      await refetch();
+      const user = await refetch().unwrap();
+      await dispatch(userExist(user?.data));
       toast.success(res?.message);
       setIsFormEdit(false);
     } catch (error) {
@@ -51,14 +57,16 @@ const Profile = () => {
   useEffect(() => {
     if (data) {
       let profile = data?.data;
-      setFirstName(profile?.firstName || "");
-      setLastName(profile?.lastName || "");
-      setAddress(profile?.address || "");
-      setState(profile?.state || "");
-      setCountry(profile?.country || "");
-      setContact(profile?.contact || "");
-      setEmail(profile?.email || "");
-      setImgSrc(profile?.image?.url || "");
+      setForm({
+        firstName: profile?.firstName || "",
+        lastName: profile?.lastName || "",
+        address: profile?.address || "",
+        state: profile?.state || "",
+        country: profile?.country || "",
+        contact: profile?.contact || "",
+        email: profile?.email || "",
+      });
+      setImgSrc(profile?.image?.url || "https://placehold.co/113x113");
     }
   }, [data, isFormEdit]);
   return isLoading ? (
@@ -87,8 +95,8 @@ const Profile = () => {
           <Input
             label="First Name"
             type="text"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
+            value={form.firstName}
+            onChange={(e) => setForm({ ...form, firstName: e.target.value })}
             readOnly={!isFormEdit}
             style={{ cursor: isFormEdit ? "auto" : "auto" }}
           />
@@ -97,8 +105,8 @@ const Profile = () => {
           <Input
             label="Last Name"
             type="text"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
+            value={form.lastName}
+            onChange={(e) => setForm({ ...form, lastName: e.target.value })}
             readOnly={!isFormEdit}
             style={{ cursor: isFormEdit ? "auto" : "auto" }}
           />
@@ -107,8 +115,8 @@ const Profile = () => {
           <Input
             label="Address"
             type="text"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
+            value={form.address}
+            onChange={(e) => setForm({ ...form, address: e.target.value })}
             readOnly={!isFormEdit}
             style={{ cursor: isFormEdit ? "auto" : "auto" }}
           />
@@ -117,8 +125,8 @@ const Profile = () => {
           <Input
             label="Contact"
             type="tel"
-            value={contact}
-            onChange={(e) => setContact(e.target.value)}
+            value={form.contact}
+            onChange={(e) => setForm({ ...form, contact: e.target.value })}
             readOnly={!isFormEdit}
             style={{ cursor: isFormEdit ? "auto" : "auto" }}
           />
@@ -127,8 +135,8 @@ const Profile = () => {
           <Input
             label="Country"
             type="text"
-            value={country}
-            onChange={(e) => setCountry(e.target.value)}
+            value={form.country}
+            onChange={(e) => setForm({ ...form, country: e.target.value })}
             readOnly={!isFormEdit}
             style={{ cursor: isFormEdit ? "auto" : "auto" }}
           />
@@ -137,14 +145,11 @@ const Profile = () => {
           <Input
             label="State"
             type="text"
-            value={state}
-            onChange={(e) => setState(e.target.value)}
+            value={form.state}
+            onChange={(e) => setForm({ ...form, state: e.target.value })}
             readOnly={!isFormEdit}
             style={{ cursor: isFormEdit ? "auto" : "auto" }}
           />
-        </div>
-        <div>
-          <Input label="Email" type="email" value={email} readOnly style={{ cursor: isFormEdit ? "auto" : "auto" }} />
         </div>
         {isFormEdit && (
           <div className="md:col-span-2 flex justify-end gap-4 mt-0 md:mt-4">
