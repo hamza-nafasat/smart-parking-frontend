@@ -109,7 +109,13 @@ const SignUp = () => {
                 )}
               </div>
             </div>
-            <Button disabled={isLoading} type="submit" text="Register" width="w-full" height="h-[45px] sm:h-[57px]" />
+            <Button
+              type="submit"
+              text="Register"
+              width="w-full"
+              height="h-[45px] sm:h-[57px]"
+              className={`${isLoading ? "cursor-not-allowed pointer-events-none opacity-40" : ""}`}
+            />
           </form>
         </div>
         <div className="mt-4 md:mt-8 flex flex-col justify-center items-center gap-4">

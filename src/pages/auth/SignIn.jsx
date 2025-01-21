@@ -26,7 +26,7 @@ const SignIn = () => {
       toast.success(response?.message);
       setForm({ email: "", password: "" });
       await dispatch(userExist(response?.data));
-      return navigate("/");
+      return navigate(`/${response?.data?.role?.toLowerCase()}`);
     } catch (error) {
       toast.error(error?.data?.message);
       console.log("Error in loginHandler:", error);
@@ -75,7 +75,13 @@ const SignIn = () => {
                 Forgot Password?
               </Link>
             </div>
-            <Button disabled={isLoading} type="submit" text="Sign In" width="w-full" height="h-[45px] sm:h-[57px]" />
+            <Button
+              type="submit"
+              text="Sign In"
+              width="w-full"
+              height="h-[45px] sm:h-[57px]"
+              className={`${isLoading ? "cursor-not-allowed pointer-events-none opacity-40" : ""}`}
+            />
           </form>
         </div>
         <div className="mt-4 md:mt-8 flex flex-col justify-center items-center gap-4">
