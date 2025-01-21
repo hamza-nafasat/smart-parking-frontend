@@ -10,6 +10,7 @@ import { useLoginMutation } from "../../redux/apis/authApis";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { userExist } from "../../redux/slices/authSlice";
+import { areCookiesEnabled } from "../../utils/features";
 
 const SignIn = () => {
   const dispatch = useDispatch();
@@ -18,8 +19,10 @@ const SignIn = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [loginUser, { isLoading }] = useLoginMutation();
   const passwordVisibilityHandler = () => setIsPasswordVisible(!isPasswordVisible);
+
   const loginHandler = async (e) => {
     e.preventDefault();
+    if (!areCookiesEnabled()) return toast.error("Cookies are disabled! Enable them for a better experience.");
     if (!form.email || !form.password) return toast.error("Please Select Email and Password");
     try {
       const response = await loginUser(form).unwrap();
