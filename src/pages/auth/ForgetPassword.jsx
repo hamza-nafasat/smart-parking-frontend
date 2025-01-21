@@ -48,7 +48,8 @@ const ForgetPassword = () => {
               text="Continue"
               width="w-full"
               height="h-[45px] sm:h-[57px]"
-              className={`${isLoading && "pointer-events-none opacity-30 cursor-not-allowed"}`}
+              disabled={isLoading}
+              className={`${isLoading ? " opacity-30 !cursor-not-allowed" : ""}`}
             />
           </form>
         </div>

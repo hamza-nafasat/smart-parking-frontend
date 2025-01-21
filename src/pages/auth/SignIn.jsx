@@ -80,7 +80,8 @@ const SignIn = () => {
               text="Sign In"
               width="w-full"
               height="h-[45px] sm:h-[57px]"
-              className={`${isLoading ? "cursor-not-allowed pointer-events-none opacity-40" : ""}`}
+              disabled={isLoading}
+              className={`${isLoading ? " opacity-30 !cursor-not-allowed" : ""}`}
             />
           </form>
         </div>
