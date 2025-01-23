@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import logo from "../../assets/images/logo.png";
 import { ArrowIcon } from "../../assets/svgs/Icon";
-import { Link, useLocation, useNavigate } from "react-router-dom";
 import { pages } from "./pages";
 
 const Aside = () => {

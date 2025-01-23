@@ -40,6 +40,15 @@ export const pages = [
     filledIcon: <ParkingFilledIcon />,
   },
   {
+    id: 3,
+    title: "Sensors",
+    link: [
+      "/manager/sensors",
+    ],
+    icon: <ParkingAsideIcon />,
+    filledIcon: <ParkingFilledIcon />,
+  },
+  {
     id: 4,
     title: "Wallet",
     link: ["/admin/wallet", "/manager/wallet"],

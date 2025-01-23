@@ -16,6 +16,7 @@ import { useCheckLoginMutation } from "./redux/apis/authApis";
 import { useDispatch } from "react-redux";
 import { userExist, userNotExist } from "./redux/slices/authSlice";
 import ProtectedRoutes from "./components/ProtectedRoutes";
+import "react-confirm-alert/src/react-confirm-alert.css";
 
 const LandingPage = lazy(() => import("./pages/landing/LandingPage"));
 // auth imports
@@ -42,6 +43,7 @@ const ManagerParkingSummary = lazy(() => import("./pages/manager/parkingSummary/
 const ManagerWallet = lazy(() => import("./pages/manager/wallet/Wallet"));
 const ManagerProfile = lazy(() => import("./pages/manager/settings/Profile"));
 const AddParking = lazy(() => import("./pages/manager/addParkingSpace/components/AddParking"))
+const Sensors = lazy(() => import("./pages/manager/sensors/Sensors"))
 // User imports
 const User = lazy(() => import("./pages/user/index"));
 const UserDashboard = lazy(() => import("./pages/user/dashboard/UserDashboard"));
@@ -104,6 +106,7 @@ function App() {
                 <Route path="building-view/:id" element={<ManagerBuildingView />} />
                 <Route path="floor-view/:id" element={<ManagerFloorView />} />
                 <Route path="parking-summary" element={<ManagerParkingSummary />} />
+                <Route path="sensors" element={<Sensors />} />
                 <Route path="wallet" element={<ManagerWallet />} />
                 <Route path="profile" element={<ManagerProfile />} />
                 <Route path="profile" element={<ManagerProfile />} />

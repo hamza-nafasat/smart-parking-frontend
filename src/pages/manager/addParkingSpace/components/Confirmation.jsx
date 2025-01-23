@@ -38,6 +38,7 @@ const Confirmation = ({ setCurrentStep }) => {
 
 export default Confirmation;
 
+// eslint-disable-next-line react/prop-types
 const GeneralInfoSec = ({ setCurrentStep }) => {
   return (
     <section>
@@ -83,6 +84,7 @@ const GeneralInfoSec = ({ setCurrentStep }) => {
   );
 };
 
+// eslint-disable-next-line react/prop-types
 const FloorSensorInfoSec = ({ setCurrentStep }) => {
   return (
     <section className="mt-3">
@@ -109,7 +111,7 @@ const FloorSensorInfoSec = ({ setCurrentStep }) => {
               </button>
             </div>
           </div>
-          <div className="rounded-b-[4px] border border-[#0000003f] h-[125px] overflow-y-scroll custom-scroll">
+          <div className="rounded-b-[4px] border border-[#0000003f] max-h-[125px] overflow-y-scroll custom-scroll">
              {floors.map((floor, i) => (
               <SensorList key={i} floor={floor} />
              ))}
@@ -120,15 +122,17 @@ const FloorSensorInfoSec = ({ setCurrentStep }) => {
   );
 };
 
+// eslint-disable-next-line react/prop-types
 const SensorList = ({floor}) => {
   return (
     <div className="flex items-center justify-between py-[6px] px-[14px] border-b border-[#B0B0B080]">
-      <h6 className="text-[10px] text-[#313131] font-medium">{floor.parking}</h6>
-      <p className="text-[10px] text-[#313131] font-medium">{floor.sensor}</p>
+      <h6 className="text-[10px] text-[#313131] font-medium">{floor?.parking}</h6>
+      <p className="text-[10px] text-[#313131] font-medium">{floor?.sensor}</p>
     </div>
   )
 }
 
+// eslint-disable-next-line react/prop-types
 const List = ({ name, value }) => {
   return (
     <div className="flex items-center justify-between gap-4 mt-1">
