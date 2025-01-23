@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import GeneralInfo from "./components/GeneralInfo";
 import FloorInfo from "./components/FloorInfo";
 import Confirmation from "./components/Confirmation";

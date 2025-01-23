@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Cropper from "react-easy-crop";
 import { getCroppedImg, sensors } from "../utils/addParkingSpaceFeatures";
 import { CiEdit } from "react-icons/ci";
@@ -356,7 +356,7 @@ const BookParkingSpace = () => {
     if (isDrawingEnabled) {
       drawCanvas();
     }
-  }, [image, polygons, currentPolygon]);
+  }, [image, polygons, currentPolygon, isDrawingEnabled, drawCanvas]);
 
   return (
     <div className="relative">
