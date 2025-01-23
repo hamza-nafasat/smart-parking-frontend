@@ -1,6 +1,9 @@
-import React from "react";
 import Button from "../../../../components/shared/small/Button";
-import { AccordionEditIcon } from "../../../../assets/svgs/Icon";
+import {
+  AccordionDeleteIcon,
+  AccordionEditIcon,
+} from "../../../../assets/svgs/Icon";
+import { floors } from "../utils/addParkingSpaceFeatures";
 
 // eslint-disable-next-line react/prop-types
 const Confirmation = ({ setCurrentStep }) => {
@@ -14,7 +17,9 @@ const Confirmation = ({ setCurrentStep }) => {
         <GeneralInfoSec setCurrentStep={setCurrentStep} />
       </div>
       {/* Floor info */}
-      <FloorSensorInfoSec />
+      {[1,2].map((_, i) => (
+      <FloorSensorInfoSec setCurrentStep={setCurrentStep} key={i} />
+      ))}
       <div className="mt-5 flex justify-end">
         <div className="flex items-center gap-4">
           <Button
@@ -78,7 +83,7 @@ const GeneralInfoSec = ({ setCurrentStep }) => {
   );
 };
 
-const FloorSensorInfoSec = ({setCurrentStep}) => {
+const FloorSensorInfoSec = ({ setCurrentStep }) => {
   return (
     <section className="mt-3">
       <h6 className="text-sm md:text-base font-medium text-primary">
@@ -91,12 +96,38 @@ const FloorSensorInfoSec = ({setCurrentStep}) => {
           className="lg:col-span-4 w-full h-[160px] object-cover rounded-xl border-[4px] border-primary"
         />
         <div className="lg:col-span-8">
-
+          <div className="flex items-center justify-between bg-primary rounded-t-[4px] px-[14px] py-2 -mb-[1px] relative z-10">
+            <h6 className="text-xs sm:text-sm text-white font-bold">
+              Floor Name-01
+            </h6>
+            <div className="flex items-center gap-3">
+              <button onClick={() => setCurrentStep(1)}>
+                <AccordionEditIcon />
+              </button>
+              <button>
+                <AccordionDeleteIcon />
+              </button>
+            </div>
+          </div>
+          <div className="rounded-b-[4px] border border-[#0000003f] h-[125px] overflow-y-scroll custom-scroll">
+             {floors.map((floor, i) => (
+              <SensorList key={i} floor={floor} />
+             ))}
+          </div>
         </div>
-      </div> 
+      </div>
     </section>
   );
 };
+
+const SensorList = ({floor}) => {
+  return (
+    <div className="flex items-center justify-between py-[6px] px-[14px] border-b border-[#B0B0B080]">
+      <h6 className="text-[10px] text-[#313131] font-medium">{floor.parking}</h6>
+      <p className="text-[10px] text-[#313131] font-medium">{floor.sensor}</p>
+    </div>
+  )
+}
 
 const List = ({ name, value }) => {
   return (

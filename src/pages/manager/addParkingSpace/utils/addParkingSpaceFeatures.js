@@ -36,4 +36,28 @@ const sensors = [
   { option: "Sensor-05", value: "sensor-05" },
 ];
 
-export { getCroppedImg, sensors };
+const floors = [
+  {
+    parking: 'Floor 1-ParkingSpace-1',
+    sensor: 'Sensor name-01',
+  },
+  {
+    parking: 'Floor 1-ParkingSpace-2',
+    sensor: 'Sensor name-02',
+  },
+  {
+    parking: 'Floor 2-ParkingSpace-1',
+    sensor: 'Sensor name-03',
+  },
+  {
+    parking: 'Floor 2-ParkingSpace-2',
+    sensor: 'Sensor name-04',
+  },
+  {
+    parking: 'Floor 3-ParkingSpace-1',
+    sensor: 'Sensor name-05',
+  },
+];
+
+
+export { getCroppedImg, sensors, floors };
