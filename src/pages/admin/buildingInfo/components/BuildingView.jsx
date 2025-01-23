@@ -59,7 +59,7 @@ const BuildingView = () => {
         <div className="md:border md:border-[#E7E7E7] md:shadow-md md:rounded-[16px]">
           <div className="flex items-center justify-between gap-4 py-4 md:px-6">
             <h2 className="text-base font-bold text-[#414141]">
-              Building Manager List
+              Parking Floors
             </h2>
             <div className="flex items-center gap-2 bg-[#F9FBFF] border border-[#e7e7e7] rounded-[10px] py-2 px-4">
               <CiSearch fontSize={20} color="#7E7E7E" />

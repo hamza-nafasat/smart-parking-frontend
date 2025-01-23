@@ -13,7 +13,7 @@ const Aside = () => {
   };
   return (
     <div
-      className={`h-full py-8 relative transition-all duration-500 rounded-lg xl:rounded-[0] ${
+      className={`h-full py-8 relative transition-all duration-300 rounded-lg xl:rounded-[0] ${
         isAsideOpen ? "w-[90px]" : "w-[220px]"
       }`}
       style={{
@@ -24,7 +24,7 @@ const Aside = () => {
       <div className="flex items-center gap-1 justify-center overflow-hidden px-4">
         <img src={logo} alt="logo" className="w-[40px]" />
         <h6
-          className={`text-lg font-bold text-primary leading-none transition-all duration-500 text-nowrap ${
+          className={`text-lg font-bold text-primary leading-none transition-all duration-300 text-nowrap ${
             isAsideOpen ? "w-0 opacity-0 invisible" : "w-full"
           }`}
         >

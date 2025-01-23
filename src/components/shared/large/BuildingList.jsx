@@ -26,7 +26,8 @@ const carouselSettings = {
 };
 
 // Main component
-const BuildingList = () => {
+// eslint-disable-next-line react/prop-types
+const BuildingList = ({redirect = "admin"}) => {
   const [currentPage, setCurrentPage] = useState(0); // current page state
   const itemsPerPage = 4; // number of items per page
 
@@ -45,7 +46,7 @@ const BuildingList = () => {
   return (
     <div>
       {currentBuildings.map((data, index) => (
-        <SingleBuilding key={index} data={data} />
+        <SingleBuilding key={index} data={data} redirect={redirect} />
       ))}
 
       <ReactPaginate
@@ -81,7 +82,7 @@ const BuildingList = () => {
 export default BuildingList;
 
 // Single building component
-const SingleBuilding = ({ data }) => {
+const SingleBuilding = ({ data, redirect }) => {
   const navigate = useNavigate();
   return (
     <div className="flex flex-wrap justify-between gap-4 md:gap-6 building-slider border-b border-[#00000037] py-4">
@@ -152,7 +153,7 @@ const SingleBuilding = ({ data }) => {
       <div className="flex">
         <button
           className="text-primary text-sm md:text-base font-bold underline h-fit"
-          onClick={() => navigate(`/admin/building-view/${data?._id}`)}
+          onClick={() => navigate(`/${redirect}/building-view/${data?._id}`)}
         >
           View Details
         </button>

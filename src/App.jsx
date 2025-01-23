@@ -36,10 +36,12 @@ const BuildingView = lazy(() => import("./pages/admin/buildingInfo/components/Bu
 const Manager = lazy(() => import("./pages/manager/index"));
 const ManagerDashboard = lazy(() => import("./pages/manager/dashboard/ManagerDashboard"));
 const ManagerBuildingInfo = lazy(() => import("./pages/manager/buildingInfo/BuildingInfo"));
+const ManagerBuildingView = lazy(() => import("./pages/manager/buildingInfo/components/BuildingView"));
 const ManagerFloorView = lazy(() => import("./pages/manager/buildingInfo/components/FloorView"));
 const ManagerParkingSummary = lazy(() => import("./pages/manager/parkingSummary/ParkingSummary"));
 const ManagerWallet = lazy(() => import("./pages/manager/wallet/Wallet"));
 const ManagerProfile = lazy(() => import("./pages/manager/settings/Profile"));
+const AddParking = lazy(() => import("./pages/manager/addParkingSpace/components/AddParking"))
 // User imports
 const User = lazy(() => import("./pages/user/index"));
 const UserDashboard = lazy(() => import("./pages/user/dashboard/UserDashboard"));
@@ -92,20 +94,22 @@ function App() {
                 <Route path="wallet" element={<Wallet />} />
                 <Route path="wallet-transactions-detail" element={<WalletTransactionsDetail />} />
                 <Route path="view-slip/:id" element={<ViewSlipAdmin />} />
-              </Route>{" "}
+              </Route>
             </Route>
 
             <Route element={<ProtectedRoutes requiresAuth role={"manager"} />}>
               <Route path="/manager" element={<Manager />}>
                 <Route index element={<ManagerDashboard />} />
                 <Route path="building-info" element={<ManagerBuildingInfo />} />
+                <Route path="building-view/:id" element={<ManagerBuildingView />} />
                 <Route path="floor-view/:id" element={<ManagerFloorView />} />
                 <Route path="parking-summary" element={<ManagerParkingSummary />} />
                 <Route path="wallet" element={<ManagerWallet />} />
                 <Route path="profile" element={<ManagerProfile />} />
                 <Route path="profile" element={<ManagerProfile />} />
                 <Route path="add-parking-space" element={<AddParkingSpace />} />
-              </Route>{" "}
+                <Route path="add-parking" element={<AddParking />} />
+              </Route>
             </Route>
 
             <Route element={<ProtectedRoutes requiresAuth role={"user"} />}>
