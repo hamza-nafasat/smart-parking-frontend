@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import DeleteIcon from "../../../../assets/svgs/building/DeleteIcon";
-import BrowseFile from "../../../../components/shared/large/BrowseFile";
+import TwoDModel from "./TwoDModel";
 
-const UploadModel = () => {
-    const [file, setFile] = useState(null)
-    const [imagePreview, setImagePreview] = useState(null);
-
-    const deleteButtonHandler = () => setImagePreview(null)
+const UploadModel = ({onUpload}) => {
+  const [refreshKey, setRefreshKey] = useState(0);
+    const deleteButtonHandler = () => {
+      setRefreshKey((prev) => prev + 1)
+    }
   return (
     <div>
       <div className="flex items-center justify-between gap-4">
@@ -17,8 +17,8 @@ const UploadModel = () => {
          <DeleteIcon />
         </div>
       </div>
-      <div className="mt-1">
-        <BrowseFile setFile={setFile} imagePreview={imagePreview} setImagePreview={setImagePreview} />
+      <div className="mt-4 flex justify-center">
+        <TwoDModel key={refreshKey} onUpload={onUpload} />
       </div>
     </div>
   );

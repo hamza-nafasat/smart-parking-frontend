@@ -4,10 +4,20 @@ import { AiOutlineDelete } from "react-icons/ai";
 import { CiEdit } from "react-icons/ci";
 import { SlCursorMove } from "react-icons/sl";
 import { VscCopy } from "react-icons/vsc";
-import Button from "../../../../components/shared/small/Button";
-import { drawCanvas, getCroppedImg, handleCanvasClick, handleCanvasMouseDown, handleCanvasMouseMove, handleCanvasMouseUp, handleCopyMode, handleDeleteMode, handleDeletePolygon, handleMoveMode, sensors, updateSensorAttached } from "../utils/addParkingSpaceFeatures";
+import {
+  drawCanvas,
+  getCroppedImg,
+  handleCanvasClick,
+  handleCanvasMouseDown,
+  handleCanvasMouseMove,
+  handleCanvasMouseUp,
+  handleCopyMode,
+  handleDeleteMode,
+  handleDeletePolygon,
+  handleMoveMode
+} from "../utils/addParkingSpaceFeatures";
 
-const BookParkingSpace = () => {
+const TwoDModel = ({onUpload}) => {
   const canvasRef = useRef(null);
   const [imageSrc, setImageSrc] = useState(null);
   const [isDrawingEnabled, setIsDrawingEnabled] = useState(false);
@@ -26,9 +36,6 @@ const BookParkingSpace = () => {
   const [draggedPolygon, setDraggedPolygon] = useState(null);
   const [draggingPolygon, setDraggingPolygon] = useState(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-  const [sensorModal, setSensorModal] = useState(false);
-
-  const sensorModalHandler = () => setSensorModal(true);
 
   // Handle image upload and display on the canvas
   const handleImageUpload = (event) => {
@@ -66,6 +73,12 @@ const BookParkingSpace = () => {
     }
   }, [image, polygons, currentPolygon, isDrawingEnabled]);
 
+  useEffect(() => {
+    if(onUpload) {
+      onUpload(imageSrc, polygons)
+    }
+  }, [imageSrc, polygons])
+
   return (
     <div className="relative">
       {!isDrawingEnabled && <BrowseFileBtn onFileChange={handleImageUpload} />}
@@ -74,9 +87,46 @@ const BookParkingSpace = () => {
         height={500}
         ref={canvasRef}
         className="border border-primary border-dashed rounded-lg"
-        onClick={(event) => handleCanvasClick(event, canvasRef, isDeleteMode, handleDeletePolygon, isCopyMode, draggedPolygon, polygonCount, setPolygons, setPolygonCount, setDraggedPolygon, isEditMode, setCurrentPolygon, polygons, currentPolygon)}
-        onMouseDown={(event) => handleCanvasMouseDown(event, isMoveMode, canvasRef, polygons, setDraggingPolygon, setDragOffset)}
-        onMouseMove={(event) => handleCanvasMouseMove(event, isCopyMode, canvasRef, polygons, draggingPolygon, dragOffset, setDraggedPolygon, setPolygons)}
+        onClick={(event) =>
+          handleCanvasClick(
+            event,
+            canvasRef,
+            isDeleteMode,
+            handleDeletePolygon,
+            isCopyMode,
+            draggedPolygon,
+            polygonCount,
+            setPolygons,
+            setPolygonCount,
+            setDraggedPolygon,
+            isEditMode,
+            setCurrentPolygon,
+            polygons,
+            currentPolygon
+          )
+        }
+        onMouseDown={(event) =>
+          handleCanvasMouseDown(
+            event,
+            isMoveMode,
+            canvasRef,
+            polygons,
+            setDraggingPolygon,
+            setDragOffset
+          )
+        }
+        onMouseMove={(event) =>
+          handleCanvasMouseMove(
+            event,
+            isCopyMode,
+            canvasRef,
+            polygons,
+            draggingPolygon,
+            dragOffset,
+            setDraggedPolygon,
+            setPolygons
+          )
+        }
         onMouseUp={() => handleCanvasMouseUp(setDraggingPolygon)}
       />
       {showCropper && (
@@ -86,7 +136,7 @@ const BookParkingSpace = () => {
               image={imageSrc}
               crop={crop}
               zoom={zoom}
-              aspect={8 / 5}
+              aspect={12 / 5}
               onCropChange={setCrop}
               onZoomChange={setZoom}
               onCropComplete={onCropComplete}
@@ -99,6 +149,7 @@ const BookParkingSpace = () => {
                 Cancel
               </button>
               <button
+                type="button"
                 onClick={handleCropConfirm}
                 className="bg-primary text-white px-4 py-2 rounded"
               >
@@ -112,6 +163,7 @@ const BookParkingSpace = () => {
         <>
           <div className="flex flex-col items-center gap-4 absolute top-0 right-[-6%]">
             <button
+              type="button"
               onClick={() => {
                 setIsEditMode(!isEditMode);
                 setIsCopyMode(false);
@@ -128,7 +180,17 @@ const BookParkingSpace = () => {
               />
             </button>
             <button
-              onClick={() => handleCopyMode(setIsCopyMode, setIsEditMode, setIsMoveMode, setIsDeleteMode, setDraggedPolygon, isCopyMode)}
+              type="button"
+              onClick={() =>
+                handleCopyMode(
+                  setIsCopyMode,
+                  setIsEditMode,
+                  setIsMoveMode,
+                  setIsDeleteMode,
+                  setDraggedPolygon,
+                  isCopyMode
+                )
+              }
               className={`p-2 border rounded-md text-white ${
                 isCopyMode ? "border-primary" : "border-[#565656]"
               }`}
@@ -139,7 +201,17 @@ const BookParkingSpace = () => {
               />
             </button>
             <button
-              onClick={() => handleMoveMode(setIsMoveMode, setIsEditMode, setIsCopyMode, setIsDeleteMode, setDraggingPolygon, isMoveMode)}
+              type="button"
+              onClick={() =>
+                handleMoveMode(
+                  setIsMoveMode,
+                  setIsEditMode,
+                  setIsCopyMode,
+                  setIsDeleteMode,
+                  setDraggingPolygon,
+                  isMoveMode
+                )
+              }
               className={`p-2 border rounded-md text-white ${
                 isMoveMode ? "border-primary" : "border-[#565656]"
               }`}
@@ -150,7 +222,16 @@ const BookParkingSpace = () => {
               />
             </button>
             <button
-              onClick={() => handleDeleteMode(setIsDeleteMode, setIsEditMode, setIsCopyMode, setIsMoveMode, isDeleteMode)}
+              type="button"
+              onClick={() =>
+                handleDeleteMode(
+                  setIsDeleteMode,
+                  setIsEditMode,
+                  setIsCopyMode,
+                  setIsMoveMode,
+                  isDeleteMode
+                )
+              }
               className={`p-2 border rounded-md text-white ${
                 isDeleteMode ? "border-primary" : "border-[#565656]"
               }`}
@@ -161,83 +242,13 @@ const BookParkingSpace = () => {
               />
             </button>
           </div>
-          <button
-            className="absolute top-5 left-5 bg-primary px-3 py-[6px] rounded-md text-white text-sm font-bold"
-            onClick={sensorModalHandler}
-            disabled={!polygons.length}
-          >
-            Add Sensor
-          </button>
-          {/* sensor modal */}
-          {sensorModal && (
-            <SensorModal
-              setSensorModal={setSensorModal}
-              polygons={polygons}
-              setPolygons={setPolygons}
-              sensors={sensors}
-              onUpdateSensor={updateSensorAttached}
-            />
-          )}
         </>
       )}
     </div>
   );
 };
 
-export default BookParkingSpace;
-
-// eslint-disable-next-line react/prop-types
-const SensorModal = ({ setSensorModal, polygons, sensors, onUpdateSensor, setPolygons }) => {
-  const [selectedSensors, setSelectedSensors] = useState({});
-
-  const sensorSelectHandler = (polygonId, sensor) => {
-    setSelectedSensors({ ...selectedSensors, [polygonId]: sensor });
-    onUpdateSensor(polygonId, sensor, polygons, setPolygons);
-  };
-  console.log("selectedSensors", selectedSensors);
-  return (
-    <div className="bg-white p-4 rounded-lg shadow-md absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[450px]">
-      <h6 className="text-sm font-medium text-[#414141] text-center">
-        Add Sensor
-      </h6>
-      <div className="my-6 h-[200px] overflow-y-scroll custom-scroll">
-        {polygons?.map((polygon, i) => (
-          <div key={i} className="grid grid-cols-2 gap-4 mb-2">
-            <h6 className="px-4 h-[45px] flex items-center border rounded-md text-xs text-[#414141]">
-              {polygon?.id}
-            </h6>
-            <select
-              name="sensors"
-              className="outline-none border rounded-md px-2 text-xs text-[#414141]"
-              onChange={(e) => sensorSelectHandler(polygon?.id, e.target.value)}
-            >
-              <option>Select Sensor</option>
-              {sensors?.map((sensor, i) => (
-                <option key={i} value={sensor?.value}>
-                  {sensor?.option}
-                </option>
-              ))}
-            </select>
-          </div>
-        ))}
-      </div>
-      <div className="flex items-center justify-center gap-3">
-        <Button
-          text="Cancel"
-          width="w-20 sm:w-[85px]"
-          bg="bg-white hover:bg-primary hover:text-white"
-          color="text-primary"
-          onClick={() => setSensorModal(false)}
-        />
-        <Button
-          text="Save"
-          width="w-20 sm:w-[85px]"
-          onClick={() => setSensorModal(false)}
-        />
-      </div>
-    </div>
-  );
-};
+export default TwoDModel;
 
 const BrowseFileBtn = ({ onFileChange }) => {
   return (
