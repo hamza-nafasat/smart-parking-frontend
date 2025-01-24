@@ -1,14 +1,18 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { VscEye, VscEyeClosed } from "react-icons/vsc";
-import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import { GoogleIcon } from "../../assets/svgs/Icon";
 import Button from "../../components/shared/small/Button";
 import Input from "../../components/shared/small/Input";
 import { useRegisterMutation } from "../../redux/apis/authApis";
+import { userExist } from "../../redux/slices/authSlice";
 import AuthLayout from "./AuthLayout";
 
 const SignUp = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [registerUser, { isLoading }] = useRegisterMutation();
   const [form, setForm] = useState({
     firstName: "",
@@ -31,6 +35,8 @@ const SignUp = () => {
       const response = await registerUser(form).unwrap();
       toast.success(response?.message);
       setForm({ firstName: "", lastName: "", email: "", password: "", confirmPassword: "" });
+      await dispatch(userExist(response?.data));
+      return navigate("/");
     } catch (error) {
       toast.error(error?.data?.message || "Something went wrong");
       console.log("Error in registerHandler:", error);

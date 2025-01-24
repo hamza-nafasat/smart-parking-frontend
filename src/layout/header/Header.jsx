@@ -165,13 +165,12 @@ const Profile = () => {
         <IoChevronForwardOutline fontSize={18} />
       </Link>
       <div
+        onClick={logoutHandler}
         className={`flex items-center justify-between gap-4 px-2 py-2 cursor-pointer bg-white rounded-b-md hover:bg-[#b6feef] ${
           isLoading && "cursor-not-allowed pointer-events-none opacity-50"
         }`}
       >
-        <h6 className={`text-[13px] font-medium `} onClick={logoutHandler}>
-          Logout
-        </h6>
+        <h6 className={`text-[13px] font-medium `}>Logout</h6>
         <IoLogOutOutline fontSize={18} />
       </div>
     </div>
