@@ -36,7 +36,7 @@ const SignUp = () => {
       toast.success(response?.message);
       setForm({ firstName: "", lastName: "", email: "", password: "", confirmPassword: "" });
       await dispatch(userExist(response?.data));
-      return navigate("/");
+      return navigate(`/${response?.data?.role?.toLowerCase()}`);
     } catch (error) {
       toast.error(error?.data?.message || "Something went wrong");
       console.log("Error in registerHandler:", error);
