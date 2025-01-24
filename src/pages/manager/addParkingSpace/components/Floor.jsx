@@ -32,6 +32,18 @@ const FloorAccordion = () => {
 };
 
 const Floor = ({ isOpen, onToggle }) => {
+  const selectFloorHandler = (name, value) => setFormData({...formData, [name]: value})
+  const updateFloorImgAndCoordinates = (img, coordinates) => setFormData({...formData, floorImg: img, floorCoordinates: coordinates})
+  const [formData, setFormData] = useState({
+    floorName: "",
+    numberOfParkingSpaces: "",
+    floorImg: null,
+    floorCoordinates: [],
+  });
+  const formDataHandler = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  console.log("formData", formData);
   return (
     <div>
       {/* Accordion Header */}
@@ -54,12 +66,25 @@ const Floor = ({ isOpen, onToggle }) => {
         <div className="mt-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
           <Dropdown
             defaultText="Select floor"
-            options={[{ option: "Floor 1" }]}
+            options={[{ option: "Floor 1" , value: "floor-1"}]}
+            onSelect={(value) => selectFloorHandler("floor", value)}
           />
-          <Input type="text" placeholder="Floor name" />
-          <Input type="text" placeholder="Number of parking spaces" />
+          <Input
+            type="text"
+            placeholder="Floor name"
+            name="floorName"
+            value={formData.floorName}
+            onChange={formDataHandler}
+          />
+          <Input
+            type="text"
+            placeholder="Number of parking spaces"
+            name="numberOfParkingSpaces"
+            value={formData.numberOfParkingSpaces}
+            onChange={formDataHandler}
+          />
           <div className="lg:col-span-3 flex justify-center">
-            <BookParkingSpace />
+            <BookParkingSpace onUpload={updateFloorImgAndCoordinates} />
           </div>
         </div>
       )}

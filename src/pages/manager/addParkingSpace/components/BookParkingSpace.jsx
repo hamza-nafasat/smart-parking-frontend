@@ -7,7 +7,7 @@ import { VscCopy } from "react-icons/vsc";
 import Button from "../../../../components/shared/small/Button";
 import { drawCanvas, getCroppedImg, handleCanvasClick, handleCanvasMouseDown, handleCanvasMouseMove, handleCanvasMouseUp, handleCopyMode, handleDeleteMode, handleDeletePolygon, handleMoveMode, sensors, updateSensorAttached } from "../utils/addParkingSpaceFeatures";
 
-const BookParkingSpace = () => {
+const BookParkingSpace = ({onUpload}) => {
   const canvasRef = useRef(null);
   const [imageSrc, setImageSrc] = useState(null);
   const [isDrawingEnabled, setIsDrawingEnabled] = useState(false);
@@ -65,6 +65,10 @@ const BookParkingSpace = () => {
       drawCanvas(canvasRef, isDrawingEnabled, image, polygons, currentPolygon);
     }
   }, [image, polygons, currentPolygon, isDrawingEnabled]);
+
+  useEffect(() => {
+    if(onUpload) onUpload(imageSrc, polygons)
+  }, [imageSrc, polygons])
 
   return (
     <div className="relative">
