@@ -13,5 +13,5 @@ const buildingSlice = createSlice({
   },
 });
 
-export const { addBuildingInfo, removeBuildingInfo } = buildingSlice.actions;
+export const { addBuildingGeneralInfo, removeBuildingInfo } = buildingSlice.actions;
 export default buildingSlice;
