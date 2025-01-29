@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
+import {useSelector} from 'react-redux'
 import logo from "../../assets/images/logo.png";
 import parkImg from "../../assets/images/landing-page/park.png";
 import airportImg from "../../assets/images/landing-page/airport.png";
@@ -30,7 +31,7 @@ import {
   UsersIcon,
 } from "../../assets/svgs/Icon";
 import Slider from "react-slick/lib/slider";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const LandingPage = () => {
   return (
@@ -85,6 +86,10 @@ const Header = () => {
 };
 
 const Hero = () => {
+  const navigate = useNavigate();
+  const {user}=useSelector((state)=>state.auth)
+  const onStartedClickHandler = () =>  user ? navigate(`/${user?.role}`) : navigate("/login");
+  
   return (
     <section className="container px-4 mx-auto grid place-items-center gap-6 flex-1 text-white">
       {/* hero content */}
@@ -96,15 +101,15 @@ const Hero = () => {
           SIMPLE, SECURED & SMART
         </h6>
         <div className="flex flex-wrap items-center justify-center gap-4 md:gap-8">
-          <Button text="Get Started" width="w-[215px]" />
-          <Link to="/register">
+          <Button onClick={onStartedClickHandler} text="Get Started" width="w-[215px]" />
+          {/* <Link to="/register">
             <Button
               text="Register as a Manager"
               width="w-[215px]"
               bg="bg-[#00000045] hover:bg-primary hover:text-white"
               color="text-primary"
             />
-          </Link>
+          </Link> */}
         </div>
       </div>
       {/* widgets */}
