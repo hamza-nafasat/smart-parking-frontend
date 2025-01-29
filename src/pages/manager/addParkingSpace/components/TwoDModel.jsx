@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useRef, useState } from "react";
 import Cropper from "react-easy-crop";
 import { AiOutlineDelete } from "react-icons/ai";
@@ -14,10 +15,10 @@ import {
   handleCopyMode,
   handleDeleteMode,
   handleDeletePolygon,
-  handleMoveMode
+  handleMoveMode,
 } from "../utils/addParkingSpaceFeatures";
 
-const TwoDModel = ({onUpload}) => {
+const TwoDModel = ({ onUpload }) => {
   const canvasRef = useRef(null);
   const [imageSrc, setImageSrc] = useState(null);
   const [isDrawingEnabled, setIsDrawingEnabled] = useState(false);
@@ -74,10 +75,8 @@ const TwoDModel = ({onUpload}) => {
   }, [image, polygons, currentPolygon, isDrawingEnabled]);
 
   useEffect(() => {
-    if(onUpload) {
-      onUpload(imageSrc, polygons)
-    }
-  }, [imageSrc, polygons])
+    if (onUpload) onUpload(imageSrc, polygons);
+  }, [imageSrc, polygons]);
 
   return (
     <div className="relative">
@@ -106,14 +105,7 @@ const TwoDModel = ({onUpload}) => {
           )
         }
         onMouseDown={(event) =>
-          handleCanvasMouseDown(
-            event,
-            isMoveMode,
-            canvasRef,
-            polygons,
-            setDraggingPolygon,
-            setDragOffset
-          )
+          handleCanvasMouseDown(event, isMoveMode, canvasRef, polygons, setDraggingPolygon, setDragOffset)
         }
         onMouseMove={(event) =>
           handleCanvasMouseMove(
@@ -142,17 +134,10 @@ const TwoDModel = ({onUpload}) => {
               onCropComplete={onCropComplete}
             />
             <div className="flex items-center gap-2 mt-4 z-[999] absolute bottom-6 right-6">
-              <button
-                onClick={() => setShowCropper(false)}
-                className="bg-gray-500 text-white px-4 py-2 rounded"
-              >
+              <button onClick={() => setShowCropper(false)} className="bg-gray-500 text-white px-4 py-2 rounded">
                 Cancel
               </button>
-              <button
-                type="button"
-                onClick={handleCropConfirm}
-                className="bg-primary text-white px-4 py-2 rounded"
-              >
+              <button type="button" onClick={handleCropConfirm} className="bg-primary text-white px-4 py-2 rounded">
                 Crop
               </button>
             </div>
@@ -170,14 +155,9 @@ const TwoDModel = ({onUpload}) => {
                 setIsMoveMode(false);
                 setIsDeleteMode(false);
               }}
-              className={`p-2 border rounded-md text-white ${
-                isEditMode ? "border-primary" : "border-[#565656]"
-              }`}
+              className={`p-2 border rounded-md text-white ${isEditMode ? "border-primary" : "border-[#565656]"}`}
             >
-              <CiEdit
-                fontSize={20}
-                color={isEditMode ? "#18bc9c" : "#565656"}
-              />
+              <CiEdit fontSize={20} color={isEditMode ? "#18bc9c" : "#565656"} />
             </button>
             <button
               type="button"
@@ -191,14 +171,9 @@ const TwoDModel = ({onUpload}) => {
                   isCopyMode
                 )
               }
-              className={`p-2 border rounded-md text-white ${
-                isCopyMode ? "border-primary" : "border-[#565656]"
-              }`}
+              className={`p-2 border rounded-md text-white ${isCopyMode ? "border-primary" : "border-[#565656]"}`}
             >
-              <VscCopy
-                fontSize={20}
-                color={isCopyMode ? "#18bc9c" : "#565656"}
-              />
+              <VscCopy fontSize={20} color={isCopyMode ? "#18bc9c" : "#565656"} />
             </button>
             <button
               type="button"
@@ -212,34 +187,18 @@ const TwoDModel = ({onUpload}) => {
                   isMoveMode
                 )
               }
-              className={`p-2 border rounded-md text-white ${
-                isMoveMode ? "border-primary" : "border-[#565656]"
-              }`}
+              className={`p-2 border rounded-md text-white ${isMoveMode ? "border-primary" : "border-[#565656]"}`}
             >
-              <SlCursorMove
-                fontSize={20}
-                color={isMoveMode ? "#18bc9c" : "#565656"}
-              />
+              <SlCursorMove fontSize={20} color={isMoveMode ? "#18bc9c" : "#565656"} />
             </button>
             <button
               type="button"
               onClick={() =>
-                handleDeleteMode(
-                  setIsDeleteMode,
-                  setIsEditMode,
-                  setIsCopyMode,
-                  setIsMoveMode,
-                  isDeleteMode
-                )
+                handleDeleteMode(setIsDeleteMode, setIsEditMode, setIsCopyMode, setIsMoveMode, isDeleteMode)
               }
-              className={`p-2 border rounded-md text-white ${
-                isDeleteMode ? "border-primary" : "border-[#565656]"
-              }`}
+              className={`p-2 border rounded-md text-white ${isDeleteMode ? "border-primary" : "border-[#565656]"}`}
             >
-              <AiOutlineDelete
-                fontSize={20}
-                color={isDeleteMode ? "#18bc9c" : "#565656"}
-              />
+              <AiOutlineDelete fontSize={20} color={isDeleteMode ? "#18bc9c" : "#565656"} />
             </button>
           </div>
         </>
@@ -254,11 +213,7 @@ const BrowseFileBtn = ({ onFileChange }) => {
   return (
     <button className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-2 cursor-pointer rounded-lg bg-primary text-white font-semibold">
       Browse File
-      <input
-        type="file"
-        className="absolute inset-0 cursor-pointer opacity-0"
-        onChange={onFileChange}
-      />
+      <input type="file" className="absolute inset-0 cursor-pointer opacity-0" onChange={onFileChange} />
     </button>
   );
 };
