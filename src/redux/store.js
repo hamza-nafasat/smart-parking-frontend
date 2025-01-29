@@ -3,20 +3,25 @@ import authApis from "./apis/authApis";
 import authSlice from "./slices/authSlice";
 import buildingApis from "./apis/buildingApis";
 import buildingSlice from "./slices/buildingSlice";
+import floorApis from "./apis/floorApis";
+import floorSlice from "./slices/floorSlice";
 
 const store = configureStore({
   reducer: {
     // apis
     [authApis.reducerPath]: authApis.reducer,
     [buildingApis.reducerPath]: buildingApis.reducer,
+    [floorApis.reducerPath]: floorApis.reducer,
     // slices
     [authSlice.name]: authSlice.reducer,
     [buildingSlice.name]: buildingSlice.reducer,
+    [floorSlice.name]: floorSlice.reducer,
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware({ serializableCheck: false })
       .concat(authApis.middleware)
-      .concat(buildingApis.middleware);
+      .concat(buildingApis.middleware)
+      .concat(floorApis.middleware);
   },
 });
 
