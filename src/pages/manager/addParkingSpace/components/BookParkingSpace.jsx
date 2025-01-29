@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useRef, useState } from "react";
 import Cropper from "react-easy-crop";
 import { AiOutlineDelete } from "react-icons/ai";
@@ -5,7 +6,20 @@ import { CiEdit } from "react-icons/ci";
 import { SlCursorMove } from "react-icons/sl";
 import { VscCopy } from "react-icons/vsc";
 import Button from "../../../../components/shared/small/Button";
-import { drawCanvas, getCroppedImg, handleCanvasClick, handleCanvasMouseDown, handleCanvasMouseMove, handleCanvasMouseUp, handleCopyMode, handleDeleteMode, handleDeletePolygon, handleMoveMode, sensors, updateSensorAttached } from "../utils/addParkingSpaceFeatures";
+import {
+  drawCanvas,
+  getCroppedImg,
+  handleCanvasClick,
+  handleCanvasMouseDown,
+  handleCanvasMouseMove,
+  handleCanvasMouseUp,
+  handleCopyMode,
+  handleDeleteMode,
+  handleDeletePolygon,
+  handleMoveMode,
+  sensors,
+  updateSensorAttached,
+} from "../utils/addParkingSpaceFeatures";
 
 const BookParkingSpace = () => {
   const canvasRef = useRef(null);
@@ -74,9 +88,39 @@ const BookParkingSpace = () => {
         height={500}
         ref={canvasRef}
         className="border border-primary border-dashed rounded-lg"
-        onClick={(event) => handleCanvasClick(event, canvasRef, isDeleteMode, handleDeletePolygon, isCopyMode, draggedPolygon, polygonCount, setPolygons, setPolygonCount, setDraggedPolygon, isEditMode, setCurrentPolygon, polygons, currentPolygon)}
-        onMouseDown={(event) => handleCanvasMouseDown(event, isMoveMode, canvasRef, polygons, setDraggingPolygon, setDragOffset)}
-        onMouseMove={(event) => handleCanvasMouseMove(event, isCopyMode, canvasRef, polygons, draggingPolygon, dragOffset, setDraggedPolygon, setPolygons)}
+        onClick={(event) =>
+          handleCanvasClick(
+            event,
+            canvasRef,
+            isDeleteMode,
+            handleDeletePolygon,
+            isCopyMode,
+            draggedPolygon,
+            polygonCount,
+            setPolygons,
+            setPolygonCount,
+            setDraggedPolygon,
+            isEditMode,
+            setCurrentPolygon,
+            polygons,
+            currentPolygon
+          )
+        }
+        onMouseDown={(event) =>
+          handleCanvasMouseDown(event, isMoveMode, canvasRef, polygons, setDraggingPolygon, setDragOffset)
+        }
+        onMouseMove={(event) =>
+          handleCanvasMouseMove(
+            event,
+            isCopyMode,
+            canvasRef,
+            polygons,
+            draggingPolygon,
+            dragOffset,
+            setDraggedPolygon,
+            setPolygons
+          )
+        }
         onMouseUp={() => handleCanvasMouseUp(setDraggingPolygon)}
       />
       {showCropper && (
@@ -92,16 +136,10 @@ const BookParkingSpace = () => {
               onCropComplete={onCropComplete}
             />
             <div className="flex items-center gap-2 mt-4 z-[999] absolute bottom-6 right-6">
-              <button
-                onClick={() => setShowCropper(false)}
-                className="bg-gray-500 text-white px-4 py-2 rounded"
-              >
+              <button onClick={() => setShowCropper(false)} className="bg-gray-500 text-white px-4 py-2 rounded">
                 Cancel
               </button>
-              <button
-                onClick={handleCropConfirm}
-                className="bg-primary text-white px-4 py-2 rounded"
-              >
+              <button onClick={handleCropConfirm} className="bg-primary text-white px-4 py-2 rounded">
                 Crop
               </button>
             </div>
@@ -118,47 +156,47 @@ const BookParkingSpace = () => {
                 setIsMoveMode(false);
                 setIsDeleteMode(false);
               }}
-              className={`p-2 border rounded-md text-white ${
-                isEditMode ? "border-primary" : "border-[#565656]"
-              }`}
+              className={`p-2 border rounded-md text-white ${isEditMode ? "border-primary" : "border-[#565656]"}`}
             >
-              <CiEdit
-                fontSize={20}
-                color={isEditMode ? "#18bc9c" : "#565656"}
-              />
+              <CiEdit fontSize={20} color={isEditMode ? "#18bc9c" : "#565656"} />
             </button>
             <button
-              onClick={() => handleCopyMode(setIsCopyMode, setIsEditMode, setIsMoveMode, setIsDeleteMode, setDraggedPolygon, isCopyMode)}
-              className={`p-2 border rounded-md text-white ${
-                isCopyMode ? "border-primary" : "border-[#565656]"
-              }`}
+              onClick={() =>
+                handleCopyMode(
+                  setIsCopyMode,
+                  setIsEditMode,
+                  setIsMoveMode,
+                  setIsDeleteMode,
+                  setDraggedPolygon,
+                  isCopyMode
+                )
+              }
+              className={`p-2 border rounded-md text-white ${isCopyMode ? "border-primary" : "border-[#565656]"}`}
             >
-              <VscCopy
-                fontSize={20}
-                color={isCopyMode ? "#18bc9c" : "#565656"}
-              />
+              <VscCopy fontSize={20} color={isCopyMode ? "#18bc9c" : "#565656"} />
             </button>
             <button
-              onClick={() => handleMoveMode(setIsMoveMode, setIsEditMode, setIsCopyMode, setIsDeleteMode, setDraggingPolygon, isMoveMode)}
-              className={`p-2 border rounded-md text-white ${
-                isMoveMode ? "border-primary" : "border-[#565656]"
-              }`}
+              onClick={() =>
+                handleMoveMode(
+                  setIsMoveMode,
+                  setIsEditMode,
+                  setIsCopyMode,
+                  setIsDeleteMode,
+                  setDraggingPolygon,
+                  isMoveMode
+                )
+              }
+              className={`p-2 border rounded-md text-white ${isMoveMode ? "border-primary" : "border-[#565656]"}`}
             >
-              <SlCursorMove
-                fontSize={20}
-                color={isMoveMode ? "#18bc9c" : "#565656"}
-              />
+              <SlCursorMove fontSize={20} color={isMoveMode ? "#18bc9c" : "#565656"} />
             </button>
             <button
-              onClick={() => handleDeleteMode(setIsDeleteMode, setIsEditMode, setIsCopyMode, setIsMoveMode, isDeleteMode)}
-              className={`p-2 border rounded-md text-white ${
-                isDeleteMode ? "border-primary" : "border-[#565656]"
-              }`}
+              onClick={() =>
+                handleDeleteMode(setIsDeleteMode, setIsEditMode, setIsCopyMode, setIsMoveMode, isDeleteMode)
+              }
+              className={`p-2 border rounded-md text-white ${isDeleteMode ? "border-primary" : "border-[#565656]"}`}
             >
-              <AiOutlineDelete
-                fontSize={20}
-                color={isDeleteMode ? "#18bc9c" : "#565656"}
-              />
+              <AiOutlineDelete fontSize={20} color={isDeleteMode ? "#18bc9c" : "#565656"} />
             </button>
           </div>
           <button
@@ -197,15 +235,11 @@ const SensorModal = ({ setSensorModal, polygons, sensors, onUpdateSensor, setPol
   console.log("selectedSensors", selectedSensors);
   return (
     <div className="bg-white p-4 rounded-lg shadow-md absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[450px]">
-      <h6 className="text-sm font-medium text-[#414141] text-center">
-        Add Sensor
-      </h6>
+      <h6 className="text-sm font-medium text-[#414141] text-center">Add Sensor</h6>
       <div className="my-6 h-[200px] overflow-y-scroll custom-scroll">
         {polygons?.map((polygon, i) => (
           <div key={i} className="grid grid-cols-2 gap-4 mb-2">
-            <h6 className="px-4 h-[45px] flex items-center border rounded-md text-xs text-[#414141]">
-              {polygon?.id}
-            </h6>
+            <h6 className="px-4 h-[45px] flex items-center border rounded-md text-xs text-[#414141]">{polygon?.id}</h6>
             <select
               name="sensors"
               className="outline-none border rounded-md px-2 text-xs text-[#414141]"
@@ -229,11 +263,7 @@ const SensorModal = ({ setSensorModal, polygons, sensors, onUpdateSensor, setPol
           color="text-primary"
           onClick={() => setSensorModal(false)}
         />
-        <Button
-          text="Save"
-          width="w-20 sm:w-[85px]"
-          onClick={() => setSensorModal(false)}
-        />
+        <Button text="Save" width="w-20 sm:w-[85px]" onClick={() => setSensorModal(false)} />
       </div>
     </div>
   );
@@ -243,11 +273,7 @@ const BrowseFileBtn = ({ onFileChange }) => {
   return (
     <button className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-2 cursor-pointer rounded-lg bg-primary text-white font-semibold">
       Browse File
-      <input
-        type="file"
-        className="absolute inset-0 cursor-pointer opacity-0"
-        onChange={onFileChange}
-      />
+      <input type="file" className="absolute inset-0 cursor-pointer opacity-0" onChange={onFileChange} />
     </button>
   );
 };

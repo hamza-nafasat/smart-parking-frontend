@@ -1,15 +1,12 @@
 import Button from "../../../../components/shared/small/Button";
 import FloorAccordion from "./Floor";
-const floors = 2;
 
 // eslint-disable-next-line react/prop-types
 const FloorInfo = ({ setCurrentStep }) => {
   const validationHandler = () => setCurrentStep((prevStep) => prevStep + 1);
   return (
     <div className="mt-4">
-      <h4 className="text-base md:text-xl font-medium text-[#414141] text-center">
-        Floor/Sensor Information
-      </h4>
+      <h4 className="text-base md:text-xl font-medium text-[#414141] text-center">Floor/Sensor Information</h4>
       <div className="mt-4 md:mt-8">
         <FloorAccordion />
       </div>
@@ -22,12 +19,7 @@ const FloorInfo = ({ setCurrentStep }) => {
             color="text-primary"
             onClick={() => setCurrentStep((prevStep) => prevStep - 1)}
           />
-          <Button
-            width="w-[120px]"
-            type="button"
-            text="Next"
-            onClick={validationHandler}
-          />
+          <Button width="w-[120px]" type="button" text="Next" onClick={validationHandler} />
         </div>
       </div>
     </div>

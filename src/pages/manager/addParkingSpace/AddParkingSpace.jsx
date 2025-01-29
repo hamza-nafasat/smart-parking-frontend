@@ -1,14 +1,13 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react";
-import GeneralInfo from "./components/GeneralInfo";
-import FloorInfo from "./components/FloorInfo";
-import Confirmation from "./components/Confirmation";
 import StepArrowIcon from "../../../assets/svgs/building/StepArrowIcon";
+import Confirmation from "./components/Confirmation";
+import FloorInfo from "./components/FloorInfo";
+import GeneralInfo from "./components/GeneralInfo";
 
 const AddParkingSpace = () => {
   const [currentStep, setCurrentStep] = useState(0);
-
   const steps = ["General Info", "Floor/Sensor Information", "Confirmation"];
-
   const renderStepContent = (step) => {
     switch (step) {
       case 0:
@@ -21,11 +20,10 @@ const AddParkingSpace = () => {
         return null;
     }
   };
+
   return (
     <div className="xl:px-12 xl:py-4">
-      <h2 className="text-xl md:text-[28px] font-semibold text-[#414141]">
-        Add Parking Space
-      </h2>
+      <h2 className="text-xl md:text-[28px] font-semibold text-[#414141]">Add Parking Space</h2>
       <div className="mt-4 md:mt-6 flex flex-wrap items-center md:justify-center gap-4  :gap-6 2xl:gap-8">
         {steps.map((step, i) => (
           <Step
@@ -38,9 +36,7 @@ const AddParkingSpace = () => {
           />
         ))}
       </div>
-      <div className="mt-4 md:mt-6 2xl:mt-8">
-        {renderStepContent(currentStep)}
-      </div>
+      <div className="mt-4 md:mt-6 2xl:mt-8">{renderStepContent(currentStep)}</div>
     </div>
   );
 };
@@ -51,9 +47,7 @@ const Step = ({ step, index, currentStep, setCurrentStep, stepsLength }) => {
   return (
     <div
       className={`flex items-center gap-1 ${
-        currentStep >= index
-          ? "opacity-100 cursor-pointer"
-          : "opacity-50 grayscale pointer-events-none"
+        currentStep >= index ? "opacity-100 cursor-pointer" : "opacity-50 grayscale pointer-events-none"
       }`}
       onClick={() => setCurrentStep(index)}
     >
