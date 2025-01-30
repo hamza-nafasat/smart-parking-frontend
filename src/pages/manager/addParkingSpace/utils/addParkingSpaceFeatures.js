@@ -38,29 +38,35 @@ const sensors = [
 
 const floors = [
   {
-    parking: 'Floor 1-ParkingSpace-1',
-    sensor: 'Sensor name-01',
+    parking: "Floor 1-ParkingSpace-1",
+    sensor: "Sensor name-01",
   },
   {
-    parking: 'Floor 1-ParkingSpace-2',
-    sensor: 'Sensor name-02',
+    parking: "Floor 1-ParkingSpace-2",
+    sensor: "Sensor name-02",
   },
   {
-    parking: 'Floor 2-ParkingSpace-1',
-    sensor: 'Sensor name-03',
+    parking: "Floor 2-ParkingSpace-1",
+    sensor: "Sensor name-03",
   },
   {
-    parking: 'Floor 2-ParkingSpace-2',
-    sensor: 'Sensor name-04',
+    parking: "Floor 2-ParkingSpace-2",
+    sensor: "Sensor name-04",
   },
   {
-    parking: 'Floor 3-ParkingSpace-1',
-    sensor: 'Sensor name-05',
+    parking: "Floor 3-ParkingSpace-1",
+    sensor: "Sensor name-05",
   },
 ];
 
- // Draw canvas content
- const drawCanvas = (canvasRef, isDrawingEnabled, image, polygons, currentPolygon) => {
+// Draw canvas content
+const drawCanvas = (
+  canvasRef,
+  isDrawingEnabled,
+  image,
+  polygons,
+  currentPolygon
+) => {
   const canvas = canvasRef.current;
   if (!canvas && !isDrawingEnabled) return;
   const context = canvas.getContext("2d");
@@ -99,20 +105,8 @@ const floors = [
     context.fillStyle = "#FFFFFF";
     context.beginPath();
     context.moveTo(boxX + 4, boxY);
-    context.arcTo(
-      boxX + boxWidth,
-      boxY,
-      boxX + boxWidth,
-      boxY + boxHeight,
-      4
-    );
-    context.arcTo(
-      boxX + boxWidth,
-      boxY + boxHeight,
-      boxX,
-      boxY + boxHeight,
-      4
-    );
+    context.arcTo(boxX + boxWidth, boxY, boxX + boxWidth, boxY + boxHeight, 4);
+    context.arcTo(boxX + boxWidth, boxY + boxHeight, boxX, boxY + boxHeight, 4);
     context.arcTo(boxX, boxY + boxHeight, boxX, boxY, 4);
     context.arcTo(boxX, boxY, boxX + boxWidth, boxY, 4);
     context.closePath();
@@ -133,7 +127,22 @@ const floors = [
 };
 
 // Add point to current polygon
-const handleCanvasClick = (event, canvasRef, isDeleteMode, handleDeletePolygon, isCopyMode, draggedPolygon, polygonCount, setPolygons, setPolygonCount, setDraggedPolygon, isEditMode, setCurrentPolygon, polygons, currentPolygon) => {
+const handleCanvasClick = (
+  event,
+  canvasRef,
+  isDeleteMode,
+  handleDeletePolygon,
+  isCopyMode,
+  draggedPolygon,
+  polygonCount,
+  setPolygons,
+  setPolygonCount,
+  setDraggedPolygon,
+  isEditMode,
+  setCurrentPolygon,
+  polygons,
+  currentPolygon
+) => {
   const canvas = canvasRef.current;
   const rect = canvas.getBoundingClientRect();
   const x = event.clientX - rect.left;
@@ -172,7 +181,14 @@ const handleCanvasClick = (event, canvasRef, isDeleteMode, handleDeletePolygon, 
 };
 
 // Toggle Copy Mode
-const handleCopyMode = (setIsCopyMode, setIsEditMode, setIsMoveMode, setIsDeleteMode, setDraggedPolygon, isCopyMode) => {
+const handleCopyMode = (
+  setIsCopyMode,
+  setIsEditMode,
+  setIsMoveMode,
+  setIsDeleteMode,
+  setDraggedPolygon,
+  isCopyMode
+) => {
   setIsCopyMode(!isCopyMode);
   setIsEditMode(false);
   setIsMoveMode(false);
@@ -181,7 +197,14 @@ const handleCopyMode = (setIsCopyMode, setIsEditMode, setIsMoveMode, setIsDelete
 };
 
 // Toggle Move Mode
-const handleMoveMode = (setIsMoveMode, setIsEditMode, setIsCopyMode, setIsDeleteMode, setDraggingPolygon, isMoveMode) => {
+const handleMoveMode = (
+  setIsMoveMode,
+  setIsEditMode,
+  setIsCopyMode,
+  setIsDeleteMode,
+  setDraggingPolygon,
+  isMoveMode
+) => {
   setIsMoveMode(!isMoveMode);
   setIsEditMode(false);
   setIsCopyMode(false);
@@ -190,7 +213,13 @@ const handleMoveMode = (setIsMoveMode, setIsEditMode, setIsCopyMode, setIsDelete
 };
 
 // Toggle Delete Mode
-const handleDeleteMode = (setIsDeleteMode, setIsEditMode, setIsCopyMode, setIsMoveMode, isDeleteMode) => {
+const handleDeleteMode = (
+  setIsDeleteMode,
+  setIsEditMode,
+  setIsCopyMode,
+  setIsMoveMode,
+  isDeleteMode
+) => {
   setIsDeleteMode(!isDeleteMode);
   setIsEditMode(false);
   setIsCopyMode(false);
@@ -198,7 +227,13 @@ const handleDeleteMode = (setIsDeleteMode, setIsEditMode, setIsCopyMode, setIsMo
 };
 
 // Enable Polygon Copying
-const handlePolygonCopy = (event, isCopyMode, canvasRef, polygons, setDraggedPolygon) => {
+const handlePolygonCopy = (
+  event,
+  isCopyMode,
+  canvasRef,
+  polygons,
+  setDraggedPolygon
+) => {
   if (!isCopyMode) return;
 
   const canvas = canvasRef.current;
@@ -221,7 +256,14 @@ const handlePolygonCopy = (event, isCopyMode, canvasRef, polygons, setDraggedPol
 };
 
 // Start dragging polygon on mouse down in Move Mode
-const handleCanvasMouseDown = (event, isMoveMode, canvasRef, polygons, setDraggingPolygon, setDragOffset) => {
+const handleCanvasMouseDown = (
+  event,
+  isMoveMode,
+  canvasRef,
+  polygons,
+  setDraggingPolygon,
+  setDragOffset
+) => {
   if (!isMoveMode) return;
 
   const canvas = canvasRef.current;
@@ -248,9 +290,24 @@ const handleCanvasMouseDown = (event, isMoveMode, canvasRef, polygons, setDraggi
 };
 
 // Handle polygon dragging in Move Mode
-const handleCanvasMouseMove = (event, isCopyMode, canvasRef, polygons, draggingPolygon, dragOffset, setDraggedPolygon, setPolygons) => {
+const handleCanvasMouseMove = (
+  event,
+  isCopyMode,
+  canvasRef,
+  polygons,
+  draggingPolygon,
+  dragOffset,
+  setDraggedPolygon,
+  setPolygons
+) => {
   if (isCopyMode) {
-    handlePolygonCopy(event, isCopyMode, canvasRef, polygons, setDraggedPolygon);
+    handlePolygonCopy(
+      event,
+      isCopyMode,
+      canvasRef,
+      polygons,
+      setDraggedPolygon
+    );
   } else if (draggingPolygon) {
     const canvas = canvasRef.current;
     const rect = canvas.getBoundingClientRect();
@@ -292,14 +349,28 @@ const handleDeletePolygon = (x, y, canvasRef, polygons, setPolygons) => {
 };
 
 // attaching sensor to the polygon
-  const updateSensorAttached = (polygonId, sensor, polygons, setPolygons) => {
-    const updatedPolygons = polygons.map((polygon) => {
-      return polygon?.id === polygonId
-        ? { ...polygon, sensorAttached: sensor }
-        : polygon;
-    });
-    setPolygons(updatedPolygons);
-  };
+const updateSensorAttached = (polygonId, sensor, polygons, setPolygons) => {
+  const updatedPolygons = polygons.map((polygon) => {
+    return polygon?.id === polygonId
+      ? { ...polygon, sensorAttached: sensor }
+      : polygon;
+  });
+  setPolygons(updatedPolygons);
+};
 
-
-export { getCroppedImg, drawCanvas, handleCanvasClick, handleCopyMode, handleMoveMode, handleDeleteMode, handlePolygonCopy, handleCanvasMouseDown, handleCanvasMouseMove, handleCanvasMouseUp, handleDeletePolygon, updateSensorAttached, sensors, floors };
+export {
+  getCroppedImg,
+  drawCanvas,
+  handleCanvasClick,
+  handleCopyMode,
+  handleMoveMode,
+  handleDeleteMode,
+  handlePolygonCopy,
+  handleCanvasMouseDown,
+  handleCanvasMouseMove,
+  handleCanvasMouseUp,
+  handleDeletePolygon,
+  updateSensorAttached,
+  sensors,
+  floors,
+};

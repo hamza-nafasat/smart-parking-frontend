@@ -9,6 +9,8 @@ import toast from "react-hot-toast";
 import { addBuildingGeneralInfo } from "../../../../redux/slices/buildingSlice";
 
 const GeneralInfo = ({ setCurrentStep }) => {
+  const [polygons, setPolygons] = useState([]);
+  const [imageSrc, setImageSrc] = useState(null);
   const dispatch = useDispatch();
   const { buildingGeneralInfo } = useSelector((state) => state.building);
   const [building, setBuilding] = useState({
@@ -22,11 +24,18 @@ const GeneralInfo = ({ setCurrentStep }) => {
     buildingCoordinates: [],
     description: "",
   });
+
   const onUploadForBuildingImage = (image, coordinates) => {
-    setBuilding({ ...building, buildingImage: image, buildingCoordinates: coordinates });
+    setBuilding({
+      ...building,
+      buildingImage: image,
+      buildingCoordinates: coordinates,
+    });
   };
-  const buildingTypeHandler = (name, value) => setBuilding({ ...building, [name]: value });
-  const formDataHandler = (e) => setBuilding({ ...building, [e.target.name]: e.target.value });
+  const buildingTypeHandler = (name, value) =>
+    setBuilding({ ...building, [name]: value });
+  const formDataHandler = (e) =>
+    setBuilding({ ...building, [e.target.name]: e.target.value });
 
   const validationHandler = () => {
     if (
@@ -58,13 +67,24 @@ const GeneralInfo = ({ setCurrentStep }) => {
         buildingCoordinates: buildingGeneralInfo.buildingCoordinates || [],
         description: buildingGeneralInfo.description || "",
       });
+
+      setImageSrc(buildingGeneralInfo.buildingImage || null);
+      setPolygons(buildingGeneralInfo.buildingCoordinates || []);
     }
   }, [buildingGeneralInfo]);
   return (
     <div className="mt-4">
-      <h4 className="text-base md:text-xl font-medium text-[#414141] text-center">General Building Information</h4>
+      <h4 className="text-base md:text-xl font-medium text-[#414141] text-center">
+        General Building Information
+      </h4>
       <form className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 md:mt-6">
-        <Input type="text" placeholder="Building Name" name="name" value={building.name} onChange={formDataHandler} />
+        <Input
+          type="text"
+          placeholder="Building Name"
+          name="name"
+          value={building.name}
+          onChange={formDataHandler}
+        />
         <Input
           type="text"
           placeholder="Building address"
@@ -102,7 +122,13 @@ const GeneralInfo = ({ setCurrentStep }) => {
           onSelect={(value) => buildingTypeHandler("type", value)}
         />
         <div className="lg:col-span-3">
-          <UploadModel onUpload={onUploadForBuildingImage} />
+          <UploadModel
+            onUpload={onUploadForBuildingImage}
+            polygons={polygons}
+            setPolygons={setPolygons}
+            imageSrc={imageSrc}
+            setImageSrc={setImageSrc}
+          />
         </div>
         <textarea
           rows="5"
@@ -113,7 +139,12 @@ const GeneralInfo = ({ setCurrentStep }) => {
           onChange={formDataHandler}
         ></textarea>
         <div className="lg:col-span-3 flex justify-end">
-          <Button width="w-[120px]" type="button" text="Next" onClick={validationHandler} />
+          <Button
+            width="w-[120px]"
+            type="button"
+            text="Next"
+            onClick={validationHandler}
+          />
         </div>
       </form>
     </div>
