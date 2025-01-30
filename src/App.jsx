@@ -72,11 +72,11 @@ function App() {
   useEffect(() => {
     checkUserLogin();
   }, [checkUserLogin]);
-
+  console.log(getEnv("DOMAIN"));
   useEffect(() => {
     if (document.cookie.includes("loggedInViaGoogle")) {
       toast.success("You are logged in via Google");
-      document.cookie = `loggedInViaGoogle=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${getEnv("DOMAIN")}`;
+      document.cookie = "loggedInViaGoogle=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     }
   }, []);
   return (
