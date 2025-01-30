@@ -72,7 +72,6 @@ function App() {
   useEffect(() => {
     checkUserLogin();
   }, [checkUserLogin]);
-  console.log(getEnv("DOMAIN"));
   useEffect(() => {
     if (document.cookie.includes("loggedInViaGoogle")) {
       toast.success("You are logged in via Google");
