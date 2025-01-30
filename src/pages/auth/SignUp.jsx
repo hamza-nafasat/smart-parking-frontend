@@ -9,10 +9,12 @@ import Input from "../../components/shared/small/Input";
 import { useRegisterMutation } from "../../redux/apis/authApis";
 import { userExist } from "../../redux/slices/authSlice";
 import AuthLayout from "./AuthLayout";
+import getEnv from "../../configs/config";
 
 const SignUp = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [googleLoading, setGoogleLoading] = useState(false);
   const [registerUser, { isLoading }] = useRegisterMutation();
   const [form, setForm] = useState({
     firstName: "",
@@ -41,6 +43,11 @@ const SignUp = () => {
       toast.error(error?.data?.message || "Something went wrong");
       console.log("Error in registerHandler:", error);
     }
+  };
+
+  const loginWithGoogle = () => {
+    setGoogleLoading(true);
+    window.location.href = `${getEnv("SERVER_URL")}/api/auth/google`;
   };
   return (
     <AuthLayout>
@@ -127,12 +134,16 @@ const SignUp = () => {
         </div>
         <div className="mt-4 md:mt-8 flex flex-col justify-center items-center gap-4">
           <p className="text-sm md:text-base text-[#6C737F]">Or Continue with</p>
-          <div
-            className="border border-[#E0E0E9] p-3 md:p-5 rounded-[15px] cursor-pointer"
+          <button
+            onClick={loginWithGoogle}
+            disabled={googleLoading}
+            className={`border border-[#E0E0E9] p-3 md:p-5 rounded-[15px] cursor-pointer ${
+              googleLoading ? "opacity-30 !cursor-not-allowed" : ""
+            }`}
             style={{ boxShadow: "0px 4px 12px 0px #18BC9C0F" }}
           >
             <GoogleIcon />
-          </div>
+          </button>
           <div className="flex items-center gap-4">
             <p className="text-sm text-[#071A17E5]">Already have an account?</p>
             <Link to="/login" className="text-sm text-primary font-bold">

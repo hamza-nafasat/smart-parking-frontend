@@ -11,12 +11,13 @@ import PaymentFail from "./pages/user/dashboard/components/PaymentFail";
 import UserViewSlip from "./pages/user/bookingSummary/components/ViewSlip";
 import UserProfile from "./pages/user/setting/Profile";
 import BookingSlots from "./pages/user/dashboard/components/BookingSlots";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { useCheckLoginMutation } from "./redux/apis/authApis";
 import { useDispatch } from "react-redux";
 import { userExist, userNotExist } from "./redux/slices/authSlice";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import "react-confirm-alert/src/react-confirm-alert.css";
+import getEnv from "./configs/config";
 
 const LandingPage = lazy(() => import("./pages/landing/LandingPage"));
 // auth imports
@@ -42,8 +43,8 @@ const ManagerFloorView = lazy(() => import("./pages/manager/buildingInfo/compone
 const ManagerParkingSummary = lazy(() => import("./pages/manager/parkingSummary/ParkingSummary"));
 const ManagerWallet = lazy(() => import("./pages/manager/wallet/Wallet"));
 const ManagerProfile = lazy(() => import("./pages/manager/settings/Profile"));
-const AddParking = lazy(() => import("./pages/manager/addParkingSpace/components/AddParking"))
-const Sensors = lazy(() => import("./pages/manager/sensors/Sensors"))
+const AddParking = lazy(() => import("./pages/manager/addParkingSpace/components/AddParking"));
+const Sensors = lazy(() => import("./pages/manager/sensors/Sensors"));
 // User imports
 const User = lazy(() => import("./pages/user/index"));
 const UserDashboard = lazy(() => import("./pages/user/dashboard/UserDashboard"));
@@ -71,6 +72,13 @@ function App() {
   useEffect(() => {
     checkUserLogin();
   }, [checkUserLogin]);
+
+  useEffect(() => {
+    if (document.cookie.includes("loggedInViaGoogle")) {
+      toast.success("You are logged in via Google");
+      document.cookie = `loggedInViaGoogle=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${getEnv("DOMAIN")}`;
+    }
+  }, []);
   return (
     <BrowserRouter>
       <Suspense fallback={<Loader />}>

@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { GoogleIcon } from "../../assets/svgs/Icon";
 import Button from "../../components/shared/small/Button";
 import Input from "../../components/shared/small/Input";
+import getEnv from "../../configs/config";
 import { useLoginMutation } from "../../redux/apis/authApis";
 import { userExist } from "../../redux/slices/authSlice";
 import AuthLayout from "./AuthLayout";
@@ -13,6 +14,7 @@ import AuthLayout from "./AuthLayout";
 const SignIn = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [googleLoading, setGoogleLoading] = useState(false);
   const [form, setForm] = useState({ email: "", password: "" });
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [loginUser, { isLoading }] = useLoginMutation();
@@ -31,6 +33,10 @@ const SignIn = () => {
       toast.error(error?.data?.message || "Something went wrong");
       console.log("Error in loginHandler:", error);
     }
+  };
+  const loginWithGoogle = () => {
+    setGoogleLoading(true);
+    window.location.href = `${getEnv("SERVER_URL")}/api/auth/google`;
   };
   return (
     <AuthLayout>
@@ -87,12 +93,16 @@ const SignIn = () => {
         </div>
         <div className="mt-4 md:mt-8 flex flex-col justify-center items-center gap-4">
           <p className="text-sm md:text-base text-[#6C737F]">Or Continue with</p>
-          <div
-            className="border border-[#E0E0E9] p-3 md:p-5 rounded-[15px] cursor-pointer"
+          <button
+            onClick={loginWithGoogle}
+            disabled={googleLoading}
+            className={`border border-[#E0E0E9] p-3 md:p-5 rounded-[15px] cursor-pointer ${
+              googleLoading ? "opacity-30 !cursor-not-allowed" : ""
+            }`}
             style={{ boxShadow: "0px 4px 12px 0px #18BC9C0F" }}
           >
             <GoogleIcon />
-          </div>
+          </button>
         </div>
       </div>
     </AuthLayout>

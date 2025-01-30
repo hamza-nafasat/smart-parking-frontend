@@ -67,6 +67,13 @@ const authApis = createApi({
         body: data,
       }),
     }),
+    // google login 
+    googleLogin: builder.mutation({
+      query: () => ({
+        url: "/google",
+        method: "GET",
+      }),
+    })
   }),
 });
 
@@ -79,5 +86,6 @@ export const {
   useCheckLoginMutation,
   useGetMyProfileQuery,
   useUpdateMyProfileMutation,
+  useGoogleLoginMutation
 } = authApis;
 export default authApis;
