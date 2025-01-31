@@ -67,6 +67,7 @@ const Confirmation = ({ setCurrentStep }) => {
 
       dispatch(resetBuildings());
       dispatch(resetFloors());
+      dispatch(setActiveAccordionIndex(null));
       setCurrentStep(0);
     } catch (error) {
       console.log("Error in stepperSubmitHandler:", error);

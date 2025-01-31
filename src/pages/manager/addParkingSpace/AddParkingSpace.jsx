@@ -4,8 +4,13 @@ import StepArrowIcon from "../../../assets/svgs/building/StepArrowIcon";
 import Confirmation from "./components/Confirmation";
 import FloorInfo from "./components/FloorInfo";
 import GeneralInfo from "./components/GeneralInfo";
+import Button from "../../../components/shared/small/Button";
+import { useDispatch } from "react-redux";
+import { resetBuildings } from "../../../redux/slices/buildingSlice";
+import { resetFloors } from "../../../redux/slices/floorSlice";
 
 const AddParkingSpace = () => {
+  const dispatch = useDispatch();
   const [currentStep, setCurrentStep] = useState(0);
   const steps = ["General Info", "Floor/Sensor Information", "Confirmation"];
   const renderStepContent = (step) => {
@@ -20,12 +25,24 @@ const AddParkingSpace = () => {
         return null;
     }
   };
-
+  const resetReduxData = () => {
+    dispatch(resetBuildings());
+    dispatch(resetFloors());
+  };
   return (
     <div className="xl:px-12 xl:py-4">
-      <h2 className="text-xl md:text-[28px] font-semibold text-[#414141]">Add Parking Space</h2>
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl md:text-[28px] font-semibold text-[#414141]">Add Parking Space</h2>
+        <Button
+          onClick={resetReduxData}
+          text="Clear Data"
+          bg="bg-transparent hover:bg-primary hover:text-white"
+          color="text-primary"
+          className="!w-[150px]"
+        ></Button>
+      </div>
       <div className="mt-4 md:mt-6 flex flex-wrap items-center md:justify-center gap-4  :gap-6 2xl:gap-8">
-        {steps.map((step, i) => (
+        {steps?.map((step, i) => (
           <Step
             step={step}
             index={i}
