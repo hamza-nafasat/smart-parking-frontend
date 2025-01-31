@@ -1,17 +1,14 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
-import { AccordionDeleteIcon, AccordionEditIcon } from "../../../../assets/svgs/Icon";
-import Dropdown from "../../../../components/shared/small/Dropdown";
-import Input from "../../../../components/shared/small/Input";
-import BookParkingSpace from "./BookParkingSpace";
-import { useDispatch, useSelector } from "react-redux";
-import Button from "../../../../components/shared/small/Button";
-import TwoDModel from "./TwoDModel";
 import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { AccordionEditIcon } from "../../../../assets/svgs/Icon";
+import Button from "../../../../components/shared/small/Button";
+import Input from "../../../../components/shared/small/Input";
 import { addFloor } from "../../../../redux/slices/floorSlice";
+import TwoDModel from "./TwoDModel";
 
-const FloorAccordion = ({ polygons, setPolygons, imageSrc, setImageSrc, }) => {
-  const { buildingGeneralInfo } = useSelector((state) => state.building);
+const FloorAccordion = ({ polygons, setPolygons, imageSrc, setImageSrc }) => {
   const { floors } = useSelector((state) => state.floor);
   const [activeAccordionIndex, setActiveAccordionIndex] = useState(null);
   const handleAccordionToggle = (index) => {
@@ -35,41 +32,35 @@ const FloorAccordion = ({ polygons, setPolygons, imageSrc, setImageSrc, }) => {
   );
 };
 
-const Floor = ({ isOpen, onToggle, floorNumber, }) => {
+const Floor = ({ isOpen, onToggle, floorNumber }) => {
   const { floors } = useSelector((state) => state.floor);
   const dispatch = useDispatch();
   const [name, setName] = useState("");
-  const [noOfParkingSpace, setNumberOfParkingSpace] = useState()
+  const [noOfParkingSpace, setNumberOfParkingSpace] = useState();
 
   const [polygons, setPolygons] = useState([]);
   const [imageSrc, setImageSrc] = useState(null);
   const saveClickHandler = () => {
-    console.log('saveClickHandler', floorNumber, name, noOfParkingSpace, imageSrc, polygons)
+    console.log("saveClickHandler", floorNumber, name, noOfParkingSpace, imageSrc, polygons);
     if (!name || !noOfParkingSpace || !imageSrc || !polygons) return toast.error("Fill all fields first");
 
-    dispatch(
-      addFloor({ floorNumber, name, noOfParkingSpace, floorImage: imageSrc, polygons })
-    );
+    dispatch(addFloor({ floorNumber, name, noOfParkingSpace, floorImage: imageSrc, polygons }));
   };
   const onUploadForFloorImage = (image, coordinates) => {
     setImageSrc(image);
     setPolygons(coordinates);
   };
 
-
   useEffect(() => {
-    console.log("floor image", floors)
+    console.log("floor image", floors);
     if (floors?.length) {
       const floor = floors.find((floor) => floor?.floorNumber == floorNumber);
-      if (floor)
-        setName(floor?.name);
+      if (floor) setName(floor?.name);
       setNumberOfParkingSpace(floor?.noOfParkingSpace);
       setPolygons(floor?.polygons || []);
       setImageSrc(floor?.floorImage || null);
     }
-  }, [floors]);
-
-
+  }, [floorNumber, floors]);
   return (
     <div>
       {/* Accordion Header */}
@@ -85,12 +76,7 @@ const Floor = ({ isOpen, onToggle, floorNumber, }) => {
       {/* Accordion Content */}
       {isOpen && (
         <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <Input
-            type="text"
-            placeholder="Floor name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
+          <Input type="text" placeholder="Floor name" value={name} onChange={(e) => setName(e.target.value)} />
           <Input
             type="text"
             placeholder="Number of parking spaces"
@@ -98,8 +84,8 @@ const Floor = ({ isOpen, onToggle, floorNumber, }) => {
             onChange={(e) => setNumberOfParkingSpace(e.target.value)}
           />
           <div className="lg:col-span-3 flex justify-center">
-            <TwoDModel onUpload={onUploadForFloorImage}
-
+            <TwoDModel
+              onUpload={onUploadForFloorImage}
               polygons={polygons}
               setPolygons={setPolygons}
               imageSrc={imageSrc}

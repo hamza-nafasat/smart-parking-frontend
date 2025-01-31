@@ -19,7 +19,7 @@ export const pages = [
   },
   {
     id: 2,
-    title: "Building Info",
+    title: "Buildings",
     link: [
       "/admin/building-info",
       "/manager/building-info",
@@ -31,20 +31,14 @@ export const pages = [
   {
     id: 3,
     title: "Parking Summary",
-    link: [
-      "/admin/parking-summary",
-      "/manager/parking-summary",
-      "/user/booking-summary",
-    ],
+    link: ["/admin/parking-summary", "/manager/parking-summary", "/user/booking-summary"],
     icon: <ParkingAsideIcon />,
     filledIcon: <ParkingFilledIcon />,
   },
   {
     id: 3,
     title: "Sensors",
-    link: [
-      "/manager/sensors",
-    ],
+    link: ["/manager/sensors"],
     icon: <ParkingAsideIcon />,
     filledIcon: <ParkingFilledIcon />,
   },
