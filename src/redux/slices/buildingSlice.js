@@ -10,6 +10,7 @@ const buildingSlice = createSlice({
     removeBuildingInfo: (state) => {
       state.building = null;
     },
+  
   },
 });
 

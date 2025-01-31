@@ -18,13 +18,7 @@ import {
   handleMoveMode,
 } from "../utils/addParkingSpaceFeatures";
 
-const TwoDModel = ({
-  onUpload,
-  polygons,
-  setPolygons,
-  imageSrc,
-  setImageSrc,
-}) => {
+const TwoDModel = ({ onUpload, polygons, setPolygons, imageSrc, setImageSrc, }) => {
   const canvasRef = useRef(null);
   // const [imageSrc, setImageSrc] = useState(null);
   // const [polygons, setPolygons] = useState([]);
@@ -44,7 +38,7 @@ const TwoDModel = ({
   const [draggingPolygon, setDraggingPolygon] = useState(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
 
-  console.log("data", polygons, imageSrc);
+  // console.log("data", polygons, imageSrc);
 
   // Handle image upload and display on the canvas
   const handleImageUpload = (event) => {
@@ -188,9 +182,8 @@ const TwoDModel = ({
                 setIsMoveMode(false);
                 setIsDeleteMode(false);
               }}
-              className={`p-2 border rounded-md text-white ${
-                isEditMode ? "border-primary" : "border-[#565656]"
-              }`}
+              className={`p-2 border rounded-md text-white ${isEditMode ? "border-primary" : "border-[#565656]"
+                }`}
             >
               <CiEdit
                 fontSize={20}
@@ -209,9 +202,8 @@ const TwoDModel = ({
                   isCopyMode
                 )
               }
-              className={`p-2 border rounded-md text-white ${
-                isCopyMode ? "border-primary" : "border-[#565656]"
-              }`}
+              className={`p-2 border rounded-md text-white ${isCopyMode ? "border-primary" : "border-[#565656]"
+                }`}
             >
               <VscCopy
                 fontSize={20}
@@ -230,9 +222,8 @@ const TwoDModel = ({
                   isMoveMode
                 )
               }
-              className={`p-2 border rounded-md text-white ${
-                isMoveMode ? "border-primary" : "border-[#565656]"
-              }`}
+              className={`p-2 border rounded-md text-white ${isMoveMode ? "border-primary" : "border-[#565656]"
+                }`}
             >
               <SlCursorMove
                 fontSize={20}
@@ -250,9 +241,8 @@ const TwoDModel = ({
                   isDeleteMode
                 )
               }
-              className={`p-2 border rounded-md text-white ${
-                isDeleteMode ? "border-primary" : "border-[#565656]"
-              }`}
+              className={`p-2 border rounded-md text-white ${isDeleteMode ? "border-primary" : "border-[#565656]"
+                }`}
             >
               <AiOutlineDelete
                 fontSize={20}

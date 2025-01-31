@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { addBuildingGeneralInfo } from "../../../../redux/slices/buildingSlice";
+import { addFloorsSample } from "../../../../redux/slices/floorSlice";
 
 const GeneralInfo = ({ setCurrentStep }) => {
   const [polygons, setPolygons] = useState([]);
@@ -51,6 +52,7 @@ const GeneralInfo = ({ setCurrentStep }) => {
       return toast.error("Please fill all the fields");
     console.log("building", building);
     dispatch(addBuildingGeneralInfo(building));
+    dispatch(addFloorsSample(Number(building?.noOfFloors||0)));
     setCurrentStep(1);
   };
 

@@ -10,18 +10,23 @@ import TwoDModel from "./TwoDModel";
 import toast from "react-hot-toast";
 import { addFloor } from "../../../../redux/slices/floorSlice";
 
-const FloorAccordion = () => {
+const FloorAccordion = ({ polygons, setPolygons, imageSrc, setImageSrc, }) => {
   const { buildingGeneralInfo } = useSelector((state) => state.building);
+  const { floors } = useSelector((state) => state.floor);
   const [activeAccordionIndex, setActiveAccordionIndex] = useState(null);
   const handleAccordionToggle = (index) => {
     setActiveAccordionIndex((prevIndex) => (prevIndex === index ? null : index));
   };
   return (
     <div className="flex flex-col gap-4">
-      {Array.from({ length: buildingGeneralInfo?.noOfFloors }).map((_, index) => (
+      {Array.from({ length: floors?.length || 0 }).map((_, index) => (
         <Floor
           key={index}
-          index={index + 1}
+          floorNumber={index + 1}
+          polygons={polygons}
+          setPolygons={setPolygons}
+          imageSrc={imageSrc}
+          setImageSrc={setImageSrc}
           isOpen={activeAccordionIndex == index}
           onToggle={() => handleAccordionToggle(index)}
         />
@@ -30,36 +35,47 @@ const FloorAccordion = () => {
   );
 };
 
-const Floor = ({ isOpen, onToggle, index }) => {
+const Floor = ({ isOpen, onToggle, floorNumber, }) => {
   const { floors } = useSelector((state) => state.floor);
   const dispatch = useDispatch();
-  const [form, setForm] = useState({ name: "", noOfParkingSpace: "", floorImage: "" });
+  const [name, setName] = useState("");
+  const [noOfParkingSpace, setNumberOfParkingSpace] = useState()
+
+  const [polygons, setPolygons] = useState([]);
+  const [imageSrc, setImageSrc] = useState(null);
   const saveClickHandler = () => {
-    if (!form.name || !form.noOfParkingSpace || !form.floorImage) return toast.error("Fill all fields first");
+    console.log('saveClickHandler', floorNumber, name, noOfParkingSpace, imageSrc, polygons)
+    if (!name || !noOfParkingSpace || !imageSrc || !polygons) return toast.error("Fill all fields first");
+
     dispatch(
-      addFloor({ index: index, name: form.name, noOfParkingSpace: form.noOfParkingSpace, file: form.floorImage })
+      addFloor({ floorNumber, name, noOfParkingSpace, floorImage: imageSrc, polygons })
     );
   };
   const onUploadForFloorImage = (image, coordinates) => {
-    setForm({ ...form, floorImage: image, floorCoordinates: coordinates });
+    setImageSrc(image);
+    setPolygons(coordinates);
   };
 
+
   useEffect(() => {
+    console.log("floor image", floors)
     if (floors?.length) {
-      const floor = floors.find((floor) => floor?.index == index);
+      const floor = floors.find((floor) => floor?.floorNumber == floorNumber);
       if (floor)
-        setForm({ ...form, name: floor?.name, noOfParkingSpace: floor?.noOfParkingSpace, floorImage: floor?.file });
+        setName(floor?.name);
+      setNumberOfParkingSpace(floor?.noOfParkingSpace);
+      setPolygons(floor?.polygons || []);
+      setImageSrc(floor?.floorImage || null);
     }
-  }, [index]);
+  }, [floors]);
+
+
   return (
     <div>
       {/* Accordion Header */}
       <div className="flex items-center justify-between bg-primary rounded-[4px] px-4 md:px-8 py-2">
-        <h6 className="text-base md:text-lg font-bold text-white">Floor {index}</h6>
+        <h6 className="text-base md:text-lg font-bold text-white">Floor {floorNumber}</h6>
         <div className="flex items-center gap-4">
-          {/* <div className="cursor-pointer">
-            <AccordionDeleteIcon />
-          </div> */}
           <div className="cursor-pointer" onClick={onToggle}>
             <AccordionEditIcon />
           </div>
@@ -69,21 +85,26 @@ const Floor = ({ isOpen, onToggle, index }) => {
       {/* Accordion Content */}
       {isOpen && (
         <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
-          {/* <Dropdown defaultText="Select floor" options={[{ option: "Floor 1" }]} /> */}
           <Input
             type="text"
             placeholder="Floor name"
-            value={form.name}
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
           <Input
             type="text"
             placeholder="Number of parking spaces"
-            value={form.noOfParkingSpace}
-            onChange={(e) => setForm({ ...form, noOfParkingSpace: e.target.value })}
+            value={noOfParkingSpace}
+            onChange={(e) => setNumberOfParkingSpace(e.target.value)}
           />
           <div className="lg:col-span-3 flex justify-center">
-            <TwoDModel onUpload={onUploadForFloorImage} />
+            <TwoDModel onUpload={onUploadForFloorImage}
+
+              polygons={polygons}
+              setPolygons={setPolygons}
+              imageSrc={imageSrc}
+              setImageSrc={setImageSrc}
+            />
           </div>
         </div>
       )}
