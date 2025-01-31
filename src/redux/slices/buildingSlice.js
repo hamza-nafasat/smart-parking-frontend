@@ -10,9 +10,15 @@ const buildingSlice = createSlice({
     removeBuildingInfo: (state) => {
       state.building = null;
     },
-  
+    decrementFloorsNumber: (state) => {
+      state.buildingGeneralInfo.noOfFloors -= 1;
+    },
+    resetBuildings: (state) => {
+      state.buildingGeneralInfo = null;
+    },
   },
 });
 
-export const { addBuildingGeneralInfo, removeBuildingInfo } = buildingSlice.actions;
+export const { addBuildingGeneralInfo, removeBuildingInfo, decrementFloorsNumber, resetBuildings } =
+  buildingSlice.actions;
 export default buildingSlice;
