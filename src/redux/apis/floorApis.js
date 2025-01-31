@@ -14,6 +14,13 @@ const floorApis = createApi({
         body: data,
       }),
     }),
+    createFloorsInBulk: builder.mutation({
+      query: (data) => ({
+        url: "/create-multiple",
+        method: "POST",
+        body: data,
+      }),
+    }),
     // get all floors
     getAllFloors: builder.query({
       query: () => ({
@@ -48,6 +55,7 @@ const floorApis = createApi({
 
 export const {
   useCreateFloorMutation,
+  useCreateFloorsInBulkMutation,
   useGetAllFloorsQuery,
   useGetSingleFloorQuery,
   useUpdateSingleFloorMutation,
