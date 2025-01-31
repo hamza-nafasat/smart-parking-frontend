@@ -1,24 +1,88 @@
+/* eslint-disable react/prop-types */
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { AccordionEditIcon } from "../../../../assets/svgs/Icon";
 import Button from "../../../../components/shared/small/Button";
-import {
-  AccordionDeleteIcon,
-  AccordionEditIcon,
-} from "../../../../assets/svgs/Icon";
-import { floors } from "../utils/addParkingSpaceFeatures";
+import { useCreateBuildingMutation } from "../../../../redux/apis/buildingApis";
+import { useCreateFloorsInBulkMutation } from "../../../../redux/apis/floorApis";
+import { resetBuildings } from "../../../../redux/slices/buildingSlice";
+import { resetFloors, setActiveAccordionIndex } from "../../../../redux/slices/floorSlice";
+import { floors as sensors } from "../utils/addParkingSpaceFeatures";
 
-// eslint-disable-next-line react/prop-types
 const Confirmation = ({ setCurrentStep }) => {
+  const dispatch = useDispatch();
+  const { buildingGeneralInfo } = useSelector((state) => state.building);
+  const { floors } = useSelector((state) => state.floor);
+  const [createBuilding, { isLoading }] = useCreateBuildingMutation();
+  const [createFloorInBulk, { isLoading: isLoadingForFloor }] = useCreateFloorsInBulkMutation();
+
+  // final submit handler which create building and floors in database
+  // -----------------------------------------------------------------
+  const stepperSubmitHandler = async () => {
+    let buildingId;
+    try {
+      // create building in database
+      let data = {
+        name: buildingGeneralInfo?.name || "",
+        address: buildingGeneralInfo?.address || "",
+        area: buildingGeneralInfo?.area || "",
+        noOfFloors: buildingGeneralInfo?.noOfFloors || "",
+        email: buildingGeneralInfo?.email || "",
+        description: buildingGeneralInfo?.description || "",
+        type: buildingGeneralInfo?.type || "",
+        file: buildingGeneralInfo?.file || "",
+        polygonData: buildingGeneralInfo?.buildingCoordinates || "",
+      };
+      const { name, address, area, email, description, type, file, polygonData, noOfFloors } = data;
+      if (!name || !address || !area || !email || !description || !type || !file || !polygonData || !noOfFloors)
+        return toast.error("Please Fill all required fields for building");
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("address", address);
+      formData.append("area", area);
+      formData.append("email", email);
+      formData.append("description", description);
+      formData.append("type", type);
+      formData.append("noOfFloors", noOfFloors);
+      formData.append("file", buildingGeneralInfo?.file);
+      formData.append("polygonData", JSON.stringify(buildingGeneralInfo?.polygonData));
+      const resForBuilding = await createBuilding(formData).unwrap();
+      if (resForBuilding.success) buildingId = resForBuilding?.data?._id;
+      else throw new Error(resForBuilding?.message);
+      // create floors in database
+      const formDataForFloor = new FormData();
+      formDataForFloor.append("buildingId", buildingId);
+      floors?.forEach((floor, i) => {
+        if (!floor?.name || !floor.noOfParkingSpace || !floor.file)
+          return toast.error("Please Fill all required fields each floor");
+        console.log("floor", floor);
+        formDataForFloor.append(`floors[${i}][name]`, floor?.name);
+        formDataForFloor.append(`floors[${i}][noOfParkingSpace]`, floor?.noOfParkingSpace);
+        formDataForFloor.append(`files`, floor?.file);
+        formDataForFloor.append(`floors[${i}][polygonData]`, JSON.stringify(floor?.polygonData));
+      });
+      const resForFloor = await createFloorInBulk(formDataForFloor).unwrap();
+      if (resForFloor.success) toast.success(`Building and ${resForFloor?.message}`);
+      else throw new Error(resForFloor?.message);
+
+      dispatch(resetBuildings());
+      dispatch(resetFloors());
+      setCurrentStep(0);
+    } catch (error) {
+      console.log("Error in stepperSubmitHandler:", error);
+      toast.error(error?.data?.message || "Something went wrong");
+    }
+  };
   return (
     <div className="mt-4">
-      <h4 className="text-base md:text-xl font-medium text-[#414141] text-center">
-        Confirmation
-      </h4>
+      <h4 className="text-base md:text-xl font-medium text-[#414141] text-center">Confirmation</h4>
       {/* General info */}
       <div className="mt-5">
         <GeneralInfoSec setCurrentStep={setCurrentStep} />
       </div>
       {/* Floor info */}
-      {[1,2].map((_, i) => (
-      <FloorSensorInfoSec setCurrentStep={setCurrentStep} key={i} />
+      {floors?.map((floor, i) => (
+        <FloorSensorInfoSec setCurrentStep={setCurrentStep} floor={floor} key={i} />
       ))}
       <div className="mt-5 flex justify-end">
         <div className="flex items-center gap-4">
@@ -29,7 +93,14 @@ const Confirmation = ({ setCurrentStep }) => {
             color="text-primary"
             onClick={() => setCurrentStep((prevStep) => prevStep - 1)}
           />
-          <Button width="w-[120px]" type="button" text="Save" />
+          <Button
+            className={`${isLoading || isLoadingForFloor ? "cursor-not-allowed opacity-30" : ""}`}
+            width="w-[120px]"
+            type="button"
+            text="Save"
+            onClick={stepperSubmitHandler}
+            disabled={isLoading || isLoadingForFloor}
+          />
         </div>
       </div>
     </div>
@@ -38,83 +109,82 @@ const Confirmation = ({ setCurrentStep }) => {
 
 export default Confirmation;
 
-// eslint-disable-next-line react/prop-types
 const GeneralInfoSec = ({ setCurrentStep }) => {
+  const { buildingGeneralInfo } = useSelector((state) => state.building);
   return (
     <section>
       <div className="flex items-center justify-between">
-        <h6 className="text-sm md:text-base font-medium text-primary">
-          General Info
-        </h6>
+        <h6 className="text-sm md:text-base font-medium text-primary">General Info</h6>
         <button onClick={() => setCurrentStep(0)}>
           <AccordionEditIcon color="#18BC9C" />
         </button>
       </div>
       <div className="mt-1 grid grid-cols-3 gap-4 md:gap-6">
         <img
-          src="https://placehold.co/400x300"
+          src={buildingGeneralInfo?.buildingImage || "https://placehold.co/400x300"}
           alt="image"
           className="w-full h-[160px] object-cover rounded-xl border-[4px] border-primary"
         />
         {/* building list */}
         <div className="flex flex-col justify-center">
-          <List name="Building" value="Building 1" />
-          <List name="Building Address" value="Country, city, Area" />
-          <List name="Total Area" value="Square Feet 123" />
-          <List name="Total number of floors" value="21 floors" />
-          <List name="Second E-mail" value="xyz@gmail.com" />
-          <List name="Building Type" value="Commercial" />
+          <List name="Building" value={buildingGeneralInfo?.name} />
+          <List name="Building Address" value={buildingGeneralInfo?.address} />
+          <List name="Total Area" value={buildingGeneralInfo?.area} />
+          <List name="Total number of floors" value={buildingGeneralInfo?.noOfFloors} />
+          <List name="Second E-mail" value={buildingGeneralInfo?.email} />
+          <List name="Building Type" value={buildingGeneralInfo?.type} />
         </div>
-        {/* Description */}
+
         <div>
-          <h6 className="text-xs sm:text-sm font-semibold text-[#353535]">
-            Description:
-          </h6>
-          <p className="mt-1 text-xs sm:text-sm font-medium text-[#41414199]">
-            Nestled in the heart of the bustling city, this enigmatic building
-            stands as a testament to modern architectural brilliance. Its sleek,
-            glass facade mirrors the dynamic skyline, while its towering height
-            commands attention from every corner. Its sleek, glass facade
-            mirrors the dynamic skyline, while its towering height commands
-            attention from every corner.{" "}
-          </p>
+          <h6 className="text-xs sm:text-sm font-semibold text-[#353535]">Description:</h6>
+          <p className="mt-1 text-xs sm:text-sm font-medium text-[#41414199]">{buildingGeneralInfo?.description}</p>
         </div>
       </div>
     </section>
   );
 };
 
-// eslint-disable-next-line react/prop-types
-const FloorSensorInfoSec = ({ setCurrentStep }) => {
+const FloorSensorInfoSec = ({ setCurrentStep, floor }) => {
+  const dispatch = useDispatch();
+  const { activeAccordionIndex } = useSelector((state) => state.floor);
+  // const removeFloorFromRedux = () => {
+  //   dispatch(removeFloor(floor?.floorNumber));
+  //   dispatch(decrementFloorsNumber(floor?.floorNumber));
+  // };
+
+  const editFloorHandler = (index) => {
+    setCurrentStep(1);
+    dispatch(setActiveAccordionIndex(activeAccordionIndex == index ? null : index));
+  };
   return (
     <section className="mt-3">
-      <h6 className="text-sm md:text-base font-medium text-primary">
-        Floors/Sensor info
-      </h6>
+      <h6 className="text-sm md:text-base font-medium text-primary">Floors/Sensor info</h6>
       <div className="mt-1 grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6">
         <img
-          src="https://placehold.co/400x300"
+          src={floor?.floorImage || "https://placehold.co/400x300"}
           alt="image"
           className="lg:col-span-4 w-full h-[160px] object-cover rounded-xl border-[4px] border-primary"
         />
         <div className="lg:col-span-8">
           <div className="flex items-center justify-between bg-primary rounded-t-[4px] px-[14px] py-2 -mb-[1px] relative z-10">
-            <h6 className="text-xs sm:text-sm text-white font-bold">
-              Floor Name-01
-            </h6>
+            <h6 className="text-xs sm:text-sm text-white font-bold">Floor No {floor?.floorNumber}</h6>
             <div className="flex items-center gap-3">
-              <button onClick={() => setCurrentStep(1)}>
+              <button onClick={() => editFloorHandler(floor?.floorNumber - 1)}>
                 <AccordionEditIcon />
               </button>
-              <button>
+              {/* <button onClick={removeFloorFromRedux}>
                 <AccordionDeleteIcon />
-              </button>
+              </button> */}
             </div>
           </div>
           <div className="rounded-b-[4px] border border-[#0000003f] max-h-[125px] overflow-y-scroll custom-scroll">
-             {floors.map((floor, i) => (
-              <SensorList key={i} floor={floor} />
-             ))}
+            <div className="flex items-center justify-between py-[6px] px-[14px] border-b border-[#B0B0B080]">
+              <List name="Floor Name" value={floor?.name} />
+              <List name="No of Parking Spaces" value={floor?.noOfParkingSpace} />
+            </div>
+            {sensors?.map((floor, i) => (
+              <SingleFloor key={i} floor={floor} />
+            ))}
           </div>
         </div>
       </div>
@@ -122,26 +192,20 @@ const FloorSensorInfoSec = ({ setCurrentStep }) => {
   );
 };
 
-// eslint-disable-next-line react/prop-types
-const SensorList = ({floor}) => {
+const SingleFloor = ({ floor }) => {
   return (
     <div className="flex items-center justify-between py-[6px] px-[14px] border-b border-[#B0B0B080]">
       <h6 className="text-[10px] text-[#313131] font-medium">{floor?.parking}</h6>
       <p className="text-[10px] text-[#313131] font-medium">{floor?.sensor}</p>
     </div>
-  )
-}
+  );
+};
 
-// eslint-disable-next-line react/prop-types
 const List = ({ name, value }) => {
   return (
     <div className="flex items-center justify-between gap-4 mt-1">
-      <h6 className="text-xs sm:text-sm font-semibold text-[#353535]">
-        {name}:
-      </h6>
-      <p className="text-xs sm:text-sm font-medium text-[#41414199] min-w-[130px]">
-        {value}
-      </p>
+      <h6 className="text-xs sm:text-sm font-semibold text-[#353535]">{name}:</h6>
+      <p className="text-xs sm:text-sm font-medium text-[#41414199] min-w-[130px]">{value}</p>
     </div>
   );
 };
