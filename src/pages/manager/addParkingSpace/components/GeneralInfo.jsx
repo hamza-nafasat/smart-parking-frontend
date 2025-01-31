@@ -14,6 +14,7 @@ const GeneralInfo = ({ setCurrentStep }) => {
   const [imageSrc, setImageSrc] = useState(null);
   const dispatch = useDispatch();
   const { buildingGeneralInfo } = useSelector((state) => state.building);
+  const [originalImage, setOriginalImage] = useState(null);
   const [building, setBuilding] = useState({
     name: "",
     address: "",
@@ -25,7 +26,9 @@ const GeneralInfo = ({ setCurrentStep }) => {
     buildingCoordinates: [],
     description: "",
   });
+  const formDataHandler = (e) => setBuilding({ ...building, [e.target.name]: e.target.value });
 
+  // function which is called inside TwoDModel
   const onUploadForBuildingImage = (image, coordinates) => {
     setBuilding({
       ...building,
@@ -33,11 +36,9 @@ const GeneralInfo = ({ setCurrentStep }) => {
       buildingCoordinates: coordinates,
     });
   };
-  const buildingTypeHandler = (name, value) =>
-    setBuilding({ ...building, [name]: value });
-  const formDataHandler = (e) =>
-    setBuilding({ ...building, [e.target.name]: e.target.value });
+  const buildingTypeHandler = (name, value) => setBuilding({ ...building, [name]: value });
 
+  // function call on next which validate data store in redux and go to next step
   const validationHandler = () => {
     if (
       !building.name ||
@@ -47,15 +48,17 @@ const GeneralInfo = ({ setCurrentStep }) => {
       !building.email ||
       !building.type ||
       !building.description ||
-      !building.buildingImage
+      !building.buildingImage ||
+      !originalImage
     )
       return toast.error("Please fill all the fields");
     console.log("building", building);
-    dispatch(addBuildingGeneralInfo(building));
-    dispatch(addFloorsSample(Number(building?.noOfFloors||0)));
+    dispatch(addBuildingGeneralInfo({ ...building, file: originalImage }));
+    dispatch(addFloorsSample(Number(building?.noOfFloors || 0)));
     setCurrentStep(1);
   };
 
+  // use effect which get data form redux and set if data not exist he just reset the data
   useEffect(() => {
     if (buildingGeneralInfo) {
       setBuilding({
@@ -69,24 +72,31 @@ const GeneralInfo = ({ setCurrentStep }) => {
         buildingCoordinates: buildingGeneralInfo.buildingCoordinates || [],
         description: buildingGeneralInfo.description || "",
       });
-
+      setOriginalImage(buildingGeneralInfo?.file || null);
       setImageSrc(buildingGeneralInfo.buildingImage || null);
       setPolygons(buildingGeneralInfo.buildingCoordinates || []);
+    } else {
+      setBuilding({
+        name: "",
+        address: "",
+        area: "",
+        noOfFloors: "",
+        email: "",
+        type: "",
+        buildingImage: null,
+        buildingCoordinates: [],
+        description: "",
+      });
+      setOriginalImage(null);
+      setImageSrc(null);
+      setPolygons([]);
     }
   }, [buildingGeneralInfo]);
   return (
     <div className="mt-4">
-      <h4 className="text-base md:text-xl font-medium text-[#414141] text-center">
-        General Building Information
-      </h4>
+      <h4 className="text-base md:text-xl font-medium text-[#414141] text-center">General Building Information</h4>
       <form className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 md:mt-6">
-        <Input
-          type="text"
-          placeholder="Building Name"
-          name="name"
-          value={building.name}
-          onChange={formDataHandler}
-        />
+        <Input type="text" placeholder="Building Name" name="name" value={building.name} onChange={formDataHandler} />
         <Input
           type="text"
           placeholder="Building address"
@@ -125,11 +135,13 @@ const GeneralInfo = ({ setCurrentStep }) => {
         />
         <div className="lg:col-span-3">
           <UploadModel
+            heading="Upload Building TwoD Model"
             onUpload={onUploadForBuildingImage}
             polygons={polygons}
             setPolygons={setPolygons}
             imageSrc={imageSrc}
             setImageSrc={setImageSrc}
+            setOriginalImage={setOriginalImage}
           />
         </div>
         <textarea
@@ -141,12 +153,7 @@ const GeneralInfo = ({ setCurrentStep }) => {
           onChange={formDataHandler}
         ></textarea>
         <div className="lg:col-span-3 flex justify-end">
-          <Button
-            width="w-[120px]"
-            type="button"
-            text="Next"
-            onClick={validationHandler}
-          />
+          <Button width="w-[120px]" type="button" text="Next" onClick={validationHandler} />
         </div>
       </form>
     </div>
