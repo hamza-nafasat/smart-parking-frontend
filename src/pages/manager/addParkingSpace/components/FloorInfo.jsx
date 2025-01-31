@@ -1,9 +1,25 @@
+/* eslint-disable react/prop-types */
+import { useSelector } from "react-redux";
 import Button from "../../../../components/shared/small/Button";
 import FloorAccordion from "./Floor";
+import { toast } from "react-hot-toast";
 
-// eslint-disable-next-line react/prop-types
 const FloorInfo = ({ setCurrentStep }) => {
-  const validationHandler = () => setCurrentStep((prevStep) => prevStep + 1);
+  const { floors } = useSelector((state) => state.floor);
+
+  const validationHandler = () => {
+    if (floors?.length == 0) return toast.error("Please add at least one floor");
+    let isMissingData = false;
+    let message = "";
+    floors.forEach((floor) => {
+      if (isMissingData) return;
+      if (!floor?.name || !floor?.noOfParkingSpace || !floor?.floorImage || !floor?.polygonData) isMissingData = true;
+      return (message = `Please Fill all fields for Floor ${floor?.floorNumber} or Reduce No Of Floors in Building Info `);
+    });
+    if (isMissingData) return toast.error(message);
+    setCurrentStep((prevStep) => prevStep + 1);
+  };
+
   return (
     <div className="mt-4">
       <h4 className="text-base md:text-xl font-medium text-[#414141] text-center">Floor/Sensor Information</h4>
