@@ -5,6 +5,7 @@ import buildingApis from "./apis/buildingApis";
 import buildingSlice from "./slices/buildingSlice";
 import floorApis from "./apis/floorApis";
 import floorSlice from "./slices/floorSlice";
+import sensorApis from "./apis/sensorApis";
 
 const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
     [authApis.reducerPath]: authApis.reducer,
     [buildingApis.reducerPath]: buildingApis.reducer,
     [floorApis.reducerPath]: floorApis.reducer,
+    [sensorApis.reducerPath]: sensorApis.reducer,
     // slices
     [authSlice.name]: authSlice.reducer,
     [buildingSlice.name]: buildingSlice.reducer,
@@ -21,7 +23,7 @@ const store = configureStore({
     return getDefaultMiddleware({ serializableCheck: false })
       .concat(authApis.middleware)
       .concat(buildingApis.middleware)
-      .concat(floorApis.middleware);
+      .concat(floorApis.middleware).concat(sensorApis.middleware);
   },
 });
 
