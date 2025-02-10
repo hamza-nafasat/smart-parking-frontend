@@ -14,12 +14,7 @@ import {
 const buildingsManagersListData = [
   {
     _id: 1,
-    buildingImages: [
-      buildingImgOne,
-      buildingImgTwo,
-      buildingImgThree,
-      buildingImgFour,
-    ],
+    buildingImages: [buildingImgOne, buildingImgTwo, buildingImgThree, buildingImgFour],
     buildingName: "Washington Square Parking",
     address: "1051 18th St NW, Washington, DC 20006",
     parkingTime: "24 hours CCTV and Parking Services",
@@ -27,150 +22,6 @@ const buildingsManagersListData = [
     totalOccupiedSpace: "110",
     totalFreeSpace: "77",
     sensorIssue: "Ps-101,109,111",
-  },
-  {
-    _id: 2,
-    buildingImages: [
-      buildingImgOne,
-      buildingImgTwo,
-      buildingImgThree,
-      buildingImgFour,
-    ],
-    buildingName: "City Center Parking",
-    address: "825 10th St NW, Washington, DC 20001",
-    parkingTime: "24 hours monitored parking",
-    totalParkingSpace: "250",
-    totalOccupiedSpace: "150",
-    totalFreeSpace: "100",
-    sensorIssue: "Ps-201,203,205",
-  },
-  {
-    _id: 3,
-    buildingImages: [
-      buildingImgOne,
-      buildingImgTwo,
-      buildingImgThree,
-      buildingImgFour,
-    ],
-    buildingName: "Union Station Parking",
-    address: "50 Massachusetts Ave NE, Washington, DC 20002",
-    parkingTime: "Open 24/7 with security",
-    totalParkingSpace: "300",
-    totalOccupiedSpace: "180",
-    totalFreeSpace: "120",
-    sensorIssue: "Ps-301,303,305",
-  },
-  {
-    _id: 4,
-    buildingImages: [
-      buildingImgOne,
-      buildingImgTwo,
-      buildingImgThree,
-      buildingImgFour,
-    ],
-    buildingName: "National Gallery Parking",
-    address: "600 Constitution Ave NW, Washington, DC 20565",
-    parkingTime: "7 AM - 11 PM",
-    totalParkingSpace: "200",
-    totalOccupiedSpace: "90",
-    totalFreeSpace: "110",
-    sensorIssue: "Ps-401,403,405",
-  },
-  {
-    _id: 5,
-    buildingImages: [
-      buildingImgOne,
-      buildingImgTwo,
-      buildingImgThree,
-      buildingImgFour,
-    ],
-    buildingName: "The White House Parking",
-    address: "1600 Pennsylvania Ave NW, Washington, DC 20500",
-    parkingTime: "Restricted access parking",
-    totalParkingSpace: "50",
-    totalOccupiedSpace: "30",
-    totalFreeSpace: "20",
-    sensorIssue: "Ps-501,503",
-  },
-  {
-    _id: 6,
-    buildingImages: [
-      buildingImgOne,
-      buildingImgTwo,
-      buildingImgThree,
-      buildingImgFour,
-    ],
-    buildingName: "Lincoln Memorial Parking",
-    address: "2 Lincoln Memorial Cir NW, Washington, DC 20037",
-    parkingTime: "8 AM - 8 PM",
-    totalParkingSpace: "150",
-    totalOccupiedSpace: "70",
-    totalFreeSpace: "80",
-    sensorIssue: "Ps-601,603,605",
-  },
-  {
-    _id: 7,
-    buildingImages: [
-      buildingImgOne,
-      buildingImgTwo,
-      buildingImgThree,
-      buildingImgFour,
-    ],
-    buildingName: "Capitol Building Parking",
-    address: "First St SE, Washington, DC 20004",
-    parkingTime: "7 AM - 10 PM",
-    totalParkingSpace: "200",
-    totalOccupiedSpace: "140",
-    totalFreeSpace: "60",
-    sensorIssue: "Ps-701,703,705",
-  },
-  {
-    _id: 8,
-    buildingImages: [
-      buildingImgOne,
-      buildingImgTwo,
-      buildingImgThree,
-      buildingImgFour,
-    ],
-    buildingName: "Smithsonian National Air and Space Museum Parking",
-    address: "600 Independence Ave SW, Washington, DC 20560",
-    parkingTime: "Open 24/7",
-    totalParkingSpace: "300",
-    totalOccupiedSpace: "200",
-    totalFreeSpace: "100",
-    sensorIssue: "Ps-801,803,805",
-  },
-  {
-    _id: 9,
-    buildingImages: [
-      buildingImgOne,
-      buildingImgTwo,
-      buildingImgThree,
-      buildingImgFour,
-    ],
-    buildingName: "Georgetown Waterfront Park Parking",
-    address: "3303 Water St NW, Washington, DC 20007",
-    parkingTime: "9 AM - 9 PM",
-    totalParkingSpace: "120",
-    totalOccupiedSpace: "60",
-    totalFreeSpace: "60",
-    sensorIssue: "Ps-901,903,905",
-  },
-  {
-    _id: 10,
-    buildingImages: [
-      buildingImgOne,
-      buildingImgTwo,
-      buildingImgThree,
-      buildingImgFour,
-    ],
-    buildingName: "Arlington National Cemetery Parking",
-    address: "1 Memorial Ave, Arlington, VA 22211",
-    parkingTime: "Open daily 8 AM - 5 PM",
-    totalParkingSpace: "400",
-    totalOccupiedSpace: "250",
-    totalFreeSpace: "150",
-    sensorIssue: "Ps-1001,1003,1005",
   },
 ];
 
@@ -212,74 +63,62 @@ const spacesCardsData = [
 
 const alertsData = [
   {
-    alert:
-      "A sensor is currently disconnected. Please check the device and reconnect.",
+    alert: "A sensor is currently disconnected. Please check the device and reconnect.",
     alertType: "attention",
     dateTime: "July 30 09:30 AM",
   },
   {
-    alert:
-      "A sensor is currently disconnected. Please check the device and reconnect.",
+    alert: "A sensor is currently disconnected. Please check the device and reconnect.",
     alertType: "alert",
     dateTime: "July 30 09:30 AM",
   },
   {
-    alert:
-      "A sensor is currently disconnected. Please check the device and reconnect.",
+    alert: "A sensor is currently disconnected. Please check the device and reconnect.",
     alertType: "notification",
     dateTime: "July 30 09:30 AM",
   },
   {
-    alert:
-      "A sensor is currently disconnected. Please check the device and reconnect.",
+    alert: "A sensor is currently disconnected. Please check the device and reconnect.",
     alertType: "warning",
     dateTime: "July 30 09:30 AM",
   },
   {
-    alert:
-      "A sensor is currently disconnected. Please check the device and reconnect.",
+    alert: "A sensor is currently disconnected. Please check the device and reconnect.",
     alertType: "warning",
     dateTime: "July 30 09:30 AM",
   },
   {
-    alert:
-      "A sensor is currently disconnected. Please check the device and reconnect.",
+    alert: "A sensor is currently disconnected. Please check the device and reconnect.",
     alertType: "attention",
     dateTime: "July 30 09:30 AM",
   },
   {
-    alert:
-      "A sensor is currently disconnected. Please check the device and reconnect.",
+    alert: "A sensor is currently disconnected. Please check the device and reconnect.",
     alertType: "notification",
     dateTime: "July 30 09:30 AM",
   },
   {
-    alert:
-      "A sensor is currently disconnected. Please check the device and reconnect.",
+    alert: "A sensor is currently disconnected. Please check the device and reconnect.",
     alertType: "warning",
     dateTime: "July 30 09:30 AM",
   },
   {
-    alert:
-      "A sensor is currently disconnected. Please check the device and reconnect.",
+    alert: "A sensor is currently disconnected. Please check the device and reconnect.",
     alertType: "warning",
     dateTime: "July 30 09:30 AM",
   },
   {
-    alert:
-      "A sensor is currently disconnected. Please check the device and reconnect.",
+    alert: "A sensor is currently disconnected. Please check the device and reconnect.",
     alertType: "attention",
     dateTime: "July 30 09:30 AM",
   },
   {
-    alert:
-      "A sensor is currently disconnected. Please check the device and reconnect.",
+    alert: "A sensor is currently disconnected. Please check the device and reconnect.",
     alertType: "notification",
     dateTime: "July 30 09:30 AM",
   },
   {
-    alert:
-      "A sensor is currently disconnected. Please check the device and reconnect.",
+    alert: "A sensor is currently disconnected. Please check the device and reconnect.",
     alertType: "attention",
     dateTime: "July 30 09:30 AM",
   },
@@ -288,12 +127,7 @@ const alertsData = [
 const parkingFloorListData = [
   {
     _id: 1,
-    buildingImages: [
-      buildingImgOne,
-      buildingImgTwo,
-      buildingImgThree,
-      buildingImgFour,
-    ],
+    buildingImages: [buildingImgOne, buildingImgTwo, buildingImgThree, buildingImgFour],
     buildingName: "Washington Square Parking",
     address: "1051 18th St NW, Washington, DC 20006",
     parkingTime: "24 hours CCTV and Parking Services",
@@ -307,12 +141,7 @@ const parkingFloorListData = [
   },
   {
     _id: 2,
-    buildingImages: [
-      buildingImgOne,
-      buildingImgTwo,
-      buildingImgThree,
-      buildingImgFour,
-    ],
+    buildingImages: [buildingImgOne, buildingImgTwo, buildingImgThree, buildingImgFour],
     buildingName: "City Center Parking",
     address: "825 10th St NW, Washington, DC 20001",
     parkingTime: "24 hours monitored parking",
@@ -326,12 +155,7 @@ const parkingFloorListData = [
   },
   {
     _id: 3,
-    buildingImages: [
-      buildingImgOne,
-      buildingImgTwo,
-      buildingImgThree,
-      buildingImgFour,
-    ],
+    buildingImages: [buildingImgOne, buildingImgTwo, buildingImgThree, buildingImgFour],
     buildingName: "Union Station Parking",
     address: "50 Massachusetts Ave NE, Washington, DC 20002",
     parkingTime: "Open 24/7 with security",
@@ -345,12 +169,7 @@ const parkingFloorListData = [
   },
   {
     _id: 4,
-    buildingImages: [
-      buildingImgOne,
-      buildingImgTwo,
-      buildingImgThree,
-      buildingImgFour,
-    ],
+    buildingImages: [buildingImgOne, buildingImgTwo, buildingImgThree, buildingImgFour],
     buildingName: "National Gallery Parking",
     address: "600 Constitution Ave NW, Washington, DC 20565",
     parkingTime: "7 AM - 11 PM",
@@ -364,12 +183,7 @@ const parkingFloorListData = [
   },
   {
     _id: 5,
-    buildingImages: [
-      buildingImgOne,
-      buildingImgTwo,
-      buildingImgThree,
-      buildingImgFour,
-    ],
+    buildingImages: [buildingImgOne, buildingImgTwo, buildingImgThree, buildingImgFour],
     buildingName: "The White House Parking",
     address: "1600 Pennsylvania Ave NW, Washington, DC 20500",
     parkingTime: "Restricted access parking",
@@ -383,12 +197,7 @@ const parkingFloorListData = [
   },
   {
     _id: 6,
-    buildingImages: [
-      buildingImgOne,
-      buildingImgTwo,
-      buildingImgThree,
-      buildingImgFour,
-    ],
+    buildingImages: [buildingImgOne, buildingImgTwo, buildingImgThree, buildingImgFour],
     buildingName: "Lincoln Memorial Parking",
     address: "2 Lincoln Memorial Cir NW, Washington, DC 20037",
     parkingTime: "8 AM - 8 PM",
@@ -402,12 +211,7 @@ const parkingFloorListData = [
   },
   {
     _id: 7,
-    buildingImages: [
-      buildingImgOne,
-      buildingImgTwo,
-      buildingImgThree,
-      buildingImgFour,
-    ],
+    buildingImages: [buildingImgOne, buildingImgTwo, buildingImgThree, buildingImgFour],
     buildingName: "Capitol Building Parking",
     address: "First St SE, Washington, DC 20004",
     parkingTime: "7 AM - 10 PM",
@@ -421,12 +225,7 @@ const parkingFloorListData = [
   },
   {
     _id: 8,
-    buildingImages: [
-      buildingImgOne,
-      buildingImgTwo,
-      buildingImgThree,
-      buildingImgFour,
-    ],
+    buildingImages: [buildingImgOne, buildingImgTwo, buildingImgThree, buildingImgFour],
     buildingName: "Smithsonian National Air and Space Museum Parking",
     address: "600 Independence Ave SW, Washington, DC 20560",
     parkingTime: "Open 24/7",
@@ -440,12 +239,7 @@ const parkingFloorListData = [
   },
   {
     _id: 9,
-    buildingImages: [
-      buildingImgOne,
-      buildingImgTwo,
-      buildingImgThree,
-      buildingImgFour,
-    ],
+    buildingImages: [buildingImgOne, buildingImgTwo, buildingImgThree, buildingImgFour],
     buildingName: "Georgetown Waterfront Park Parking",
     address: "3303 Water St NW, Washington, DC 20007",
     parkingTime: "9 AM - 9 PM",
@@ -459,12 +253,7 @@ const parkingFloorListData = [
   },
   {
     _id: 10,
-    buildingImages: [
-      buildingImgOne,
-      buildingImgTwo,
-      buildingImgThree,
-      buildingImgFour,
-    ],
+    buildingImages: [buildingImgOne, buildingImgTwo, buildingImgThree, buildingImgFour],
     buildingName: "Arlington National Cemetery Parking",
     address: "1 Memorial Ave, Arlington, VA 22211",
     parkingTime: "Open daily 8 AM - 5 PM",
@@ -496,10 +285,4 @@ const floorDetailsList = [
   },
 ];
 
-export {
-  buildingsManagersListData,
-  spacesCardsData,
-  alertsData,
-  parkingFloorListData,
-  floorDetailsList,
-};
+export { buildingsManagersListData, spacesCardsData, alertsData, parkingFloorListData, floorDetailsList };

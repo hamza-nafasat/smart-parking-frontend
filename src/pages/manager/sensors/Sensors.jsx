@@ -14,7 +14,7 @@ import {
 import AddSensor from "./components/AddSensor";
 import EditSensor from "./components/EditSensor";
 
-const columns = (modalOpenHandler, statusToggleHandler, deleteHandler, isUpdating) => [
+const columns = (modalOpenHandler, statusToggleHandler, deleteHandler, isUpdating, isDeleting) => [
   {
     name: "Sensor Name",
     selector: (row) => row?.name,
@@ -49,7 +49,10 @@ const columns = (modalOpenHandler, statusToggleHandler, deleteHandler, isUpdatin
         <div className="cursor-pointer" onClick={() => modalOpenHandler("edit", row)}>
           <AccordionEditIcon color="#18BC9C" />
         </div>
-        <div className="cursor-pointer" onClick={() => deleteHandler(row?._id)}>
+        <div
+          className={`${isDeleting ? "pointer-events-none cursor-not-allowed" : "cursor-pointer"}`}
+          onClick={() => deleteHandler(row?._id)}
+        >
           <DeleteIcon />
         </div>
       </div>
@@ -116,7 +119,7 @@ const Sensors = () => {
       </div>
       <div className="mt-5">
         <DataTable
-          columns={columns(modalOpenHandler, statusToggleHandler, deleteHandler, isUpdating)}
+          columns={columns(modalOpenHandler, statusToggleHandler, deleteHandler, isUpdating, isDeleting)}
           data={data?.data}
           selectableRows
           selectableRowsHighlight

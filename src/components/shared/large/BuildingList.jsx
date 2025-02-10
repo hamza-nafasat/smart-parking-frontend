@@ -1,17 +1,17 @@
-import { useState } from "react";
+/* eslint-disable react/prop-types */
+import { useEffect, useState } from "react";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
+import ReactPaginate from "react-paginate";
+import { useNavigate } from "react-router-dom";
 import Slider from "react-slick";
-import { buildingsManagersListData } from "../../../pages/admin/buildingInfo/utils/buildingData";
 import {
   FreeSpaceIcon,
   LocationIcon,
   OccupiedParkingIcon,
   SensorIssueIcon,
   TotalParkingIcon,
-  TwentyFourSevenIcon,
 } from "../../../assets/svgs/Icon";
-import { useNavigate } from "react-router-dom";
-import ReactPaginate from "react-paginate";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
+import { useGetAllBuildingsQuery } from "../../../redux/apis/buildingApis";
 
 // Carousel settings for image slider
 const carouselSettings = {
@@ -26,27 +26,27 @@ const carouselSettings = {
 };
 
 // Main component
-// eslint-disable-next-line react/prop-types
-const BuildingList = ({redirect = "admin"}) => {
+const BuildingList = ({ redirect = "admin" }) => {
+  const [buildingsData, setBuildingsData] = useState([]);
+  const { data } = useGetAllBuildingsQuery();
   const [currentPage, setCurrentPage] = useState(0); // current page state
   const itemsPerPage = 4; // number of items per page
 
   // Calculate the buildings to display based on the current page
   const offset = currentPage * itemsPerPage;
-  const currentBuildings = buildingsManagersListData.slice(
-    offset,
-    offset + itemsPerPage
-  );
+  const currentBuildings = buildingsData.slice(offset, offset + itemsPerPage);
 
   // Handler for page change
-  const handlePageClick = (event) => {
-    setCurrentPage(event.selected);
-  };
+  const handlePageClick = (event) => setCurrentPage(event.selected);
+
+  useEffect(() => {
+    if (data) setBuildingsData(data?.data);
+  }, [data]);
 
   return (
     <div>
-      {currentBuildings.map((data, index) => (
-        <SingleBuilding key={index} data={data} redirect={redirect} />
+      {currentBuildings?.map((building, index) => (
+        <SingleBuilding key={index} building={building} redirect={redirect} />
       ))}
 
       <ReactPaginate
@@ -61,7 +61,7 @@ const BuildingList = ({redirect = "admin"}) => {
           </button>
         }
         breakLabel={"..."}
-        pageCount={Math.ceil(buildingsManagersListData.length / itemsPerPage)}
+        pageCount={Math.ceil(buildingsData?.length / itemsPerPage)}
         marginPagesDisplayed={2}
         pageRangeDisplayed={3}
         onPageChange={handlePageClick}
@@ -82,7 +82,7 @@ const BuildingList = ({redirect = "admin"}) => {
 export default BuildingList;
 
 // Single building component
-const SingleBuilding = ({ data, redirect }) => {
+const SingleBuilding = ({ building, redirect }) => {
   const navigate = useNavigate();
   return (
     <div className="flex flex-wrap justify-between gap-4 md:gap-6 building-slider border-b border-[#00000037] py-4">
@@ -90,60 +90,49 @@ const SingleBuilding = ({ data, redirect }) => {
         {/* Image carousel */}
         <div className="w-[249px] h-[150px] rounded-xl overflow-hidden">
           <Slider {...carouselSettings}>
-            {data?.buildingImages?.map((img, i) => (
-              <img
-                key={i}
-                src={img}
-                alt="image"
-                className="w-[249px] h-[150px] rounded-xl object-cover"
-              />
-            ))}
+            {/* {building?.buildingImages?.map((img, i) => ( */}
+            <img src={building?.twoDImage?.url} alt="image" className="w-[249px] h-[150px] rounded-xl object-cover" />
+            {/* ))} */}
           </Slider>
         </div>
 
         {/* Content */}
         <div>
-          <h4 className="text-base md:text-xl font-bold text-[#000]">
-            {data?.buildingName}
-          </h4>
+          <h4 className="text-base md:text-xl font-bold text-[#000]">{building?.name}</h4>
           <div className="flex items-center gap-2">
             <LocationIcon />
-            <p className="text-[10px] font-semibold text-[#47484b]">
-              {data?.address}
-            </p>
+            <p className="text-[10px] font-semibold text-[#47484b]">{building?.address}</p>
           </div>
-          <div className="flex items-center gap-2 mt-1">
+          {/* <div className="flex items-center gap-2 mt-1">
             <TwentyFourSevenIcon />
-            <p className="text-[10px] font-semibold text-[#47484b]">
-              {data?.parkingTime}
-            </p>
-          </div>
+            <p className="text-[10px] font-semibold text-[#47484b]">{building?.parkingTime}</p>
+          </div> */}
           <div className="flex flex-wrap gap-4 xl:gap-5 mt-6">
             <ParkingList
               data={{
                 title: "Total No. of Parking Space",
-                value: data?.totalParkingSpace,
+                value: building?.totalParkingSpace,
                 icon: <TotalParkingIcon />,
               }}
             />
             <ParkingList
               data={{
                 title: "Total Occupied Parking",
-                value: data?.totalOccupiedSpace,
+                value: building?.totalOccupiedSpace,
                 icon: <OccupiedParkingIcon />,
               }}
             />
             <ParkingList
               data={{
                 title: "Total Free Space",
-                value: data?.totalFreeSpace,
+                value: building?.totalFreeSpace,
                 icon: <FreeSpaceIcon />,
               }}
             />
             <ParkingList
               data={{
                 title: "Sensor Issue",
-                value: data?.sensorIssue,
+                value: building?.sensorIssue,
                 icon: <SensorIssueIcon />,
               }}
             />
@@ -153,7 +142,7 @@ const SingleBuilding = ({ data, redirect }) => {
       <div className="flex">
         <button
           className="text-primary text-sm md:text-base font-bold underline h-fit"
-          onClick={() => navigate(`/${redirect}/building-view/${data?._id}`)}
+          onClick={() => navigate(`/${redirect}/building-view/${building?._id}`)}
         >
           View Details
         </button>
@@ -168,9 +157,7 @@ const ParkingList = ({ data }) => {
     <div className="flex items-center gap-2">
       {data?.icon}
       <div>
-        <h4 className="text-sm md:text-base font-bold text-[#292D32]">
-          {data?.title}
-        </h4>
+        <h4 className="text-sm md:text-base font-bold text-[#292D32]">{data?.title}</h4>
         <h6 className="text-sm md:text-base font-medium text-[#000000CC]">
           {data?.value} {data?.title === "Sensor Issue" ? "" : "Space"}
         </h6>
