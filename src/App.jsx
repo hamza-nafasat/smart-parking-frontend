@@ -18,6 +18,8 @@ import { userExist, userNotExist } from "./redux/slices/authSlice";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import getEnv from "./configs/config";
+import EditBuildingInfo from "./pages/manager/editBuildingInfo/EditBuildingInfo";
+import EditFloorInfo from "./pages/manager/editFloorInfo/EditFloorInfo";
 
 const LandingPage = lazy(() => import("./pages/landing/LandingPage"));
 // auth imports
@@ -114,7 +116,9 @@ function App() {
                 <Route index element={<ManagerDashboard />} />
                 <Route path="building-info" element={<ManagerBuildingInfo />} />
                 <Route path="building-view/:id" element={<ManagerBuildingView />} />
+                <Route path="edit-building-info/:id" element={<EditBuildingInfo />} />
                 <Route path="floor-view/:id" element={<ManagerFloorView />} />
+                <Route path="edit-floor-info/:id" element={<EditFloorInfo />} />
                 <Route path="parking-summary" element={<ManagerParkingSummary />} />
                 <Route path="sensors" element={<Sensors />} />
                 <Route path="wallet" element={<ManagerWallet />} />

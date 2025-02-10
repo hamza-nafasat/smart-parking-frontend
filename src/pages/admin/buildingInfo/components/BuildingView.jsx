@@ -13,7 +13,7 @@ const BuildingView = () => {
   const navigate = useNavigate();
   return (
     <div className="grid grid-cols-12 gap-4">
-      <div className="col-span-12 lg:col-span-3 flex">
+      <div className="col-span-12 lg:col-span-3 bg-red-600 flex">
         <BuildingData />
       </div>
       <div className="col-span-12 lg:col-span-6">

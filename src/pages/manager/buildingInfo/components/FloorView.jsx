@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import FloorDetail from "../../../../components/shared/large/FloorDetail";
 import SpacesCards from "../../../../components/shared/large/SpacesCards";
 import {
@@ -13,10 +13,39 @@ import {
   PrimaryWidgetCard,
   SecondaryWidgetCard,
 } from "../../../../components/shared/large/WidgetCard";
+import { Link, useParams } from "react-router-dom";
+import EditIcon from "../../../../assets/svgs/parkingStepper/EditIcon";
+import DeleteIcon from "../../../../assets/svgs/parkingStepper/DeleteIcon";
 
 const FloorView = () => {
+
+
+
+  const [deleteModal, setDeleteModal] = useState(false);
+  const { id } = useParams();
+  console.log("id", id)
+  const handleOpenDeleteModal = () => {
+    setDeleteModal(true);
+  };
+
+
+
   return (
-    <div>
+    <div className="bg-red-500">
+      <section>
+        <section>
+          <section className="m-2 flex justify-end">
+            <div className="flex items-center gap-4">
+              <Link to={`/manager/edit-floor-info/${id}`}>
+                <EditIcon />
+              </Link>
+              <button onClick={handleOpenDeleteModal}>
+                <DeleteIcon />
+              </button>
+            </div>
+          </section>
+        </section>
+      </section>
       <div className="grid grid-cols-12 gap-4 ">
         <div className="col-span-12 lg:col-span-9">
           <div className="grid grid-cols-12 gap-4">

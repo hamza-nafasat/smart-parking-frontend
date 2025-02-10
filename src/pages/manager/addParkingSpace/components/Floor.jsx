@@ -14,6 +14,8 @@ const FloorAccordion = ({ polygons, setPolygons, imageSrc, setImageSrc }) => {
   const handleAccordionToggle = (index) =>
     dispatch(setActiveAccordionIndex(activeAccordionIndex === index ? null : index));
 
+
+  // console.log("floors",floors);
   return (
     <div className="flex flex-col gap-4">
       {Array?.from({ length: floors?.length || 0 }).map((_, index) => (

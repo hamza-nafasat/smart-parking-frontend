@@ -20,7 +20,19 @@ const BuildingView = () => {
   }, [data]);
 
   return (
-    <div>
+    <div className="" >
+      <section>
+        <section className="m-2 flex justify-end">
+          <div className="flex items-center gap-4">
+            <Link to={`/manager/edit-building-info/${id}`}>
+              <EditIcon />
+            </Link>
+            <button onClick={handleOpenDeleteModal}>
+              <DeleteIcon />
+            </button>
+          </div>
+        </section>
+      </section>
       <div className="grid grid-cols-12 gap-4 ">
         <div className="col-span-12 lg:col-span-9">
           <div className="grid grid-cols-12 gap-4">
