@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from "react";
 import Slider from "react-slick";
 import {
@@ -24,11 +25,11 @@ const carouselSettings = {
   pauseOnHover: true,
 };
 
-const ParkingFloor = ({ listData, linkTo }) => {
+const ParkingFloor = ({ data, listData, linkTo }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 4;
   const offset = currentPage * itemsPerPage;
-  const currentBuildings = listData.slice(offset, offset + itemsPerPage);
+  const currentBuildings = data?.slice(offset, offset + itemsPerPage);
 
   const handlePageClick = (event) => {
     setCurrentPage(event.selected);
@@ -36,7 +37,7 @@ const ParkingFloor = ({ listData, linkTo }) => {
 
   return (
     <div>
-      {currentBuildings.map((data, index) => (
+      {currentBuildings?.map((data, index) => (
         <SingleFloor key={index} data={data} linkTo={linkTo(data._id)} />
       ))}
 
@@ -52,7 +53,7 @@ const ParkingFloor = ({ listData, linkTo }) => {
           </button>
         }
         breakLabel={"..."}
-        pageCount={Math.ceil(listData.length / itemsPerPage)}
+        pageCount={Math.ceil(data?.length / itemsPerPage)}
         marginPagesDisplayed={2}
         pageRangeDisplayed={3}
         onPageChange={handlePageClick}
@@ -80,33 +81,22 @@ const SingleFloor = ({ data, linkTo }) => {
         {/* image carousel */}
         <div className="w-[249px] h-[150px] rounded-xl overflow-hidden">
           <Slider {...carouselSettings}>
-            {data?.buildingImages?.map((img, i) => (
-              <img
-                key={i}
-                src={img}
-                alt="image"
-                className="w-[249px] h-[150px] rounded-xl object-cover"
-              />
-            ))}
+            {/* {data?.buildingImages?.map((img, i) => ( */}
+            <img src={data?.twoDImage?.url} alt="image" className="w-[249px] h-[150px] rounded-xl object-cover" />
+            {/* ))} */}
           </Slider>
         </div>
         {/* content */}
         <div>
-          <h4 className="text-base md:text-xl font-bold text-[#000]">
-            {data?.buildingName}
-          </h4>
-          <div className="flex items-center gap-2">
+          <h4 className="text-base md:text-xl font-bold text-[#000]">{data?.name}</h4>
+          {/* <div className="flex items-center gap-2">
             <LocationIcon />
-            <p className="text-[10px] font-semibold text-[#47484b]">
-              {data?.address}
-            </p>
-          </div>
-          <div className="flex items-center gap-2 mt-1">
+            <p className="text-[10px] font-semibold text-[#47484b]">{data?.address}</p>
+          </div> */}
+          {/* <div className="flex items-center gap-2 mt-1">
             <TwentyFourSevenIcon />
-            <p className="text-[10px] font-semibold text-[#47484b]">
-              {data?.parkingTime}
-            </p>
-          </div>
+            <p className="text-[10px] font-semibold text-[#47484b]">{data?.parkingTime}</p>
+          </div> */}
           <div className="flex flex-wrap gap-4 xl:gap-5 mt-6">
             <ParkingList
               data={{
@@ -141,19 +131,12 @@ const SingleFloor = ({ data, linkTo }) => {
       </div>
 
       <div className="flex items-center xl:items-end flex-row xl:flex-col justify-between xl:justify-around min-w-full xl:min-w-[300px]">
-        <div className="flex items-center gap-3">
-          <BlankAreaChart
-            width={100}
-            data={data?.data}
-            areaColor={data?.color}
-          />
-          <h4
-            className="text-xl md:text-[27px] font-bold"
-            style={{ color: data?.color }}
-          >
+        {/* <div className="flex items-center gap-3">
+          <BlankAreaChart width={100} data={data?.data} areaColor={data?.color} />
+          <h4 className="text-xl md:text-[27px] font-bold" style={{ color: data?.color }}>
             {data?.value}%
           </h4>
-        </div>
+        </div> */}
 
         <div className="flex justify-end">
           <button
@@ -173,9 +156,7 @@ const ParkingList = ({ data }) => {
     <div className="flex items-center gap-2">
       {data?.icon}
       <div>
-        <h4 className="text-sm md:text-base font-bold text-[#292D32]">
-          {data?.title}
-        </h4>
+        <h4 className="text-sm md:text-base font-bold text-[#292D32]">{data?.title}</h4>
         <h6 className="text-sm md:text-base font-medium text-[#000000CC]">
           {data?.value} {data?.title === "Sensor Issue" ? "" : "Space"}
         </h6>

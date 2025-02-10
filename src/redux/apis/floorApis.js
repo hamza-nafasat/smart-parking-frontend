@@ -23,8 +23,8 @@ const floorApis = createApi({
     }),
     // get all floors
     getAllFloors: builder.query({
-      query: () => ({
-        url: "/all",
+      query: (buildingId) => ({
+        url: `/all?buildingId=${buildingId}`,
         method: "GET",
       }),
     }),
