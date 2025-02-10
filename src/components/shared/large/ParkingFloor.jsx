@@ -1,18 +1,10 @@
 /* eslint-disable react/prop-types */
-import React, { useState } from "react";
-import Slider from "react-slick";
-import {
-  FreeSpaceIcon,
-  LocationIcon,
-  OccupiedParkingIcon,
-  SensorIssueIcon,
-  TotalParkingIcon,
-  TwentyFourSevenIcon,
-} from "../../../assets/svgs/Icon";
-import { useNavigate } from "react-router-dom";
-import BlankAreaChart from "../../charts/BlankAreaChart";
-import ReactPaginate from "react-paginate";
+import { useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
+import ReactPaginate from "react-paginate";
+import { useNavigate } from "react-router-dom";
+import Slider from "react-slick";
+import { FreeSpaceIcon, OccupiedParkingIcon, SensorIssueIcon, TotalParkingIcon } from "../../../assets/svgs/Icon";
 
 const carouselSettings = {
   dots: true,
@@ -25,7 +17,7 @@ const carouselSettings = {
   pauseOnHover: true,
 };
 
-const ParkingFloor = ({ data, listData, linkTo }) => {
+const ParkingFloor = ({ data, linkTo }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 4;
   const offset = currentPage * itemsPerPage;

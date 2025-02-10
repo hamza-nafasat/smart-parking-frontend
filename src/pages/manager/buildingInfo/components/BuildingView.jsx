@@ -6,9 +6,8 @@ import Alerts from "../../../../components/shared/large/Alerts";
 import ParkingFloor from "../../../../components/shared/large/ParkingFloor";
 import { PrimaryWidgetCard, SecondaryWidgetCard } from "../../../../components/shared/large/WidgetCard";
 import { useGetSingleBuildingQuery } from "../../../../redux/apis/buildingApis";
-import { alertsData, spacesCardsData } from "../../../admin/buildingInfo/utils/buildingData";
-import { parkingFloorListData } from "../utils/managerData";
 import { useGetAllFloorsQuery } from "../../../../redux/apis/floorApis";
+import { alertsData, spacesCardsData } from "../../../admin/buildingInfo/utils/buildingData";
 
 const BuildingView = () => {
   const [buildingData, setBuildingData] = useState(null);
@@ -61,7 +60,7 @@ const BuildingView = () => {
           </div>
         </div>
         <div className="border-t border-[#E7E7E7]"></div>
-        <ParkingFloor data={floorsData?.data} listData={parkingFloorListData} linkTo={(id) => `/manager/floor-view/${id}`} />
+        <ParkingFloor data={floorsData?.data} linkTo={(id) => `/manager/floor-view/${id}`} />
       </div>
     </div>
   );
