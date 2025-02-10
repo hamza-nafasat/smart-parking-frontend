@@ -19,7 +19,7 @@ const BuildingView = () => {
       <div className="col-span-12 lg:col-span-6">
         {/* <SpacesCards cardData={spacesCardsData} /> */}
         <div className="flex flex-wrap gap-4">
-          {spacesCardsData.map((card, i) => {
+          {spacesCardsData?.map((card, i) => {
             if (i < 3) {
               return <PrimaryWidgetCard key={i} cardData={card} />;
             } else if (i == 3) {
