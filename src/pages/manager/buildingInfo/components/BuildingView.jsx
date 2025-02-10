@@ -1,13 +1,15 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import { CiSearch } from "react-icons/ci";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import Alerts from "../../../../components/shared/large/Alerts";
 import ParkingFloor from "../../../../components/shared/large/ParkingFloor";
 import { PrimaryWidgetCard, SecondaryWidgetCard } from "../../../../components/shared/large/WidgetCard";
 import { useGetSingleBuildingQuery } from "../../../../redux/apis/buildingApis";
 import { useGetAllFloorsQuery } from "../../../../redux/apis/floorApis";
 import { alertsData, spacesCardsData } from "../../../admin/buildingInfo/utils/buildingData";
+import EditIcon from "../../../../assets/svgs/parkingStepper/EditIcon";
+import DeleteIcon from "../../../../assets/svgs/parkingStepper/DeleteIcon";
 
 const BuildingView = () => {
   const [buildingData, setBuildingData] = useState(null);
@@ -20,14 +22,14 @@ const BuildingView = () => {
   }, [data]);
 
   return (
-    <div className="" >
+    <div className="">
       <section>
         <section className="m-2 flex justify-end">
           <div className="flex items-center gap-4">
-            <Link to={`/manager/edit-building-info/${id}`}>
+            <Link to={`/manager/edit-building-info/${buildingId}`}>
               <EditIcon />
             </Link>
-            <button onClick={handleOpenDeleteModal}>
+            <button onClick={() => console.log("delete")}>
               <DeleteIcon />
             </button>
           </div>

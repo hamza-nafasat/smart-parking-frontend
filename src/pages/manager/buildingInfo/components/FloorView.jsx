@@ -1,45 +1,31 @@
-import React, { useState } from "react";
-import FloorDetail from "../../../../components/shared/large/FloorDetail";
-import SpacesCards from "../../../../components/shared/large/SpacesCards";
-import {
-  alertsData,
-  floorDetailsList,
-  spacesCardsData,
-} from "../../../admin/buildingInfo/utils/buildingData";
+import { useEffect, useState } from "react";
 import Alerts from "../../../../components/shared/large/Alerts";
-import d3parking from "../../../../assets/images/building/3dparking.png";
-import d2parking from "../../../../assets/images/building/2dparking.png";
-import {
-  PrimaryWidgetCard,
-  SecondaryWidgetCard,
-} from "../../../../components/shared/large/WidgetCard";
+import FloorDetail from "../../../../components/shared/large/FloorDetail";
+import { PrimaryWidgetCard, SecondaryWidgetCard } from "../../../../components/shared/large/WidgetCard";
+import { useGetSingleFloorQuery } from "../../../../redux/apis/floorApis";
+import { alertsData, spacesCardsData } from "../../../admin/buildingInfo/utils/buildingData";
 import { Link, useParams } from "react-router-dom";
 import EditIcon from "../../../../assets/svgs/parkingStepper/EditIcon";
 import DeleteIcon from "../../../../assets/svgs/parkingStepper/DeleteIcon";
 
 const FloorView = () => {
+  const [floorData, setFloorData] = useState(null);
+  const floorId = useParams().id;
+  const { data } = useGetSingleFloorQuery(floorId);
 
-
-
-  const [deleteModal, setDeleteModal] = useState(false);
-  const { id } = useParams();
-  console.log("id", id)
-  const handleOpenDeleteModal = () => {
-    setDeleteModal(true);
-  };
-
-
-
+  useEffect(() => {
+    if (data) setFloorData(data?.data);
+  }, [data]);
   return (
-    <div className="bg-red-500">
+    <div>
       <section>
         <section>
           <section className="m-2 flex justify-end">
             <div className="flex items-center gap-4">
-              <Link to={`/manager/edit-floor-info/${id}`}>
+              <Link to={`/manager/edit-floor-info/${floorId}`}>
                 <EditIcon />
               </Link>
-              <button onClick={handleOpenDeleteModal}>
+              <button onClick={() => console.log("delete")}>
                 <DeleteIcon />
               </button>
             </div>
@@ -50,26 +36,22 @@ const FloorView = () => {
         <div className="col-span-12 lg:col-span-9">
           <div className="grid grid-cols-12 gap-4">
             <div className="col-span-12 lg:col-span-4">
-              <FloorDetail data={floorDetailsList} />
+              <FloorDetail data={floorData} />
             </div>
             <div className="col-span-12 lg:col-span-8">
               <div className="flex flex-wrap gap-4">
                 {spacesCardsData.map((card, i) => {
                   if (i < 3) {
-                    return <PrimaryWidgetCard cardData={card} />;
+                    return <PrimaryWidgetCard key={i} cardData={card} />;
                   } else if (i == 3) {
-                    return <SecondaryWidgetCard cardData={card} />;
+                    return <SecondaryWidgetCard key={i} cardData={card} />;
                   }
                 })}
               </div>
             </div>
           </div>
           <div className="mt-4">
-            <img
-              src={d3parking}
-              alt="image"
-              className="rounded-lg object-cover"
-            />
+            <img src={floorData?.twoDImage?.url} alt="image" className="rounded-lg object-cover" />
           </div>
         </div>
         <div className="col-span-12 lg:col-span-3">
@@ -79,11 +61,7 @@ const FloorView = () => {
       <div className="shadow-md rounded-lg bg-white border-[1px] p-4 mt-4">
         <h4 className="font-[600] mb-4">Ramps View</h4>
         <div className="">
-          <img
-            src={d2parking}
-            alt="image"
-            className=" rounded-lg object-cover"
-          />
+          <img src={floorData?.twoDImage?.url} alt="image" className=" rounded-lg object-cover" />
         </div>
       </div>
     </div>
