@@ -1,24 +1,55 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import { CiSearch } from "react-icons/ci";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import Alerts from "../../../../components/shared/large/Alerts";
 import ParkingFloor from "../../../../components/shared/large/ParkingFloor";
 import { PrimaryWidgetCard, SecondaryWidgetCard } from "../../../../components/shared/large/WidgetCard";
-import { useGetSingleBuildingQuery } from "../../../../redux/apis/buildingApis";
+import { useDeleteSingleBuildingMutation, useGetSingleBuildingQuery } from "../../../../redux/apis/buildingApis";
 import { useGetAllFloorsQuery } from "../../../../redux/apis/floorApis";
 import { alertsData, spacesCardsData } from "../../../admin/buildingInfo/utils/buildingData";
 import EditIcon from "../../../../assets/svgs/parkingStepper/EditIcon";
 import DeleteIcon from "../../../../assets/svgs/parkingStepper/DeleteIcon";
+import toast from "react-hot-toast";
+import { confirmAlert } from "react-confirm-alert";
 
 const BuildingView = () => {
-  const [buildingData, setBuildingData] = useState(null);
+  const navigate = useNavigate();
   const buildingId = useParams().id;
+  const [buildingData, setBuildingData] = useState(null);
+  const [deleteBuilding] = useDeleteSingleBuildingMutation();
   const { data } = useGetSingleBuildingQuery(buildingId);
   const { data: floorsData } = useGetAllFloorsQuery(buildingId);
 
+  // building delete handler
+  const buildingDeleteHandler = (id) => {
+    confirmAlert({
+      title: "Delete Building",
+      message: "Are you sure, you want to delete this building?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: async () => {
+            if (!id) return toast.error("Please Provide Building Id");
+            try {
+              const res = await deleteBuilding(id).unwrap();
+              console.log("building delete response", res);
+              return navigate("/manager/building-info");
+            } catch (error) {
+              console.log("error in delete building", error);
+              toast.error(error?.data?.message || "Error while deleting building");
+            }
+          },
+        },
+        {
+          label: "No",
+        },
+      ],
+    });
+  };
+
   useEffect(() => {
-    if (data) setBuildingData(data?.building);
+    if (data) setBuildingData(data?.data);
   }, [data]);
 
   return (
@@ -29,7 +60,7 @@ const BuildingView = () => {
             <Link to={`/manager/edit-building-info/${buildingId}`}>
               <EditIcon />
             </Link>
-            <button onClick={() => console.log("delete")}>
+            <button onClick={() => buildingDeleteHandler(buildingId)}>
               <DeleteIcon />
             </button>
           </div>
@@ -74,7 +105,7 @@ const BuildingView = () => {
           </div>
         </div>
         <div className="border-t border-[#E7E7E7]"></div>
-        <ParkingFloor data={floorsData?.data} linkTo={(id) => `/manager/floor-view/${id}`} />
+        <ParkingFloor data={floorsData?.data} linkTo={(id) => `/manager/floor-view/${buildingId}/${id}`} />
       </div>
     </div>
   );

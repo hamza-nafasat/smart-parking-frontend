@@ -33,6 +33,7 @@ const Confirmation = ({ setCurrentStep }) => {
         file: buildingGeneralInfo?.file || "",
         polygonData: buildingGeneralInfo?.buildingCoordinates || "",
       };
+      console.log("data is", data);
       const { name, address, area, email, description, type, file, polygonData, noOfFloors } = data;
       if (!name || !address || !area || !email || !description || !type || !file || !polygonData || !noOfFloors)
         return toast.error("Please Fill all required fields for building");
@@ -44,8 +45,8 @@ const Confirmation = ({ setCurrentStep }) => {
       formData.append("description", description);
       formData.append("type", type);
       formData.append("noOfFloors", noOfFloors);
-      formData.append("file", buildingGeneralInfo?.file);
-      formData.append("polygonData", JSON.stringify(buildingGeneralInfo?.polygonData));
+      formData.append("file", file);
+      formData.append("polygonData", JSON.stringify(polygonData));
       const resForBuilding = await createBuilding(formData).unwrap();
       if (resForBuilding.success) buildingId = resForBuilding?.data?._id;
       else throw new Error(resForBuilding?.message);

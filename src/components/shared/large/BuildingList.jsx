@@ -29,8 +29,9 @@ const carouselSettings = {
 const BuildingList = ({ redirect = "admin" }) => {
   const [buildingsData, setBuildingsData] = useState([]);
   const { data } = useGetAllBuildingsQuery();
-  const [currentPage, setCurrentPage] = useState(0); // current page state
-  const itemsPerPage = 4; // number of items per page
+
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 4;
 
   // Calculate the buildings to display based on the current page
   const offset = currentPage * itemsPerPage;

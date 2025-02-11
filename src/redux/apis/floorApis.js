@@ -27,6 +27,7 @@ const floorApis = createApi({
         url: `/all?buildingId=${buildingId}`,
         method: "GET",
       }),
+      providesTags: [{ type: "Floor", id: "LIST" }],
     }),
     // get single floor
     getSingleFloor: builder.query({
@@ -49,6 +50,7 @@ const floorApis = createApi({
         url: `/single/${id}`,
         method: "DELETE",
       }),
+      invalidatesTags: [{ type: "Floor", id: "LIST" }],
     }),
   }),
 });

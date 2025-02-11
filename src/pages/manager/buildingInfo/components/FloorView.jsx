@@ -1,37 +1,66 @@
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import DeleteIcon from "../../../../assets/svgs/parkingStepper/DeleteIcon";
+import EditIcon from "../../../../assets/svgs/parkingStepper/EditIcon";
 import Alerts from "../../../../components/shared/large/Alerts";
 import FloorDetail from "../../../../components/shared/large/FloorDetail";
 import { PrimaryWidgetCard, SecondaryWidgetCard } from "../../../../components/shared/large/WidgetCard";
-import { useGetSingleFloorQuery } from "../../../../redux/apis/floorApis";
+import { useDeleteSingleFloorMutation, useGetSingleFloorQuery } from "../../../../redux/apis/floorApis";
 import { alertsData, spacesCardsData } from "../../../admin/buildingInfo/utils/buildingData";
-import { Link, useParams } from "react-router-dom";
-import EditIcon from "../../../../assets/svgs/parkingStepper/EditIcon";
-import DeleteIcon from "../../../../assets/svgs/parkingStepper/DeleteIcon";
+import { confirmAlert } from "react-confirm-alert";
 
 const FloorView = () => {
+  const params = useParams();
+  const floorId = params.id;
+  const buildingId = params.buildingId;
+  const navigate = useNavigate();
+  const [deleteFloor] = useDeleteSingleFloorMutation();
   const [floorData, setFloorData] = useState(null);
-  const floorId = useParams().id;
   const { data } = useGetSingleFloorQuery(floorId);
+
+  const floorDeleteHandler = (id) => {
+    confirmAlert({
+      title: "Delete Floor",
+      message: "Are you sure, you want to delete this floor?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: async () => {
+            if (!id) return toast.error("Please Provide Floor Id");
+            try {
+              const res = await deleteFloor(id).unwrap();
+              console.log("floor delete response", res);
+              return navigate(`/manager/building-view/${buildingId}`);
+            } catch (error) {
+              console.log("error in delete floor", error);
+              toast.error(error?.data?.message || "Error while deleting floor");
+            }
+          },
+        },
+        {
+          label: "No",
+        },
+      ],
+    });
+  };
 
   useEffect(() => {
     if (data) setFloorData(data?.data);
   }, [data]);
   return (
     <div>
-      <section>
-        <section>
-          <section className="m-2 flex justify-end">
-            <div className="flex items-center gap-4">
-              <Link to={`/manager/edit-floor-info/${floorId}`}>
-                <EditIcon />
-              </Link>
-              <button onClick={() => console.log("delete")}>
-                <DeleteIcon />
-              </button>
-            </div>
-          </section>
-        </section>
+      <section className="m-2 flex justify-end">
+        <div className="flex items-center gap-4">
+          <Link to={`/manager/edit-floor-info/${buildingId}/${floorId}`}>
+            <EditIcon />
+          </Link>
+          <button onClick={() => floorDeleteHandler(floorId)}>
+            <DeleteIcon />
+          </button>
+        </div>
       </section>
+
       <div className="grid grid-cols-12 gap-4 ">
         <div className="col-span-12 lg:col-span-9">
           <div className="grid grid-cols-12 gap-4">

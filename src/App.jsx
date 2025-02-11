@@ -78,9 +78,7 @@ function App() {
     if (document.cookie.includes("loggedInViaGoogle")) {
       console.log("cookie exist");
       toast.success("You are logged in via Google");
-      document.cookie = `loggedInViaGoogle=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${getEnv(
-        "DOMAIN"
-      )};`;
+      document.cookie = `loggedInViaGoogle=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${getEnv("DOMAIN")};`;
     }
   }, []);
   return (
@@ -117,8 +115,8 @@ function App() {
                 <Route path="building-info" element={<ManagerBuildingInfo />} />
                 <Route path="building-view/:id" element={<ManagerBuildingView />} />
                 <Route path="edit-building-info/:id" element={<EditBuildingInfo />} />
-                <Route path="floor-view/:id" element={<ManagerFloorView />} />
-                <Route path="edit-floor-info/:id" element={<EditFloorInfo />} />
+                <Route path="floor-view/:buildingId/:id" element={<ManagerFloorView />} />
+                <Route path="edit-floor-info/:buildingId/:id" element={<EditFloorInfo />} />
                 <Route path="parking-summary" element={<ManagerParkingSummary />} />
                 <Route path="sensors" element={<Sensors />} />
                 <Route path="wallet" element={<ManagerWallet />} />
