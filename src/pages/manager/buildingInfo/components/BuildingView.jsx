@@ -12,6 +12,7 @@ import { PrimaryWidgetCard, SecondaryWidgetCard } from "../../../../components/s
 import { useDeleteSingleBuildingMutation, useGetSingleBuildingQuery } from "../../../../redux/apis/buildingApis";
 import { useGetAllFloorsQuery } from "../../../../redux/apis/floorApis";
 import { alertsData, spacesCardsData } from "../../../admin/buildingInfo/utils/buildingData";
+import TwoDModelView from "../../addParkingSpace/components/TwoDModelView";
 
 const BuildingView = () => {
   const navigate = useNavigate();
@@ -57,13 +58,25 @@ const BuildingView = () => {
       <section>
         <section className="m-2 flex justify-end">
           <div className="flex items-center  gap-4">
-            <Link className="flex items-center justify-center text-[#18BC9C] mt-[0.5px]" title="Add New Floor" to={`/manager/add-floor/${buildingId}`}>
+            <Link
+              className="flex items-center justify-center text-[#18BC9C] mt-[0.5px]"
+              title="Add New Floor"
+              to={`/manager/add-floor/${buildingId}`}
+            >
               <FaPlus size={20} />
             </Link>
-            <Link className="flex items-center justify-center" title="Edit Building " to={`/manager/edit-building-info/${buildingId}`}>
+            <Link
+              className="flex items-center justify-center"
+              title="Edit Building "
+              to={`/manager/edit-building-info/${buildingId}`}
+            >
               <GreenEdit width="20" height="20" />
             </Link>
-            <button className="text-red-400 flex items-center justify-center" title="Delete Building" onClick={() => buildingDeleteHandler(buildingId)}>
+            <button
+              className="text-red-400 flex items-center justify-center"
+              title="Delete Building"
+              onClick={() => buildingDeleteHandler(buildingId)}
+            >
               <FaTrash size={20} />
             </button>
           </div>
@@ -88,7 +101,11 @@ const BuildingView = () => {
             </div>
           </div>
           <div className="mt-4">
-            <img src={buildingData?.twoDImage?.url} alt="image" className="rounded-lg object-cover" />
+            {/* <img src={buildingData?.twoDImage?.url} alt="image" className="rounded-lg object-cover" /> */}
+            <TwoDModelView
+              polygons={buildingData?.polygonData ? JSON.parse(buildingData?.polygonData) : []}
+              imageSrc={buildingData?.twoDImage?.url}
+            />
           </div>
         </div>
         <div className="col-span-12 lg:col-span-3">

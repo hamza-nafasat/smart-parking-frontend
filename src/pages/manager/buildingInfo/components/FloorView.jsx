@@ -9,6 +9,7 @@ import FloorDetail from "../../../../components/shared/large/FloorDetail";
 import { PrimaryWidgetCard, SecondaryWidgetCard } from "../../../../components/shared/large/WidgetCard";
 import { useDeleteSingleFloorMutation, useGetSingleFloorQuery } from "../../../../redux/apis/floorApis";
 import { alertsData, spacesCardsData } from "../../../admin/buildingInfo/utils/buildingData";
+import TwoDModelView from "../../addParkingSpace/components/TwoDModelView";
 
 const FloorView = () => {
   const params = useParams();
@@ -88,7 +89,11 @@ const FloorView = () => {
             </div>
           </div>
           <div className="mt-4">
-            <img src={floorData?.twoDImage?.url} alt="image" className="rounded-lg object-cover" />
+            {/* <img src={floorData?.twoDImage?.url} alt="image" className="rounded-lg object-cover" /> */}
+            <TwoDModelView
+              polygons={floorData?.polygonData ? JSON.parse(floorData?.polygonData) : []}
+              imageSrc={floorData?.twoDImage?.url}
+            />
           </div>
         </div>
         <div className="col-span-12 lg:col-span-3">
@@ -98,7 +103,10 @@ const FloorView = () => {
       <div className="shadow-md rounded-lg bg-white border-[1px] p-4 mt-4">
         <h4 className="font-[600] mb-4">Ramps View</h4>
         <div className="">
-          <img src={floorData?.twoDImage?.url} alt="image" className=" rounded-lg object-cover" />
+          <TwoDModelView
+            polygons={floorData?.polygonData ? JSON.parse(floorData?.polygonData) : []}
+            imageSrc={floorData?.twoDImage?.url}
+          />
         </div>
       </div>
     </div>
