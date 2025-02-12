@@ -1,17 +1,17 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
+import { confirmAlert } from "react-confirm-alert";
+import toast from "react-hot-toast";
 import { CiSearch } from "react-icons/ci";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { FaPlus, FaTrash } from "react-icons/fa6";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { GreenEdit } from "../../../../assets/svgs/Icon";
 import Alerts from "../../../../components/shared/large/Alerts";
 import ParkingFloor from "../../../../components/shared/large/ParkingFloor";
 import { PrimaryWidgetCard, SecondaryWidgetCard } from "../../../../components/shared/large/WidgetCard";
 import { useDeleteSingleBuildingMutation, useGetSingleBuildingQuery } from "../../../../redux/apis/buildingApis";
 import { useGetAllFloorsQuery } from "../../../../redux/apis/floorApis";
 import { alertsData, spacesCardsData } from "../../../admin/buildingInfo/utils/buildingData";
-import EditIcon from "../../../../assets/svgs/parkingStepper/EditIcon";
-import DeleteIcon from "../../../../assets/svgs/parkingStepper/DeleteIcon";
-import toast from "react-hot-toast";
-import { confirmAlert } from "react-confirm-alert";
 
 const BuildingView = () => {
   const navigate = useNavigate();
@@ -56,12 +56,15 @@ const BuildingView = () => {
     <div className="">
       <section>
         <section className="m-2 flex justify-end">
-          <div className="flex items-center gap-4">
-            <Link to={`/manager/edit-building-info/${buildingId}`}>
-              <EditIcon />
+          <div className="flex items-center  gap-4">
+            <Link className="flex items-center justify-center text-[#18BC9C] mt-[0.5px]" title="Add New Floor" to={`/manager/add-floor/${buildingId}`}>
+              <FaPlus size={20} />
             </Link>
-            <button onClick={() => buildingDeleteHandler(buildingId)}>
-              <DeleteIcon />
+            <Link className="flex items-center justify-center" title="Edit Building " to={`/manager/edit-building-info/${buildingId}`}>
+              <GreenEdit width="20" height="20" />
+            </Link>
+            <button className="text-red-400 flex items-center justify-center" title="Delete Building" onClick={() => buildingDeleteHandler(buildingId)}>
+              <FaTrash size={20} />
             </button>
           </div>
         </section>

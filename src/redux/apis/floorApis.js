@@ -8,11 +8,12 @@ const floorApis = createApi({
   endpoints: (builder) => ({
     // create new floor
     createFloor: builder.mutation({
-      query: (data) => ({
+      query: ({ data }) => ({
         url: "/create",
         method: "POST",
         body: data,
       }),
+      invalidatesTags: [{ type: "Floor", id: "LIST" }],
     }),
     createFloorsInBulk: builder.mutation({
       query: (data) => ({

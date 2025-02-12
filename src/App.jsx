@@ -1,33 +1,28 @@
 import { lazy, Suspense, useCallback, useEffect, useState } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import Loader from "./components/shared/small/Loader";
-import FloorView from "./pages/admin/buildingInfo/components/FloorView";
-import Booking from "./pages/user/dashboard/components/Booking";
-import ConfirmBooking from "./pages/user/dashboard/components/ConfirmBooking";
-import PaymentSuccess from "./pages/user/dashboard/components/PaymentSuccess";
-import PaymentFail from "./pages/user/dashboard/components/PaymentFail";
-import UserViewSlip from "./pages/user/bookingSummary/components/ViewSlip";
-import UserProfile from "./pages/user/setting/Profile";
-import BookingSlots from "./pages/user/dashboard/components/BookingSlots";
-import toast, { Toaster } from "react-hot-toast";
-import { useCheckLoginMutation } from "./redux/apis/authApis";
-import { useDispatch } from "react-redux";
-import { userExist, userNotExist } from "./redux/slices/authSlice";
-import ProtectedRoutes from "./components/ProtectedRoutes";
 import "react-confirm-alert/src/react-confirm-alert.css";
+import toast, { Toaster } from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import "slick-carousel/slick/slick-theme.css";
+import "slick-carousel/slick/slick.css";
+import ProtectedRoutes from "./components/ProtectedRoutes";
 import getEnv from "./configs/config";
-import EditBuildingInfo from "./pages/manager/editBuildingInfo/EditBuildingInfo";
-import EditFloorInfo from "./pages/manager/editFloorInfo/EditFloorInfo";
+import { useCheckLoginMutation } from "./redux/apis/authApis";
+import { userExist, userNotExist } from "./redux/slices/authSlice";
 
+// Loader (Non-Lazy Component)
+import Loader from "./components/shared/small/Loader";
+
+// Lazy-loaded Components
 const LandingPage = lazy(() => import("./pages/landing/LandingPage"));
-// auth imports
+
+// Auth
 const SignIn = lazy(() => import("./pages/auth/SignIn"));
 const SignUp = lazy(() => import("./pages/auth/SignUp"));
 const ForgetPassword = lazy(() => import("./pages/auth/ForgetPassword"));
 const ResetPassword = lazy(() => import("./pages/auth/ResetPassword"));
-// admin imports
+
+// Admin
 const Admin = lazy(() => import("./pages/admin/index"));
 const AdminDashboard = lazy(() => import("./pages/admin/dashboard/AdminDashboard"));
 const BuildingInfo = lazy(() => import("./pages/admin/buildingInfo/BuildingInfo"));
@@ -36,7 +31,8 @@ const Wallet = lazy(() => import("./pages/admin/wallet/Wallet"));
 const ViewSlipAdmin = lazy(() => import("./pages/admin/dashboard/components/ViewSlip"));
 const WalletTransactionsDetail = lazy(() => import("./pages/admin/wallet/components/WalletTransactonsDetails"));
 const BuildingView = lazy(() => import("./pages/admin/buildingInfo/components/BuildingView"));
-// Manager imports
+
+// Manager
 const Manager = lazy(() => import("./pages/manager/index"));
 const ManagerDashboard = lazy(() => import("./pages/manager/dashboard/ManagerDashboard"));
 const ManagerBuildingInfo = lazy(() => import("./pages/manager/buildingInfo/BuildingInfo"));
@@ -47,12 +43,25 @@ const ManagerWallet = lazy(() => import("./pages/manager/wallet/Wallet"));
 const ManagerProfile = lazy(() => import("./pages/manager/settings/Profile"));
 const AddParking = lazy(() => import("./pages/manager/addParkingSpace/components/AddParking"));
 const Sensors = lazy(() => import("./pages/manager/sensors/Sensors"));
-// User imports
+const EditBuildingInfo = lazy(() => import("./pages/manager/editBuildingInfo/EditBuildingInfo"));
+const EditFloorInfo = lazy(() => import("./pages/manager/editFloorInfo/EditFloorInfo"));
+const AddNewFloor = lazy(() => import("./pages/manager/addNewFloor/addNewFloor"));
+
+// User
 const User = lazy(() => import("./pages/user/index"));
 const UserDashboard = lazy(() => import("./pages/user/dashboard/UserDashboard"));
 const BookingSummary = lazy(() => import("./pages/user/bookingSummary/BookingSummary"));
 const UserBuildingInfo = lazy(() => import("./pages/user/buildingInfo/BuildingInfo"));
 const AddParkingSpace = lazy(() => import("./pages/manager/addParkingSpace/AddParkingSpace"));
+const FloorView = lazy(() => import("./pages/admin/buildingInfo/components/FloorView"));
+const Booking = lazy(() => import("./pages/user/dashboard/components/Booking"));
+const ConfirmBooking = lazy(() => import("./pages/user/dashboard/components/ConfirmBooking"));
+const PaymentSuccess = lazy(() => import("./pages/user/dashboard/components/PaymentSuccess"));
+const PaymentFail = lazy(() => import("./pages/user/dashboard/components/PaymentFail"));
+const UserViewSlip = lazy(() => import("./pages/user/bookingSummary/components/ViewSlip"));
+const UserProfile = lazy(() => import("./pages/user/setting/Profile"));
+const BookingSlots = lazy(() => import("./pages/user/dashboard/components/BookingSlots"));
+
 
 function App() {
   const dispatch = useDispatch();
@@ -116,6 +125,7 @@ function App() {
                 <Route path="building-view/:id" element={<ManagerBuildingView />} />
                 <Route path="edit-building-info/:id" element={<EditBuildingInfo />} />
                 <Route path="floor-view/:buildingId/:id" element={<ManagerFloorView />} />
+                <Route path="add-floor/:buildingId" element={<AddNewFloor />} />
                 <Route path="edit-floor-info/:buildingId/:id" element={<EditFloorInfo />} />
                 <Route path="parking-summary" element={<ManagerParkingSummary />} />
                 <Route path="sensors" element={<Sensors />} />

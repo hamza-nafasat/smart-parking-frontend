@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
+import { confirmAlert } from "react-confirm-alert";
 import toast from "react-hot-toast";
+import { FaTrash } from "react-icons/fa6";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import DeleteIcon from "../../../../assets/svgs/parkingStepper/DeleteIcon";
-import EditIcon from "../../../../assets/svgs/parkingStepper/EditIcon";
+import { GreenEdit } from "../../../../assets/svgs/Icon";
 import Alerts from "../../../../components/shared/large/Alerts";
 import FloorDetail from "../../../../components/shared/large/FloorDetail";
 import { PrimaryWidgetCard, SecondaryWidgetCard } from "../../../../components/shared/large/WidgetCard";
 import { useDeleteSingleFloorMutation, useGetSingleFloorQuery } from "../../../../redux/apis/floorApis";
 import { alertsData, spacesCardsData } from "../../../admin/buildingInfo/utils/buildingData";
-import { confirmAlert } from "react-confirm-alert";
 
 const FloorView = () => {
   const params = useParams();
@@ -52,11 +52,19 @@ const FloorView = () => {
     <div>
       <section className="m-2 flex justify-end">
         <div className="flex items-center gap-4">
-          <Link to={`/manager/edit-floor-info/${buildingId}/${floorId}`}>
-            <EditIcon />
+          <Link
+            className="flex items-center justify-center"
+            title="Edit Floor "
+            to={`/manager/edit-floor-info/${buildingId}/${floorId}`}
+          >
+            <GreenEdit width="20" height="20" />
           </Link>
-          <button onClick={() => floorDeleteHandler(floorId)}>
-            <DeleteIcon />
+          <button
+            className="text-red-400 flex items-center justify-center"
+            title="Delete Floor"
+            onClick={() => floorDeleteHandler(floorId)}
+          >
+            <FaTrash size={20} />
           </button>
         </div>
       </section>
