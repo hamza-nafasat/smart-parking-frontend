@@ -103,7 +103,7 @@ const BuildingView = () => {
           <div className="mt-4">
             {/* <img src={buildingData?.twoDImage?.url} alt="image" className="rounded-lg object-cover" /> */}
             <TwoDModelView
-              polygons={buildingData?.polygonData ? JSON.parse(buildingData?.polygonData) : []}
+              polygons={buildingData?.polygonData ? buildingData?.polygonData : []}
               imageSrc={buildingData?.twoDImage?.url}
             />
           </div>

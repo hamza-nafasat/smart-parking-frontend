@@ -91,7 +91,7 @@ const FloorView = () => {
           <div className="mt-4">
             {/* <img src={floorData?.twoDImage?.url} alt="image" className="rounded-lg object-cover" /> */}
             <TwoDModelView
-              polygons={floorData?.polygonData ? JSON.parse(floorData?.polygonData) : []}
+              polygons={floorData?.polygonData ? floorData?.polygonData : []}
               imageSrc={floorData?.twoDImage?.url}
             />
           </div>
@@ -104,7 +104,7 @@ const FloorView = () => {
         <h4 className="font-[600] mb-4">Ramps View</h4>
         <div className="">
           <TwoDModelView
-            polygons={floorData?.polygonData ? JSON.parse(floorData?.polygonData) : []}
+            polygons={floorData?.polygonData ? floorData?.polygonData : []}
             imageSrc={floorData?.twoDImage?.url}
           />
         </div>

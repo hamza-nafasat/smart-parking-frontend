@@ -76,12 +76,12 @@ function EditBuildingInfo() {
         email: building.email || "",
         type: building.type || "",
         buildingImage: building?.twoDImage?.url || null,
-        buildingCoordinates: JSON.parse(building.polygonData) || [],
+        buildingCoordinates: building.polygonData || [],
         description: building.description || "",
       });
       setOldImageSrc(building?.twoDImage?.url || null);
       setImageSrc(building?.twoDImage?.url || null);
-      setPolygons(JSON.parse(building?.polygonData) || []);
+      setPolygons(building?.polygonData || []);
     }
   }, [data?.data]);
   return (
@@ -96,7 +96,13 @@ function EditBuildingInfo() {
           value={building.address}
           onChange={formDataHandler}
         />
-        <Input type="text" placeholder="Total area (sq ft/m)" name="area" value={building.area} onChange={formDataHandler} />
+        <Input
+          type="text"
+          placeholder="Total area (sq ft/m)"
+          name="area"
+          value={building.area}
+          onChange={formDataHandler}
+        />
         <Input
           className="col-span-2"
           type="email"
