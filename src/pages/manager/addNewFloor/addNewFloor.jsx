@@ -7,12 +7,14 @@ import Input from "../../../components/shared/small/Input";
 import { useCreateFloorMutation } from "../../../redux/apis/floorApis";
 import { customObjectId } from "../../../utils/features";
 import UploadModel from "../addParkingSpace/components/UploadModel";
+import { useCreateSlotsInBulkMutation } from "../../../redux/apis/slotApis";
 
 function AddNewFloor() {
   const navigate = useNavigate();
   const params = useParams();
   const buildingId = params.buildingId;
   const [addFloor, { isLoading }] = useCreateFloorMutation();
+  const [addSlotInBulk, { isLoading: isLoadingForSlot }] = useCreateSlotsInBulkMutation();
   const [name, setName] = useState("");
   const [noOfParkingSpace, setNumberOfParkingSpace] = useState();
   const [originalImage, setOriginalImage] = useState(null);
@@ -32,8 +34,24 @@ function AddNewFloor() {
     if (originalImage) formData.append("file", originalImage);
     try {
       const res = await addFloor({ data: formData }).unwrap();
-      if (res.success) toast.success(res?.message);
-      return navigate(`/manager/building-view/${buildingId}`);
+      if (res.success) {
+        if (!res?.data?._id) return toast.error("floor id not found");
+        const formDataForSlots = {};
+        formDataForSlots.floorId = res?.data?._id;
+        formDataForSlots.buildingId = buildingId;
+        const slots = [];
+        polygonsForBackend?.forEach((slot) => {
+          if (!slot?.id || !slot?.points?.length) return toast.error("Please Fill all required fields each floor");
+          slots.push({ id: slot?.id, points: slot?.points });
+        });
+        formDataForSlots.slots = slots;
+        const resForSlots = await addSlotInBulk({ data: formDataForSlots }).unwrap();
+        if (resForSlots?.success) {
+          toast.success(`Floor ${name} and ${resForSlots?.data?.length} slots added successfully`);
+          console.log("resForSlots", resForSlots);
+        }
+        return navigate(`/manager/building-view/${buildingId}`);
+      }
     } catch (error) {
       console.log("Error in update floor", error);
       toast.error(error?.data?.message || "Something went wrong");
@@ -79,7 +97,7 @@ function AddNewFloor() {
         </div>
         <div className="min-w-full flex justify-end pr-6 m-2">
           <Button
-            disabled={isLoading}
+            disabled={isLoading || isLoadingForSlot}
             className={`${isLoading ? "cursor-not-allowed opacity-30" : ""}`}
             width="w-[200px]"
             type="button"

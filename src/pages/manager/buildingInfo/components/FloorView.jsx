@@ -10,6 +10,7 @@ import { PrimaryWidgetCard, SecondaryWidgetCard } from "../../../../components/s
 import { useDeleteSingleFloorMutation, useGetSingleFloorQuery } from "../../../../redux/apis/floorApis";
 import { alertsData, spacesCardsData } from "../../../admin/buildingInfo/utils/buildingData";
 import TwoDModelView from "../../addParkingSpace/components/TwoDModelView";
+import { useGetAllSlotsQuery } from "../../../../redux/apis/slotApis";
 
 const FloorView = () => {
   const params = useParams();
@@ -19,6 +20,8 @@ const FloorView = () => {
   const [deleteFloor] = useDeleteSingleFloorMutation();
   const [floorData, setFloorData] = useState(null);
   const { data } = useGetSingleFloorQuery(floorId);
+  const [polygons, setPolygons] = useState([]);
+  const { data: slots } = useGetAllSlotsQuery(floorId);
 
   const floorDeleteHandler = (id) => {
     confirmAlert({
@@ -45,6 +48,10 @@ const FloorView = () => {
       ],
     });
   };
+
+  useEffect(() => {
+    if (slots?.data) setPolygons(slots?.data?.map((slot) => ({ id: slot?.id, points: slot?.points })));
+  }, [floorData, slots?.data]);
 
   useEffect(() => {
     if (data) setFloorData(data?.data);
@@ -91,7 +98,8 @@ const FloorView = () => {
           <div className="mt-4">
             {/* <img src={floorData?.twoDImage?.url} alt="image" className="rounded-lg object-cover" /> */}
             <TwoDModelView
-              polygons={floorData?.polygonData ? floorData?.polygonData : []}
+              // polygons={floorData?.polygonData ? floorData?.polygonData : []}
+              polygons={polygons}
               imageSrc={floorData?.twoDImage?.url}
             />
           </div>
@@ -104,7 +112,8 @@ const FloorView = () => {
         <h4 className="font-[600] mb-4">Ramps View</h4>
         <div className="">
           <TwoDModelView
-            polygons={floorData?.polygonData ? floorData?.polygonData : []}
+            // polygons={floorData?.polygonData ? floorData?.polygonData : []}
+            polygons={polygons}
             imageSrc={floorData?.twoDImage?.url}
           />
         </div>
