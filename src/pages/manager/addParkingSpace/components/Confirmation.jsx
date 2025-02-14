@@ -7,6 +7,7 @@ import { useCreateBuildingMutation } from "../../../../redux/apis/buildingApis";
 import { useCreateFloorsInBulkMutation } from "../../../../redux/apis/floorApis";
 import { resetBuildings } from "../../../../redux/slices/buildingSlice";
 import { resetFloors, setActiveAccordionIndex } from "../../../../redux/slices/floorSlice";
+import { customObjectId } from "../../../../utils/features";
 import { floors as sensors } from "../utils/addParkingSpaceFeatures";
 
 const Confirmation = ({ setCurrentStep }) => {
@@ -57,6 +58,7 @@ const Confirmation = ({ setCurrentStep }) => {
         if (!floor?.name || !floor.noOfParkingSpace || !floor.file)
           return toast.error("Please Fill all required fields each floor");
         console.log("floor", floor);
+        formDataForFloor.append(`floors[${i}][_id]`, customObjectId());
         formDataForFloor.append(`floors[${i}][name]`, floor?.name);
         formDataForFloor.append(`floors[${i}][noOfParkingSpace]`, floor?.noOfParkingSpace);
         formDataForFloor.append(`files`, floor?.file);
@@ -65,7 +67,6 @@ const Confirmation = ({ setCurrentStep }) => {
       const resForFloor = await createFloorInBulk(formDataForFloor).unwrap();
       if (resForFloor.success) toast.success(`Building and ${resForFloor?.message}`);
       else throw new Error(resForFloor?.message);
-
       dispatch(resetBuildings());
       dispatch(resetFloors());
       dispatch(setActiveAccordionIndex(null));

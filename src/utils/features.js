@@ -1,4 +1,5 @@
 import getEnv from "../configs/config";
+import { v4 as uuid } from "uuid";
 
 const areCookiesEnabled = () => {
   document.cookie = `checkCookieBlocker=1; SameSite=None; Secure; path=/; domain=${getEnv("DOMAIN")}`;
@@ -8,4 +9,8 @@ const areCookiesEnabled = () => {
   return isCookieSet;
 };
 
-export { areCookiesEnabled };
+function customObjectId() {
+  return uuid().replace(/-/g, "").substring(0, 24);
+}
+
+export { areCookiesEnabled, customObjectId };

@@ -5,6 +5,7 @@ import { AccordionEditIcon } from "../../../assets/svgs/Icon";
 import Button from "../../../components/shared/small/Button";
 import Input from "../../../components/shared/small/Input";
 import { useCreateFloorMutation } from "../../../redux/apis/floorApis";
+import { customObjectId } from "../../../utils/features";
 import UploadModel from "../addParkingSpace/components/UploadModel";
 
 function AddNewFloor() {
@@ -23,6 +24,7 @@ function AddNewFloor() {
     if (!name || !noOfParkingSpace || !polygonsForBackend || !originalImage)
       return toast.error("Fill all fields first");
     const formData = new FormData();
+    formData.append("_id", customObjectId());
     formData.append("name", name);
     formData.append("buildingId", buildingId);
     formData.append("noOfParkingSpace", noOfParkingSpace);
