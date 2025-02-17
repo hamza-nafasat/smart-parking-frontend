@@ -9,18 +9,21 @@ import { resetBuildings } from "../../../../redux/slices/buildingSlice";
 import { resetFloors, setActiveAccordionIndex } from "../../../../redux/slices/floorSlice";
 import { customObjectId } from "../../../../utils/features";
 import { floors as sensors } from "../utils/addParkingSpaceFeatures";
+import { useCreateSlotsInBulkMutation } from "../../../../redux/apis/slotApis";
 
 const Confirmation = ({ setCurrentStep }) => {
   const dispatch = useDispatch();
   const { buildingGeneralInfo } = useSelector((state) => state.building);
+
   const { floors } = useSelector((state) => state.floor);
   const [createBuilding, { isLoading }] = useCreateBuildingMutation();
   const [createFloorInBulk, { isLoading: isLoadingForFloor }] = useCreateFloorsInBulkMutation();
+  const [createSlotsInBulk, { isLoading: isLoadingForSlots }] = useCreateSlotsInBulkMutation();
 
   // final submit handler which create building and floors in database
   // -----------------------------------------------------------------
   const stepperSubmitHandler = async () => {
-    let buildingId;
+    let gettedBuildingId = customObjectId();
     try {
       // create building in database
       let data = {
@@ -34,39 +37,99 @@ const Confirmation = ({ setCurrentStep }) => {
         file: buildingGeneralInfo?.file || "",
         polygonData: buildingGeneralInfo?.buildingCoordinates || "",
       };
-      console.log("data is", data);
       const { name, address, area, email, description, type, file, polygonData, noOfFloors } = data;
       if (!name || !address || !area || !email || !description || !type || !file || !polygonData || !noOfFloors)
         return toast.error("Please Fill all required fields for building");
-      const formData = new FormData();
-      formData.append("name", name);
-      formData.append("address", address);
-      formData.append("area", area);
-      formData.append("email", email);
-      formData.append("description", description);
-      formData.append("type", type);
-      formData.append("noOfFloors", noOfFloors);
-      formData.append("file", file);
-      formData.append("polygonData", JSON.stringify(polygonData));
-      const resForBuilding = await createBuilding(formData).unwrap();
-      if (resForBuilding.success) buildingId = resForBuilding?.data?._id;
-      else throw new Error(resForBuilding?.message);
-      // create floors in database
+      const formDataForBuilding = new FormData();
       const formDataForFloor = new FormData();
-      formDataForFloor.append("buildingId", buildingId);
+      const allSlotsFormData = [];
+      // create form data for building ===>
+      formDataForBuilding.append("_id", gettedBuildingId);
+      formDataForBuilding.append("name", name);
+      formDataForBuilding.append("address", address);
+      formDataForBuilding.append("area", area);
+      formDataForBuilding.append("email", email);
+      formDataForBuilding.append("description", description);
+      formDataForBuilding.append("type", type);
+      formDataForBuilding.append("noOfFloors", noOfFloors);
+      formDataForBuilding.append("file", file);
+      formDataForBuilding.append("polygonData", JSON.stringify(polygonData));
+      console.log("buildingData", {
+        gettedBuildingId,
+        name,
+        address,
+        area,
+        email,
+        description,
+        type,
+        noOfFloors,
+        file,
+        polygonData,
+      });
+
+      // create form data for floor ===>
+      formDataForFloor.append("buildingId", gettedBuildingId);
       floors?.forEach((floor, i) => {
         if (!floor?.name || !floor.noOfParkingSpace || !floor.file)
           return toast.error("Please Fill all required fields each floor");
-        console.log("floor", floor);
-        formDataForFloor.append(`floors[${i}][_id]`, customObjectId());
+        const floorId = customObjectId();
+        console.log("floorData", {
+          gettedBuildingId,
+          floorId,
+          name: floor?.name,
+          noOfParkingSpace: floor?.noOfParkingSpace,
+          polygonData: floor?.polygonData,
+        });
+        formDataForFloor.append(`floors[${i}][_id]`, floorId);
         formDataForFloor.append(`floors[${i}][name]`, floor?.name);
         formDataForFloor.append(`floors[${i}][noOfParkingSpace]`, floor?.noOfParkingSpace);
         formDataForFloor.append(`files`, floor?.file);
         formDataForFloor.append(`floors[${i}][polygonData]`, JSON.stringify(floor?.polygonData));
+
+        // create form data for slots ===>
+        const slotData = { slots: [] };
+        slotData.floorId = floorId;
+        slotData.buildingId = gettedBuildingId;
+        floor?.polygonData?.forEach((polygon) => {
+          if (!polygon.id || !polygon.points) return toast.error("Please Fill all required fields each Slot");
+          console.log("slots data", slotData);
+          const singleSlot = {
+            id: polygon.id,
+            color: polygon?.color,
+            fillColor: polygon?.fillColor,
+            points: JSON.stringify(polygon?.points),
+          };
+          slotData.slots.push(singleSlot);
+        });
+        allSlotsFormData.push(slotData);
       });
+
+      let message = "";
+      ////////////////////////////////////////////////////////////
+      // CREATE BUILDING IN DATABASE
+      const resForBuilding = await createBuilding(formDataForBuilding).unwrap();
+      if (resForBuilding.success) gettedBuildingId = resForBuilding?.data?._id;
+      else throw new Error(resForBuilding?.message);
+      // create floors in database
+      ///////////////////////////////////////////////////////////
+      // CREATE FLOORS IN DATABASE
       const resForFloor = await createFloorInBulk(formDataForFloor).unwrap();
-      if (resForFloor.success) toast.success(`Building and ${resForFloor?.message}`);
+      if (resForFloor.success) message = `Building, ${resForFloor?.data?.length} Floor `;
       else throw new Error(resForFloor?.message);
+      // ////////////////////////////////////////////////////////////
+      // // CREATE SLOTS IN DATABASE
+      let slots = 0;
+      await Promise.all(
+        allSlotsFormData.map(async (slotFormData) => {
+          const resForSlots = await createSlotsInBulk(slotFormData).unwrap();
+          if (resForSlots.success) slots += resForSlots?.data?.length;
+          if (!resForSlots?.success) throw new Error(resForSlots?.message);
+        })
+      );
+
+      toast.success(`${message} and ${slots} Slots added successfully`);
+      console.log(`${message} and ${slots} Slots added successfully`);
+
       dispatch(resetBuildings());
       dispatch(resetFloors());
       dispatch(setActiveAccordionIndex(null));
@@ -97,12 +160,12 @@ const Confirmation = ({ setCurrentStep }) => {
             onClick={() => setCurrentStep((prevStep) => prevStep - 1)}
           />
           <Button
-            className={`${isLoading || isLoadingForFloor ? "cursor-not-allowed opacity-30" : ""}`}
+            className={`${isLoading || isLoadingForFloor || isLoadingForSlots ? "cursor-not-allowed opacity-30" : ""}`}
             width="w-[120px]"
             type="button"
             text="Save"
             onClick={stepperSubmitHandler}
-            disabled={isLoading || isLoadingForFloor}
+            disabled={isLoading || isLoadingForFloor || isLoadingForSlots}
           />
         </div>
       </div>
