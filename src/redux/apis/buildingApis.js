@@ -20,6 +20,7 @@ const buildingApis = createApi({
         url: "/all",
         method: "GET",
       }),
+      providesTags: [{ type: "Building", id: "LIST" }],
     }),
     // get single building
     getSingleBuilding: builder.query({
@@ -35,6 +36,7 @@ const buildingApis = createApi({
         method: "PUT",
         body: data,
       }),
+      invalidatesTags: [{ type: "Building", id: "LIST" }],
     }),
     // delete single building
     deleteSingleBuilding: builder.mutation({
@@ -42,6 +44,7 @@ const buildingApis = createApi({
         url: `/single/${id}`,
         method: "DELETE",
       }),
+      invalidatesTags: [{ type: "Building", id: "LIST" }],
     }),
   }),
 });
