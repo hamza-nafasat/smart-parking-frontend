@@ -5,6 +5,10 @@ import { AiOutlineDelete } from "react-icons/ai";
 import { CiEdit } from "react-icons/ci";
 import { SlCursorMove } from "react-icons/sl";
 import { VscCopy } from "react-icons/vsc";
+import Button from "../../../../components/shared/small/Button";
+import Dropdown from "../../../../components/shared/small/Dropdown";
+import Input from "../../../../components/shared/small/Input";
+import Modal from "../../../../components/shared/small/Modal";
 import {
   drawCanvas,
   getCroppedImg,
@@ -17,13 +21,8 @@ import {
   handleDeleteMode,
   handleDeletePolygon,
   handleMoveMode,
-  polygonsLabelHandler,
   sensorInfoSubmitHandler,
 } from "../utils/addParkingSpaceFeatures";
-import Dropdown from "../../../../components/shared/small/Dropdown";
-import Button from "../../../../components/shared/small/Button";
-import Modal from '../../../../components/shared/small/Modal'
-import Input from "../../../../components/shared/small/Input";
 
 const TwoDModel = ({ onUpload, polygons, setPolygons, imageSrc, setImageSrc, setOriginalImage, isBuilding }) => {
   const canvasRef = useRef(null);
@@ -48,7 +47,7 @@ const TwoDModel = ({ onUpload, polygons, setPolygons, imageSrc, setImageSrc, set
   const [selectedSensor, setSelectedSensor] = useState("No sensor");
   const [color, setColor] = useState("#18bc9c");
 
-  console.log('polygons', polygons)
+  console.log("polygons", polygons);
 
   const openSensorPopup = (polygon) => {
     setSelectedPolygon(polygon);
@@ -81,7 +80,7 @@ const TwoDModel = ({ onUpload, polygons, setPolygons, imageSrc, setImageSrc, set
       img.src = croppedImage;
       img.onload = () => setImage(img);
       setShowCropper(false);
-      setImageSrc(croppedImage)
+      setImageSrc(croppedImage);
     } catch (error) {
       console.error("Crop failed:", error);
     }
@@ -241,7 +240,7 @@ const TwoDModel = ({ onUpload, polygons, setPolygons, imageSrc, setImageSrc, set
         </>
       )}
       {sensorPopup && selectedPolygon && (
-        <Modal title="Add Sensor" onClose={() => setSensorPopup(false)}>
+        <Modal title="Add Sensor" onClose={() => setSensorPopup(false)} notClose>
           <div className="flex flex-col gap-2">
             <Input
               type="text"
@@ -250,7 +249,7 @@ const TwoDModel = ({ onUpload, polygons, setPolygons, imageSrc, setImageSrc, set
               value={polygonName}
               onChange={(e) => setPolygonName(e.target.value)}
             />
-            
+
             {isBuilding && (
               <Dropdown
                 defaultText={selectedSensor}
