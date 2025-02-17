@@ -65,7 +65,8 @@ const drawCanvas = (
   isDrawingEnabled,
   image,
   polygons,
-  currentPolygon
+  currentPolygon,
+  color
 ) => {
   const canvas = canvasRef.current;
   if (!canvas && !isDrawingEnabled) return;
@@ -82,9 +83,13 @@ const drawCanvas = (
     context.moveTo(polygon.points[0].x, polygon.points[0].y);
     polygon.points.forEach((point) => context.lineTo(point.x, point.y));
     context.closePath();
-    context.fillStyle = "#18bc9c80";
+    //  Fill the polygon with the color
+    context.fillStyle = `${polygon.color}${90}` || "#03a5e060";
+    context.strokeStyle = polygon.fillColor || "#03a5e0";
     context.fill();
-    context.strokeStyle = "#00b791";
+
+    // Draw the border with the specified color
+    context.strokeStyle = polygon.fillColor || polygon.color || "#03a5e060";
     context.lineWidth = 2;
     context.stroke();
 
@@ -141,7 +146,8 @@ const handleCanvasClick = (
   isEditMode,
   setCurrentPolygon,
   polygons,
-  currentPolygon
+  currentPolygon,
+  openSensorPopup
 ) => {
   const canvas = canvasRef.current;
   const rect = canvas.getBoundingClientRect();
@@ -163,6 +169,7 @@ const handleCanvasClick = (
     setPolygons([...polygons, newPolygon]);
     setPolygonCount(polygonCount + 1);
     setDraggedPolygon(null);
+    openSensorPopup(newPolygon);
   } else if (isEditMode) {
     // Handle creating a new polygon
     const newPolygon = [...currentPolygon, { x, y }];
@@ -176,6 +183,7 @@ const handleCanvasClick = (
       setPolygons([...polygons, polygonWithId]);
       setPolygonCount(polygonCount + 1);
       setCurrentPolygon([]);
+      openSensorPopup(polygonWithId);
     }
   }
 };
@@ -187,13 +195,32 @@ const handleCopyMode = (
   setIsMoveMode,
   setIsDeleteMode,
   setDraggedPolygon,
-  isCopyMode
+  isCopyMode,
 ) => {
   setIsCopyMode(!isCopyMode);
   setIsEditMode(false);
   setIsMoveMode(false);
   setIsDeleteMode(false);
   setDraggedPolygon(null);
+
+  // if (!isCopyMode) {
+  //   const lastPolygon = polygons[polygons.length - 1];
+  //   if (lastPolygon) {
+  //     const newPolygon = {
+  //       ...lastPolygon,
+  //       id: polygonCount + 1,
+  //       points: lastPolygon.points.map((point) => ({
+  //         ...point,
+  //         x: point.x + 10,
+  //         y: point.y + 10,
+  //       })),
+  //     };
+  //     setPolygons([...polygons, newPolygon]);
+  //     setPolygonCount(polygonCount + 1);
+  //     setSelectedPolygon(newPolygon);
+  //     setSensorPopup(true);
+  //   }
+  // }
 };
 
 // Toggle Move Mode
@@ -330,7 +357,10 @@ const handleCanvasMouseMove = (
 };
 
 // Stop dragging on mouse up
-const handleCanvasMouseUp = (setDraggingPolygon) => {
+const handleCanvasMouseUp = (setDraggingPolygon, setSensorPopup, draggingPolygon) => {
+  if (draggingPolygon) {
+    setSensorPopup(true);
+  }
   setDraggingPolygon(null);
 };
 
@@ -358,6 +388,69 @@ const updateSensorAttached = (polygonId, sensor, polygons, setPolygons) => {
   setPolygons(updatedPolygons);
 };
 
+const polygonsLabelHandler = (
+  selectedOption,
+  selectedPolygon,
+  polygons,
+  setPolygons
+) => {
+  console.log("fjl;kasjdfl;kasjdfl;as", selectedOption, selectedPolygon);
+  let selectedPolygonId = selectedPolygon.id;
+  setPolygons(
+    polygons.map((poly) => {
+      if (poly.id === selectedPolygonId) {
+        poly.labelPoint = selectedOption.value;
+        return poly;
+      } else return poly;
+    })
+  );
+};
+
+const sensorInfoSubmitHandler = (
+  sensorIdInput,
+  polygons,
+  selectedPolygon,
+  selectedSensor,
+  color,
+  setPolygons,
+  setSensorPopup
+) => {
+  if (sensorIdInput) {
+    const updatedPolygons = polygons.map((polygon) =>
+      polygon.id === selectedPolygon.id
+        ? {
+            ...polygon,
+            id: sensorIdInput,
+            sensorAttached: selectedSensor || sensorIdInput,
+            color: color,
+            fillColor: color,
+            labelPoint: polygon.labelPoint || "first",
+          }
+        : polygon
+    );
+    setPolygons(updatedPolygons);
+    setSensorPopup(false);
+  } else {
+    // If sensorIdInput is empty, we do not allow the polygon to be drawn.
+    alert("without sensor id and sensor name polygon not draw");
+  }
+};
+
+const handleCancelPolygon = (
+  setSensorPopup,
+  setPolygons,
+  selectedPolygon,
+  setCurrentPolygon,
+  setSelectedPolygon
+) => {
+  setSensorPopup(false);
+  setPolygons((prevPolygons) =>
+    prevPolygons.filter((polygon) => polygon.id !== selectedPolygon?.id)
+  );
+  setCurrentPolygon([]);
+  setSelectedPolygon(null);
+};
+
 export {
   getCroppedImg,
   drawCanvas,
@@ -373,4 +466,7 @@ export {
   updateSensorAttached,
   sensors,
   floors,
+  polygonsLabelHandler,
+  sensorInfoSubmitHandler,
+  handleCancelPolygon,
 };

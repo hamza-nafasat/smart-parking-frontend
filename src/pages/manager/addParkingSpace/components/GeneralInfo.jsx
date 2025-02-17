@@ -92,6 +92,8 @@ const GeneralInfo = ({ setCurrentStep }) => {
       setPolygons([]);
     }
   }, [buildingGeneralInfo]);
+
+  console.log("buildingGeneralInfo", buildingGeneralInfo)
   return (
     <div className="mt-4">
       <h4 className="text-base md:text-xl font-medium text-[#414141] text-center">General Building Information</h4>

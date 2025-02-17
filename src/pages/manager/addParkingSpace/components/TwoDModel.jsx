@@ -8,6 +8,7 @@ import { VscCopy } from "react-icons/vsc";
 import {
   drawCanvas,
   getCroppedImg,
+  handleCancelPolygon,
   handleCanvasClick,
   handleCanvasMouseDown,
   handleCanvasMouseMove,
@@ -16,9 +17,15 @@ import {
   handleDeleteMode,
   handleDeletePolygon,
   handleMoveMode,
+  polygonsLabelHandler,
+  sensorInfoSubmitHandler,
 } from "../utils/addParkingSpaceFeatures";
+import Dropdown from "../../../../components/shared/small/Dropdown";
+import Button from "../../../../components/shared/small/Button";
+import Modal from '../../../../components/shared/small/Modal'
+import Input from "../../../../components/shared/small/Input";
 
-const TwoDModel = ({ onUpload, polygons, setPolygons, imageSrc, setImageSrc, setOriginalImage }) => {
+const TwoDModel = ({ onUpload, polygons, setPolygons, imageSrc, setImageSrc, setOriginalImage, isBuilding }) => {
   const canvasRef = useRef(null);
   const [isDrawingEnabled, setIsDrawingEnabled] = useState(false);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
@@ -35,6 +42,17 @@ const TwoDModel = ({ onUpload, polygons, setPolygons, imageSrc, setImageSrc, set
   const [draggedPolygon, setDraggedPolygon] = useState(null);
   const [draggingPolygon, setDraggingPolygon] = useState(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [sensorPopup, setSensorPopup] = useState(false);
+  const [selectedPolygon, setSelectedPolygon] = useState(null);
+  const [sensorIdInput, setSensorIdInput] = useState("");
+  const [selectedSensor, setSelectedSensor] = useState("No sensor");
+  const [color, setColor] = useState("#18bc9c");
+
+  const openSensorPopup = (polygon) => {
+    setSelectedPolygon(polygon);
+    setSensorPopup(true);
+    setSensorIdInput("");
+  };
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
@@ -68,9 +86,9 @@ const TwoDModel = ({ onUpload, polygons, setPolygons, imageSrc, setImageSrc, set
 
   useEffect(() => {
     if (isDrawingEnabled) {
-      drawCanvas(canvasRef, isDrawingEnabled, image, polygons, currentPolygon);
+      drawCanvas(canvasRef, isDrawingEnabled, image, polygons, currentPolygon, color);
     }
-  }, [image, polygons, currentPolygon, isDrawingEnabled]);
+  }, [image, polygons, currentPolygon, isDrawingEnabled, color]);
 
   useEffect(() => {
     if (onUpload) onUpload(imageSrc, polygons);
@@ -110,7 +128,8 @@ const TwoDModel = ({ onUpload, polygons, setPolygons, imageSrc, setImageSrc, set
             isEditMode,
             setCurrentPolygon,
             polygons,
-            currentPolygon
+            currentPolygon,
+            openSensorPopup
           )
         }
         onMouseDown={(event) =>
@@ -128,7 +147,7 @@ const TwoDModel = ({ onUpload, polygons, setPolygons, imageSrc, setImageSrc, set
             setPolygons
           )
         }
-        onMouseUp={() => handleCanvasMouseUp(setDraggingPolygon)}
+        onMouseUp={() => handleCanvasMouseUp(setDraggingPolygon, setSensorPopup, draggingPolygon)}
       />
       {showCropper && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50">
@@ -177,7 +196,13 @@ const TwoDModel = ({ onUpload, polygons, setPolygons, imageSrc, setImageSrc, set
                   setIsMoveMode,
                   setIsDeleteMode,
                   setDraggedPolygon,
-                  isCopyMode
+                  isCopyMode,
+                  setSensorPopup,
+                  setSelectedPolygon,
+                  polygons,
+                  setPolygons,
+                  polygonCount,
+                  setPolygonCount
                 )
               }
               className={`p-2 border rounded-md text-white ${isCopyMode ? "border-primary" : "border-[#565656]"}`}
@@ -211,6 +236,84 @@ const TwoDModel = ({ onUpload, polygons, setPolygons, imageSrc, setImageSrc, set
             </button>
           </div>
         </>
+      )}
+      {sensorPopup && selectedPolygon && (
+        <Modal title="Add Sensor" onClose={() => setSensorPopup(false)}>
+          <div className="flex flex-col gap-2">
+            <Input
+              type="text"
+              placeholder="Sensor Id"
+              label="Sensor Id"
+              value={sensorIdInput}
+              onChange={(e) => setSensorIdInput(e.target.value)}
+            />
+            
+            {isBuilding && (
+              <Dropdown
+                defaultText={selectedSensor}
+                options={[
+                  { option: "Sensor 1", value: "sensor-1" },
+                  { option: "Sensor 2", value: "sensor-2" },
+                ]}
+                label="Sensor Name"
+                // onChange={(e) => setSelectedSensor(e.target.value)}
+                onSelect={(selectedOption) => setSelectedSensor(selectedOption.value)}
+              />
+            )}
+
+            <Dropdown
+              defaultText={"first"}
+              options={[
+                { option: "First-Point", value: "first" },
+                { option: "Second-Point", value: "second" },
+                { option: "Third-Point", value: "third" },
+                { option: "Fourth-Point", value: "fourth" },
+              ]}
+              label="Label Positioning of polygon"
+              onSelect={(selectedOption) =>
+                polygonsLabelHandler(selectedOption, selectedPolygon, polygons, setPolygons)
+              }
+            />
+
+            <div className="flex items-center gap-4">
+              <h1 className="font-bold text-xs">Select Color of Polygon</h1>
+              <input type="color" value={color} onChange={(e) => setColor(e.target.value)} />
+            </div>
+
+            <div className="flex justify-center gap-3">
+              <Button
+                disabled={!sensorIdInput}
+                text="Add"
+                width="w-[120px]"
+                onClick={() => {
+                  sensorInfoSubmitHandler(
+                    sensorIdInput,
+                    polygons,
+                    selectedPolygon,
+                    selectedSensor,
+                    color,
+                    setPolygons,
+                    setSensorPopup
+                  );
+                  setSensorPopup(false);
+                }}
+              />
+              <Button
+                width="w-[120px]"
+                text="cancel"
+                onClick={() =>
+                  handleCancelPolygon(
+                    setSensorPopup,
+                    setPolygons,
+                    selectedPolygon,
+                    setCurrentPolygon,
+                    setSelectedPolygon
+                  )
+                }
+              />
+            </div>
+          </div>
+        </Modal>
       )}
     </div>
   );

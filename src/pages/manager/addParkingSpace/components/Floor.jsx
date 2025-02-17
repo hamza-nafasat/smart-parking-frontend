@@ -119,6 +119,7 @@ const Floor = ({ isOpen, onToggle, floorNumber }) => {
                 imageSrc={imageSrc}
                 setImageSrc={setImageSrc}
                 setOriginalImage={setOriginalImage}
+                isBuilding={true}
               />
               {/* <TwoDModel
                 onUpload={onUploadForFloorImage}
