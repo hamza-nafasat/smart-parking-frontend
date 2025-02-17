@@ -14,6 +14,7 @@ import { useCreateSlotsInBulkMutation } from "../../../../redux/apis/slotApis";
 const Confirmation = ({ setCurrentStep }) => {
   const dispatch = useDispatch();
   const { buildingGeneralInfo } = useSelector((state) => state.building);
+
   const { floors } = useSelector((state) => state.floor);
   const [createBuilding, { isLoading }] = useCreateBuildingMutation();
   const [createFloorInBulk, { isLoading: isLoadingForFloor }] = useCreateFloorsInBulkMutation();
