@@ -84,12 +84,14 @@ const drawCanvas = (
     polygon.points.forEach((point) => context.lineTo(point.x, point.y));
     context.closePath();
     //  Fill the polygon with the color
-    context.fillStyle = "#18BC9C99";
-    context.strokeStyle = "#18BC9C";
+    const fillColor = polygon?.color ? `${polygon.color}90` : "#18BC9C60";
+    const strokeColor = polygon?.fillColor || polygon?.color || "#18BC9C";
+    context.fillStyle = fillColor;
+    context.strokeStyle = strokeColor;
     context.fill();
 
     // Draw the border with the specified color
-    context.strokeStyle = "#18BC9C99";
+    context.strokeStyle = polygon?.fillColor || polygon.color || "#18BC9C60";
     context.lineWidth = 2;
     context.stroke();
 
@@ -195,7 +197,7 @@ const handleCopyMode = (
   setIsMoveMode,
   setIsDeleteMode,
   setDraggedPolygon,
-  isCopyMode,
+  isCopyMode
 ) => {
   setIsCopyMode(!isCopyMode);
   setIsEditMode(false);
@@ -357,7 +359,11 @@ const handleCanvasMouseMove = (
 };
 
 // Stop dragging on mouse up
-const handleCanvasMouseUp = (setDraggingPolygon, setSensorPopup, draggingPolygon) => {
+const handleCanvasMouseUp = (
+  setDraggingPolygon,
+  setSensorPopup,
+  draggingPolygon
+) => {
   if (draggingPolygon) {
     setSensorPopup(true);
   }

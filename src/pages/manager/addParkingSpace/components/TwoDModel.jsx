@@ -81,6 +81,7 @@ const TwoDModel = ({ onUpload, polygons, setPolygons, imageSrc, setImageSrc, set
       img.src = croppedImage;
       img.onload = () => setImage(img);
       setShowCropper(false);
+      setImageSrc(croppedImage)
     } catch (error) {
       console.error("Crop failed:", error);
     }
