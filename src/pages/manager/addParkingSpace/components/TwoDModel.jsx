@@ -44,14 +44,14 @@ const TwoDModel = ({ onUpload, polygons, setPolygons, imageSrc, setImageSrc, set
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [sensorPopup, setSensorPopup] = useState(false);
   const [selectedPolygon, setSelectedPolygon] = useState(null);
-  const [sensorIdInput, setSensorIdInput] = useState("");
+  const [polygonName, setPolygonName] = useState("");
   const [selectedSensor, setSelectedSensor] = useState("No sensor");
   const [color, setColor] = useState("#18bc9c");
 
   const openSensorPopup = (polygon) => {
     setSelectedPolygon(polygon);
     setSensorPopup(true);
-    setSensorIdInput("");
+    setPolygonName("");
   };
 
   const handleImageUpload = (event) => {
@@ -242,10 +242,10 @@ const TwoDModel = ({ onUpload, polygons, setPolygons, imageSrc, setImageSrc, set
           <div className="flex flex-col gap-2">
             <Input
               type="text"
-              placeholder="Sensor Id"
-              label="Sensor Id"
-              value={sensorIdInput}
-              onChange={(e) => setSensorIdInput(e.target.value)}
+              placeholder="name"
+              label="Name"
+              value={polygonName}
+              onChange={(e) => setPolygonName(e.target.value)}
             />
             
             {isBuilding && (
@@ -261,7 +261,7 @@ const TwoDModel = ({ onUpload, polygons, setPolygons, imageSrc, setImageSrc, set
               />
             )}
 
-            <Dropdown
+            {/* <Dropdown
               defaultText={"first"}
               options={[
                 { option: "First-Point", value: "first" },
@@ -273,7 +273,7 @@ const TwoDModel = ({ onUpload, polygons, setPolygons, imageSrc, setImageSrc, set
               onSelect={(selectedOption) =>
                 polygonsLabelHandler(selectedOption, selectedPolygon, polygons, setPolygons)
               }
-            />
+            /> */}
 
             <div className="flex items-center gap-4">
               <h1 className="font-bold text-xs">Select Color of Polygon</h1>
@@ -282,12 +282,12 @@ const TwoDModel = ({ onUpload, polygons, setPolygons, imageSrc, setImageSrc, set
 
             <div className="flex justify-center gap-3">
               <Button
-                disabled={!sensorIdInput}
+                disabled={!polygonName}
                 text="Add"
                 width="w-[120px]"
                 onClick={() => {
                   sensorInfoSubmitHandler(
-                    sensorIdInput,
+                    polygonName,
                     polygons,
                     selectedPolygon,
                     selectedSensor,
