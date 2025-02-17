@@ -16,7 +16,7 @@ const slotApis = createApi({
       invalidatesTags: [{ type: "Slot", id: "LIST" }],
     }),
     createSlotsInBulk: builder.mutation({
-      query: ({ data }) => ({
+      query: (data) => ({
         url: "/create-multiple",
         method: "POST",
         body: data,
