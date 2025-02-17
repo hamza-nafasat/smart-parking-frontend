@@ -84,12 +84,12 @@ const drawCanvas = (
     polygon.points.forEach((point) => context.lineTo(point.x, point.y));
     context.closePath();
     //  Fill the polygon with the color
-    context.fillStyle = `${polygon.color}${90}` || "#18BC9C60";
-    context.strokeStyle = polygon.fillColor || "#18BC9C";
+    context.fillStyle = "#18BC9C99";
+    context.strokeStyle = "#18BC9C";
     context.fill();
 
     // Draw the border with the specified color
-    context.strokeStyle = polygon.fillColor || polygon.color || "#18BC9C60";
+    context.strokeStyle = "#18BC9C99";
     context.lineWidth = 2;
     context.stroke();
 
@@ -117,7 +117,7 @@ const drawCanvas = (
     context.closePath();
     context.fill();
 
-    context.fillStyle = "#18BC9C99";
+    context.fillStyle = "#000";
     context.fillText(text, boxX + padding, boxY + padding + textHeight - 4);
   });
 
