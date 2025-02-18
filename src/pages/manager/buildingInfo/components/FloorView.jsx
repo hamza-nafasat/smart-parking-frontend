@@ -50,7 +50,16 @@ const FloorView = () => {
   };
 
   useEffect(() => {
-    if (slots?.data) setPolygons(slots?.data?.map((slot) => ({ id: slot?.id, points: slot?.points })));
+    if (slots?.data)
+      setPolygons(
+        slots?.data?.map((slot) => ({
+          id: slot?.id,
+          points: slot?.points,
+          color: slot?.color,
+          fillColor: slot?.fillColor,
+          _id: slot?._id,
+        }))
+      );
   }, [floorData, slots?.data]);
 
   useEffect(() => {
