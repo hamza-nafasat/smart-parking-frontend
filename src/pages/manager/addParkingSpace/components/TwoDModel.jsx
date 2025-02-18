@@ -10,6 +10,7 @@ import Dropdown from "../../../../components/shared/small/Dropdown";
 import Input from "../../../../components/shared/small/Input";
 import Modal from "../../../../components/shared/small/Modal";
 import {
+  dataURLtoFile,
   drawCanvas,
   getCroppedImg,
   handleCancelPolygon,
@@ -81,6 +82,9 @@ const TwoDModel = ({ onUpload, polygons, setPolygons, imageSrc, setImageSrc, set
       img.onload = () => setImage(img);
       setShowCropper(false);
       setImageSrc(croppedImage);
+
+      const croppedImageFile = dataURLtoFile(croppedImage, "cropped_image.png");
+      setOriginalImage(croppedImageFile);
     } catch (error) {
       console.error("Crop failed:", error);
     }

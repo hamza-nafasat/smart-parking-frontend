@@ -34,6 +34,7 @@ const BuildingView = () => {
             if (!id) return toast.error("Please Provide Building Id");
             try {
               const res = await deleteBuilding(id).unwrap();
+
               console.log("building delete response", res);
               return navigate("/manager/building-info");
             } catch (error) {
