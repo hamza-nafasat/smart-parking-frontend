@@ -63,7 +63,7 @@ function EditFloorInfo() {
       const slotsData = slots?.data;
       const polygons = slotsData?.map((slot) => ({
         _id: slot._id,
-        id: slot._id,
+        id: slot.id,
         points: slot?.points,
         color: slot?.color,
         fillColor: slot?.fillColor,
@@ -72,6 +72,9 @@ function EditFloorInfo() {
       setPolygonsForBackend(polygons);
     }
   }, [slots?.data]);
+
+  console.log('newPolygons', newPolygons);
+  console.log('deletePolygonIds', deletePolygonIds);
 
   return (
     <div>

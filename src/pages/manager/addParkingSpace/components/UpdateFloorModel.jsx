@@ -153,7 +153,8 @@ const UpdateFloorModel = ({
             currentPolygon,
             openSensorPopup,
             newPolygons,
-            setNewPolygons
+            setNewPolygons,
+            setDeletedPolygonsIds
           )
         }
         onMouseDown={(event) =>
@@ -175,7 +176,9 @@ const UpdateFloorModel = ({
             draggingPolygon,
             dragOffset,
             setDraggedPolygon,
-            setPolygons
+            setPolygons,
+            newPolygons,
+            setNewPolygons
           )
         }
         onMouseUp={() =>
