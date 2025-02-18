@@ -25,31 +25,37 @@ function AddNewFloor() {
   const saveClickHandler = async () => {
     if (!name || !noOfParkingSpace || !polygonsForBackend || !originalImage)
       return toast.error("Fill all fields first");
+    const floorId = customObjectId();
     const formData = new FormData();
-    formData.append("_id", customObjectId());
+    const slotData = { slots: [] };
+    // create data for floor
+    formData.append("_id", floorId);
     formData.append("name", name);
     formData.append("buildingId", buildingId);
     formData.append("noOfParkingSpace", noOfParkingSpace);
     formData.append("polygonData", JSON.stringify(polygonsForBackend));
     if (originalImage) formData.append("file", originalImage);
+    // create slots data
+    slotData.floorId = floorId;
+    slotData.buildingId = buildingId;
+    polygonsForBackend?.forEach((polygon) => {
+      if (!polygon.id || !polygon.points || !polygon.sensorId)
+        return toast.error("Please Fill all required fields each Slot");
+      const singleSlot = {
+        id: polygon.id,
+        color: polygon?.color,
+        fillColor: polygon?.fillColor,
+        points: JSON.stringify(polygon?.points),
+        sensorId: polygon.sensorId,
+      };
+      slotData.slots.push(singleSlot);
+    });
+    // create floor and slots in db
     try {
       const res = await addFloor({ data: formData }).unwrap();
       if (res.success) {
-        if (!res?.data?._id) return toast.error("floor id not found");
-        const formDataForSlots = {};
-        formDataForSlots.floorId = res?.data?._id;
-        formDataForSlots.buildingId = buildingId;
-        const slots = [];
-        polygonsForBackend?.forEach((slot) => {
-          if (!slot?.id || !slot?.points?.length) return toast.error("Please Fill all required fields each floor");
-          slots.push({ id: slot?.id, points: slot?.points });
-        });
-        formDataForSlots.slots = slots;
-        const resForSlots = await addSlotInBulk({ data: formDataForSlots }).unwrap();
-        if (resForSlots?.success) {
-          toast.success(`Floor ${name} and ${resForSlots?.data?.length} slots added successfully`);
-          console.log("resForSlots", resForSlots);
-        }
+        const slotRes = await addSlotInBulk(slotData).unwrap();
+        if (slotRes?.success) toast.success(`Floor and ${slotRes?.data?.length} slots created successfully`);
         return navigate(`/manager/building-view/${buildingId}`);
       }
     } catch (error) {

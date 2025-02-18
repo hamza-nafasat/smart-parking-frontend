@@ -11,7 +11,7 @@ const UploadModel = ({
   setImageSrc,
   setOriginalImage,
   heading = "Upload TwoD Model",
-  isBuilding=false
+  isBuilding = false,
 }) => {
   const [refreshKey, setRefreshKey] = useState(0);
   const deleteButtonHandler = () => {

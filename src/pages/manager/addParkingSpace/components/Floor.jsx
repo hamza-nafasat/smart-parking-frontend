@@ -14,7 +14,6 @@ const FloorAccordion = ({ polygons, setPolygons, imageSrc, setImageSrc }) => {
   const handleAccordionToggle = (index) =>
     dispatch(setActiveAccordionIndex(activeAccordionIndex === index ? null : index));
 
-
   // console.log("floors",floors);
   return (
     <div className="flex flex-col gap-4">
@@ -119,7 +118,6 @@ const Floor = ({ isOpen, onToggle, floorNumber }) => {
                 imageSrc={imageSrc}
                 setImageSrc={setImageSrc}
                 setOriginalImage={setOriginalImage}
-                isBuilding={true}
               />
               {/* <TwoDModel
                 onUpload={onUploadForFloorImage}

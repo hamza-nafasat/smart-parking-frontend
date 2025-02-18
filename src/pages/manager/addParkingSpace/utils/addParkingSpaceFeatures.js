@@ -1,3 +1,5 @@
+import toast from "react-hot-toast";
+
 // getCroppedImg.js
 const getCroppedImg = (imageSrc, crop) => {
   return new Promise((resolve) => {
@@ -458,21 +460,24 @@ const polygonsLabelHandler = (
 };
 
 const sensorInfoSubmitHandler = (
-  sensorIdInput,
+  name,
   polygons,
   selectedPolygon,
   selectedSensor,
   color,
   setPolygons,
-  setSensorPopup
+  setSensorPopup,
+  isBuilding
 ) => {
-  if (sensorIdInput) {
+  if (!name) return toast.error("Please select sensor name");
+  if (!isBuilding && !selectedSensor) return toast.error("Please select sensor");
+  if (name) {
     const updatedPolygons = polygons.map((polygon) =>
       polygon.id === selectedPolygon.id
         ? {
             ...polygon,
-            id: sensorIdInput,
-            sensorAttached: selectedSensor || sensorIdInput,
+            id: name,
+            sensorId: selectedSensor || "",
             color: color,
             fillColor: color,
             labelPoint: polygon.labelPoint || "first",

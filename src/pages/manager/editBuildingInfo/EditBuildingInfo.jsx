@@ -127,6 +127,7 @@ function EditBuildingInfo() {
             setPolygons={setPolygons}
             imageSrc={imageSrc}
             setImageSrc={setImageSrc}
+            isBuilding
           />
         </div>
         <textarea

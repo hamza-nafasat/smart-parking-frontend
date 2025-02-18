@@ -101,14 +101,7 @@ const UpdateFloorModel = ({
 
   useEffect(() => {
     if (isDrawingEnabled) {
-      drawCanvas(
-        canvasRef,
-        isDrawingEnabled,
-        image,
-        polygons,
-        currentPolygon,
-        color
-      );
+      drawCanvas(canvasRef, isDrawingEnabled, image, polygons, currentPolygon, color);
     }
   }, [image, polygons, currentPolygon, isDrawingEnabled, color]);
 
@@ -158,14 +151,7 @@ const UpdateFloorModel = ({
           )
         }
         onMouseDown={(event) =>
-          handleCanvasMouseDown(
-            event,
-            isMoveMode,
-            canvasRef,
-            polygons,
-            setDraggingPolygon,
-            setDragOffset
-          )
+          handleCanvasMouseDown(event, isMoveMode, canvasRef, polygons, setDraggingPolygon, setDragOffset)
         }
         onMouseMove={(event) =>
           handleCanvasMouseMove(
@@ -181,14 +167,7 @@ const UpdateFloorModel = ({
             setNewPolygons
           )
         }
-        onMouseUp={() =>
-          handleCanvasMouseUp(
-            setDraggingPolygon,
-            setSensorPopup,
-            draggingPolygon,
-            isCopyMode
-          )
-        }
+        onMouseUp={() => handleCanvasMouseUp(setDraggingPolygon, setSensorPopup, draggingPolygon, isCopyMode)}
       />
       {showCropper && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50">
@@ -203,17 +182,10 @@ const UpdateFloorModel = ({
               onCropComplete={onCropComplete}
             />
             <div className="flex items-center gap-2 mt-4 z-[999] absolute bottom-6 right-6">
-              <button
-                onClick={() => setShowCropper(false)}
-                className="bg-gray-500 text-white px-4 py-2 rounded"
-              >
+              <button onClick={() => setShowCropper(false)} className="bg-gray-500 text-white px-4 py-2 rounded">
                 Cancel
               </button>
-              <button
-                type="button"
-                onClick={handleCropConfirm}
-                className="bg-primary text-white px-4 py-2 rounded"
-              >
+              <button type="button" onClick={handleCropConfirm} className="bg-primary text-white px-4 py-2 rounded">
                 Crop
               </button>
             </div>
@@ -231,14 +203,9 @@ const UpdateFloorModel = ({
                 setIsMoveMode(false);
                 setIsDeleteMode(false);
               }}
-              className={`p-2 border rounded-md text-white ${
-                isEditMode ? "border-primary" : "border-[#565656]"
-              }`}
+              className={`p-2 border rounded-md text-white ${isEditMode ? "border-primary" : "border-[#565656]"}`}
             >
-              <CiEdit
-                fontSize={20}
-                color={isEditMode ? "#18bc9c" : "#565656"}
-              />
+              <CiEdit fontSize={20} color={isEditMode ? "#18bc9c" : "#565656"} />
             </button>
             <button
               type="button"
@@ -258,14 +225,9 @@ const UpdateFloorModel = ({
                   setPolygonCount
                 )
               }
-              className={`p-2 border rounded-md text-white ${
-                isCopyMode ? "border-primary" : "border-[#565656]"
-              }`}
+              className={`p-2 border rounded-md text-white ${isCopyMode ? "border-primary" : "border-[#565656]"}`}
             >
-              <VscCopy
-                fontSize={20}
-                color={isCopyMode ? "#18bc9c" : "#565656"}
-              />
+              <VscCopy fontSize={20} color={isCopyMode ? "#18bc9c" : "#565656"} />
             </button>
             <button
               type="button"
@@ -279,34 +241,18 @@ const UpdateFloorModel = ({
                   isMoveMode
                 )
               }
-              className={`p-2 border rounded-md text-white ${
-                isMoveMode ? "border-primary" : "border-[#565656]"
-              }`}
+              className={`p-2 border rounded-md text-white ${isMoveMode ? "border-primary" : "border-[#565656]"}`}
             >
-              <SlCursorMove
-                fontSize={20}
-                color={isMoveMode ? "#18bc9c" : "#565656"}
-              />
+              <SlCursorMove fontSize={20} color={isMoveMode ? "#18bc9c" : "#565656"} />
             </button>
             <button
               type="button"
               onClick={() =>
-                handleDeleteMode(
-                  setIsDeleteMode,
-                  setIsEditMode,
-                  setIsCopyMode,
-                  setIsMoveMode,
-                  isDeleteMode
-                )
+                handleDeleteMode(setIsDeleteMode, setIsEditMode, setIsCopyMode, setIsMoveMode, isDeleteMode)
               }
-              className={`p-2 border rounded-md text-white ${
-                isDeleteMode ? "border-primary" : "border-[#565656]"
-              }`}
+              className={`p-2 border rounded-md text-white ${isDeleteMode ? "border-primary" : "border-[#565656]"}`}
             >
-              <AiOutlineDelete
-                fontSize={20}
-                color={isDeleteMode ? "#18bc9c" : "#565656"}
-              />
+              <AiOutlineDelete fontSize={20} color={isDeleteMode ? "#18bc9c" : "#565656"} />
             </button>
           </div>
         </>
@@ -331,9 +277,7 @@ const UpdateFloorModel = ({
                 ]}
                 label="Sensor Name"
                 // onChange={(e) => setSelectedSensor(e.target.value)}
-                onSelect={(selectedOption) =>
-                  setSelectedSensor(selectedOption.value)
-                }
+                onSelect={(selectedOption) => setSelectedSensor(selectedOption.value)}
               />
             )}
 
@@ -353,11 +297,7 @@ const UpdateFloorModel = ({
 
             <div className="flex items-center gap-4">
               <h1 className="font-bold text-xs">Select Color of Polygon</h1>
-              <input
-                type="color"
-                value={color}
-                onChange={(e) => setColor(e.target.value)}
-              />
+              <input type="color" value={color} onChange={(e) => setColor(e.target.value)} />
             </div>
 
             <div className="flex justify-center gap-3">
@@ -405,11 +345,7 @@ const BrowseFileBtn = ({ onFileChange }) => {
   return (
     <button className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-2 cursor-pointer rounded-lg bg-primary text-white font-semibold">
       Browse File
-      <input
-        type="file"
-        className="absolute inset-0 cursor-pointer opacity-0"
-        onChange={onFileChange}
-      />
+      <input type="file" className="absolute inset-0 cursor-pointer opacity-0" onChange={onFileChange} />
     </button>
   );
 };

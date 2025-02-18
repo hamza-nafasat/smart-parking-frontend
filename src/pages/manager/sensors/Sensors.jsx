@@ -22,8 +22,8 @@ const columns = (modalOpenHandler, statusToggleHandler, deleteHandler, isUpdatin
     selector: (row) => row?.name,
   },
   {
-    name: "Sensor Type",
-    selector: (row) => row?.type,
+    name: "isConnected",
+    selector: (row) => (row?.isConnected ? "True" : "False"),
   },
   {
     name: "Unique Id",
@@ -70,11 +70,11 @@ const Sensors = () => {
   const [updateSensor, { isLoading: isUpdating }] = useUpdateSingleSensorMutation();
   const [deleteSensor, { isLoading: isDeleting }] = useDeleteSingleSensorMutation();
 
+  const modalCloseHandler = () => setModal(false);
   const modalOpenHandler = (modalType, row) => {
     setModal(modalType);
     if (row) setSelectedSensor(row);
   };
-  const modalCloseHandler = () => setModal(false);
   const statusToggleHandler = async (id, status) => {
     try {
       const res = await updateSensor({ id, data: { status } }).unwrap();
@@ -85,7 +85,6 @@ const Sensors = () => {
       toast.error(error?.data?.message || "Something went wrong");
     }
   };
-
   const deleteHandler = (id) => {
     confirmAlert({
       title: "Delete Sensor",
