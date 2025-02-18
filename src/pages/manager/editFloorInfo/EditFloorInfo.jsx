@@ -22,6 +22,7 @@ function EditFloorInfo() {
   const [polygons, setPolygons] = useState([]);
   const [polygonsForBackend, setPolygonsForBackend] = useState([]);
   const [imageSrc, setImageSrc] = useState(null);
+
   const [newPolygons, setNewPolygons] = useState([]);
   const [deletePolygonIds, setDeletedPolygonsIds] = useState([]);
 
@@ -73,8 +74,8 @@ function EditFloorInfo() {
     }
   }, [slots?.data]);
 
-  console.log('newPolygons', newPolygons);
-  console.log('deletePolygonIds', deletePolygonIds);
+  console.log("newPolygons", newPolygons);
+  console.log("deletePolygonIds", deletePolygonIds);
 
   return (
     <div>

@@ -5,6 +5,10 @@ import { AiOutlineDelete } from "react-icons/ai";
 import { CiEdit } from "react-icons/ci";
 import { SlCursorMove } from "react-icons/sl";
 import { VscCopy } from "react-icons/vsc";
+import Button from "../../../../components/shared/small/Button";
+import Dropdown from "../../../../components/shared/small/Dropdown";
+import Input from "../../../../components/shared/small/Input";
+import Modal from "../../../../components/shared/small/Modal";
 import {
   drawCanvas,
   getCroppedImg,
@@ -17,13 +21,11 @@ import {
   handleDeleteMode,
   handleDeletePolygon,
   handleMoveMode,
-  polygonsLabelHandler,
   sensorInfoSubmitHandler,
 } from "../utils/addParkingSpaceFeatures";
-import Dropdown from "../../../../components/shared/small/Dropdown";
-import Button from "../../../../components/shared/small/Button";
-import Modal from "../../../../components/shared/small/Modal";
-import Input from "../../../../components/shared/small/Input";
+import { useDispatch, useSelector } from "react-redux";
+import { useGetAllSensorsQuery } from "../../../../redux/apis/sensorApis";
+import { addAvailableSensors, removeFromAvailableSensors } from "../../../../redux/slices/sensorSlice";
 
 const UpdateFloorModel = ({
   onUpload,
@@ -32,12 +34,15 @@ const UpdateFloorModel = ({
   imageSrc,
   setImageSrc,
   setOriginalImage,
-  isBuilding,
+  isBuilding = false,
   newPolygons,
   setNewPolygons,
-  deletePolygonIds,
   setDeletedPolygonsIds,
 }) => {
+  const dispatch = useDispatch();
+  const { availableSensors } = useSelector((state) => state.sensor);
+  const { data: sensors } = useGetAllSensorsQuery();
+
   const canvasRef = useRef(null);
   const [isDrawingEnabled, setIsDrawingEnabled] = useState(false);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
@@ -120,6 +125,13 @@ const UpdateFloorModel = ({
       img.src = imageSrc;
     }
   }, [imageSrc]);
+
+  useEffect(() => {
+    if (sensors?.data) {
+      const availableSensors = sensors?.data?.filter((sensor) => !sensor?.isConnected && sensor?.status);
+      dispatch(addAvailableSensors(availableSensors));
+    }
+  }, [sensors?.data, dispatch]);
   return (
     <div className="relative">
       {!isDrawingEnabled && <BrowseFileBtn onFileChange={handleImageUpload} />}
@@ -268,32 +280,14 @@ const UpdateFloorModel = ({
               onChange={(e) => setPolygonName(e.target.value)}
             />
 
-            {isBuilding && (
+            {!isBuilding && (
               <Dropdown
-                defaultText={selectedSensor}
-                options={[
-                  { option: "Sensor 1", value: "sensor-1" },
-                  { option: "Sensor 2", value: "sensor-2" },
-                ]}
                 label="Sensor Name"
-                // onChange={(e) => setSelectedSensor(e.target.value)}
-                onSelect={(selectedOption) => setSelectedSensor(selectedOption.value)}
+                defaultText={"Select Sensor"}
+                options={availableSensors?.map((sensor) => ({ option: sensor.name, value: sensor._id }))}
+                onSelect={(selectedOption) => setSelectedSensor(selectedOption)}
               />
             )}
-
-            {/* <Dropdown
-              defaultText={"first"}
-              options={[
-                { option: "First-Point", value: "first" },
-                { option: "Second-Point", value: "second" },
-                { option: "Third-Point", value: "third" },
-                { option: "Fourth-Point", value: "fourth" },
-              ]}
-              label="Label Positioning of polygon"
-              onSelect={(selectedOption) =>
-                polygonsLabelHandler(selectedOption, selectedPolygon, polygons, setPolygons)
-              }
-            /> */}
 
             <div className="flex items-center gap-4">
               <h1 className="font-bold text-xs">Select Color of Polygon</h1>
@@ -313,9 +307,10 @@ const UpdateFloorModel = ({
                     selectedSensor,
                     color,
                     setPolygons,
-                    setSensorPopup
+                    setSensorPopup,
+                    isBuilding
                   );
-                  setSensorPopup(false);
+                  dispatch(removeFromAvailableSensors(selectedSensor));
                 }}
               />
               <Button
