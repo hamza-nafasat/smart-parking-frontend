@@ -7,6 +7,7 @@ import floorApis from "./apis/floorApis";
 import floorSlice from "./slices/floorSlice";
 import sensorApis from "./apis/sensorApis";
 import slotApis from "./apis/slotApis";
+import sensorSlice from "./slices/sensorSlice";
 
 const store = configureStore({
   reducer: {
@@ -20,6 +21,7 @@ const store = configureStore({
     [authSlice.name]: authSlice.reducer,
     [buildingSlice.name]: buildingSlice.reducer,
     [floorSlice.name]: floorSlice.reducer,
+    [sensorSlice.name]: sensorSlice.reducer,
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware({ serializableCheck: false })

@@ -6,6 +6,7 @@ import Button from "../../../components/shared/small/Button";
 import Input from "../../../components/shared/small/Input";
 import { useGetSingleFloorQuery, useUpdateSingleFloorMutation } from "../../../redux/apis/floorApis";
 import UpdateModel from "../addParkingSpace/components/UpdateModel";
+import { useGetAllSlotsQuery } from "../../../redux/apis/slotApis";
 
 function EditFloorInfo() {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ function EditFloorInfo() {
   const buildingId = params.buildingId;
   const floorId = params.id;
   const { data, refetch } = useGetSingleFloorQuery(floorId);
+  const { data: slots } = useGetAllSlotsQuery(floorId);
   const [updateFloor, { isLoading }] = useUpdateSingleFloorMutation();
   const [name, setName] = useState("");
   const [noOfParkingSpace, setNumberOfParkingSpace] = useState();
@@ -21,7 +23,7 @@ function EditFloorInfo() {
   const [polygonsForBackend, setPolygonsForBackend] = useState([]);
   const [imageSrc, setImageSrc] = useState(null);
   const [newPolygons, setNewPolygons] = useState([]);
-  const [deletePolygonIds, setDeletedPolygonsIds] = useState([])
+  const [deletePolygonIds, setDeletedPolygonsIds] = useState([]);
 
   const saveClickHandler = async () => {
     if (!name || !noOfParkingSpace || !imageSrc || !polygonsForBackend) return toast.error("Fill all fields first");
@@ -54,12 +56,22 @@ function EditFloorInfo() {
       setName(floor.name);
       setNumberOfParkingSpace(floor.noOfParkingSpace);
       setImageSrc(floor?.twoDImage?.url);
-      setPolygons(floor?.polygonData);
-      setPolygonsForBackend(floor?.polygonData);
     }
-  }, [data]);
-
-  console.log('newPolygons',data?.data)
+  }, [data?.data]);
+  useEffect(() => {
+    if (slots?.data) {
+      const slotsData = slots?.data;
+      const polygons = slotsData?.map((slot) => ({
+        _id: slot._id,
+        id: slot._id,
+        points: slot?.points,
+        color: slot?.color,
+        fillColor: slot?.fillColor,
+      }));
+      setPolygons(polygons);
+      setPolygonsForBackend(polygons);
+    }
+  }, [slots?.data]);
 
   return (
     <div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { confirmAlert } from "react-confirm-alert";
 import DataTable from "react-data-table-component";
 import toast from "react-hot-toast";
@@ -13,6 +13,8 @@ import {
 } from "../../../redux/apis/sensorApis";
 import AddSensor from "./components/AddSensor";
 import EditSensor from "./components/EditSensor";
+import { useDispatch } from "react-redux";
+import { addAvailableSensors } from "../../../redux/slices/sensorSlice";
 
 const columns = (modalOpenHandler, statusToggleHandler, deleteHandler, isUpdating, isDeleting) => [
   {
@@ -61,6 +63,7 @@ const columns = (modalOpenHandler, statusToggleHandler, deleteHandler, isUpdatin
 ];
 
 const Sensors = () => {
+  const dispatch = useDispatch();
   const [modal, setModal] = useState(false);
   const [selectedSensor, setSelectedSensor] = useState({});
   const { data, isLoading, refetch } = useGetAllSensorsQuery();
@@ -108,6 +111,13 @@ const Sensors = () => {
       ],
     });
   };
+
+  useEffect(() => {
+    if (data?.data) {
+      const availableSensors = data?.data?.filter((sensor) => !sensor?.isConnected);
+      dispatch(addAvailableSensors(availableSensors));
+    }
+  }, [data, dispatch]);
   return isLoading ? (
     <Loader />
   ) : (
