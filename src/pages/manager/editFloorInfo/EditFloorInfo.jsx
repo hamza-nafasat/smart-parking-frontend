@@ -5,7 +5,7 @@ import { AccordionEditIcon } from "../../../assets/svgs/Icon";
 import Button from "../../../components/shared/small/Button";
 import Input from "../../../components/shared/small/Input";
 import { useGetSingleFloorQuery, useUpdateSingleFloorMutation } from "../../../redux/apis/floorApis";
-import UploadModel from "../addParkingSpace/components/UploadModel";
+import UpdateModel from "../addParkingSpace/components/UpdateModel";
 
 function EditFloorInfo() {
   const navigate = useNavigate();
@@ -20,6 +20,8 @@ function EditFloorInfo() {
   const [polygons, setPolygons] = useState([]);
   const [polygonsForBackend, setPolygonsForBackend] = useState([]);
   const [imageSrc, setImageSrc] = useState(null);
+  const [newPolygons, setNewPolygons] = useState([]);
+  const [deletePolygonIds, setDeletedPolygonsIds] = useState([])
 
   const saveClickHandler = async () => {
     if (!name || !noOfParkingSpace || !imageSrc || !polygonsForBackend) return toast.error("Fill all fields first");
@@ -57,6 +59,8 @@ function EditFloorInfo() {
     }
   }, [data]);
 
+  console.log('newPolygons',newPolygons)
+
   return (
     <div>
       <div className="flex items-center justify-between bg-primary rounded-[4px] px-4 md:px-8 py-2">
@@ -78,7 +82,7 @@ function EditFloorInfo() {
             onChange={(e) => setNumberOfParkingSpace(e.target.value)}
           />
           <div className="lg:col-span-3 flex justify-center">
-            <UploadModel
+            <UpdateModel
               heading="Upload Floor TwoD Model"
               onUpload={onUploadForFloorImage}
               polygons={polygons}
@@ -86,6 +90,10 @@ function EditFloorInfo() {
               imageSrc={imageSrc}
               setImageSrc={setImageSrc}
               setOriginalImage={setOriginalImage}
+              newPolygons={newPolygons}
+              setNewPolygons={setNewPolygons}
+              deletePolygonIds={deletePolygonIds}
+              setDeletedPolygonsIds={setDeletedPolygonsIds}
             />
           </div>
         </div>
