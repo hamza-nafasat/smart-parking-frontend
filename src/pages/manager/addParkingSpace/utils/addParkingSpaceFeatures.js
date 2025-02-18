@@ -60,7 +60,7 @@ const drawCanvas = (canvasRef, isDrawingEnabled, image, polygons, currentPolygon
     context.drawImage(image, 0, 0, canvas.width, canvas.height);
   }
 
-  polygons.forEach((polygon) => {
+  polygons?.forEach((polygon) => {
     if (!polygon || !polygon.points) return;
     context.beginPath();
     context.moveTo(polygon.points[0].x, polygon.points[0].y);

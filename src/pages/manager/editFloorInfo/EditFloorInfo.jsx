@@ -59,7 +59,7 @@ function EditFloorInfo() {
     }
   }, [data]);
 
-  console.log('newPolygons',newPolygons)
+  console.log('newPolygons',data?.data)
 
   return (
     <div>
