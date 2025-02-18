@@ -84,6 +84,19 @@ const drawCanvas = (
     context.moveTo(polygon.points[0].x, polygon.points[0].y);
     polygon.points.forEach((point) => context.lineTo(point.x, point.y));
     context.closePath();
+
+    if(polygon?._id) {
+      // context.filter = "blur(3px)";
+      // context.globalAlpha = 0.5;
+      context.setLineDash([5, 5]);
+      context.strokeStyle = "red";
+    }else {
+      // context.filter = "none";
+      context.globalAlpha = 1;
+      context.setLineDash([]);
+    }
+
+
     //  Fill the polygon with the color
     const fillColor = polygon?.color ? `${polygon.color}90` : "#18BC9C60";
     const strokeColor = polygon?.fillColor || polygon?.color || "#18BC9C";
@@ -184,7 +197,7 @@ const handleCanvasClick = (
       })),
     };
     setPolygons([...polygons, newPolygon]);
-    setNewPolygons([...newPolygons, newPolygon]);
+    if(setNewPolygons) setNewPolygons([...newPolygons, newPolygon]);
     setPolygonCount(polygonCount + 1);
     setDraggedPolygon(null);
     openSensorPopup(newPolygon);
@@ -416,7 +429,9 @@ const handleDeletePolygon = (
 
   const deletedPolygonsIds = deletePolygons.filter((polygon) => polygon._id).map((polygon) => polygon._id)
 
-  setDeletedPolygonsIds((prevIds) => [...prevIds, ...deletedPolygonsIds])
+  if(setDeletedPolygonsIds) {
+    setDeletedPolygonsIds((prevIds) => [...prevIds, ...deletedPolygonsIds])
+  }
 
   // Filter polygons
   const updatedPolygons = polygons.filter(
