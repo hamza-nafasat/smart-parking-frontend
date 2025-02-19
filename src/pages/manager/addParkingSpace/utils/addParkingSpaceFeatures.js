@@ -11,17 +11,7 @@ const getCroppedImg = (imageSrc, crop) => {
       canvas.height = 500;
       const ctx = canvas.getContext("2d");
 
-      ctx.drawImage(
-        image,
-        crop.x,
-        crop.y,
-        crop.width,
-        crop.height,
-        0,
-        0,
-        canvas.width,
-        canvas.height
-      );
+      ctx.drawImage(image, crop.x, crop.y, crop.width, crop.height, 0, 0, canvas.width, canvas.height);
 
       canvas.toBlob((blob) => {
         resolve(URL.createObjectURL(blob));
@@ -62,13 +52,7 @@ const floors = [
 ];
 
 // Draw canvas content
-const drawCanvas = (
-  canvasRef,
-  isDrawingEnabled,
-  image,
-  polygons,
-  currentPolygon
-) => {
+const drawCanvas = (canvasRef, isDrawingEnabled, image, polygons, currentPolygon) => {
   const canvas = canvasRef.current;
   if (!canvas && !isDrawingEnabled) return;
   const context = canvas.getContext("2d");
@@ -85,17 +69,16 @@ const drawCanvas = (
     polygon.points.forEach((point) => context.lineTo(point.x, point.y));
     context.closePath();
 
-    if(polygon?._id) {
+    if (polygon?._id) {
       // context.filter = "blur(3px)";
       // context.globalAlpha = 0.5;
       context.setLineDash([5, 5]);
       context.strokeStyle = "red";
-    }else {
+    } else {
       // context.filter = "none";
       context.globalAlpha = 1;
       context.setLineDash([]);
     }
-
 
     //  Fill the polygon with the color
     const fillColor = polygon?.color ? `${polygon.color}90` : "#18BC9C60";
@@ -174,19 +157,10 @@ const handleCanvasClick = (
   const y = event.clientY - rect.top;
 
   if (isDeleteMode) {
-    handleDeletePolygon(
-      x,
-      y,
-      canvasRef,
-      polygons,
-      setPolygons,
-      newPolygons,
-      setNewPolygons,
-      setDeletedPolygonsIds
-    );
+    handleDeletePolygon(x, y, canvasRef, polygons, setPolygons, newPolygons, setNewPolygons, setDeletedPolygonsIds);
   } else if (isCopyMode && draggedPolygon) {
     // Handle copy-pasting of polygons
-    const {_id, ...restPolygon} = draggedPolygon
+    const { _id, ...restPolygon } = draggedPolygon;
     const newPolygon = {
       ...restPolygon,
       id: `F1-PS${polygonCount}`,
@@ -197,7 +171,7 @@ const handleCanvasClick = (
       })),
     };
     setPolygons([...polygons, newPolygon]);
-    if(setNewPolygons) setNewPolygons([...newPolygons, newPolygon]);
+    if (setNewPolygons) setNewPolygons([...newPolygons, newPolygon]);
     setPolygonCount(polygonCount + 1);
     setDraggedPolygon(null);
     openSensorPopup(newPolygon);
@@ -272,13 +246,7 @@ const handleMoveMode = (
 };
 
 // Toggle Delete Mode
-const handleDeleteMode = (
-  setIsDeleteMode,
-  setIsEditMode,
-  setIsCopyMode,
-  setIsMoveMode,
-  isDeleteMode
-) => {
+const handleDeleteMode = (setIsDeleteMode, setIsEditMode, setIsCopyMode, setIsMoveMode, isDeleteMode) => {
   setIsDeleteMode(!isDeleteMode);
   setIsEditMode(false);
   setIsCopyMode(false);
@@ -286,13 +254,7 @@ const handleDeleteMode = (
 };
 
 // Enable Polygon Copying
-const handlePolygonCopy = (
-  event,
-  isCopyMode,
-  canvasRef,
-  polygons,
-  setDraggedPolygon
-) => {
+const handlePolygonCopy = (event, isCopyMode, canvasRef, polygons, setDraggedPolygon) => {
   if (!isCopyMode) return;
 
   const canvas = canvasRef.current;
@@ -315,14 +277,7 @@ const handlePolygonCopy = (
 };
 
 // Start dragging polygon on mouse down in Move Mode
-const handleCanvasMouseDown = (
-  event,
-  isMoveMode,
-  canvasRef,
-  polygons,
-  setDraggingPolygon,
-  setDragOffset
-) => {
+const handleCanvasMouseDown = (event, isMoveMode, canvasRef, polygons, setDraggingPolygon, setDragOffset) => {
   if (!isMoveMode) return;
 
   const canvas = canvasRef.current;
@@ -360,13 +315,7 @@ const handleCanvasMouseMove = (
   setPolygons
 ) => {
   if (isCopyMode) {
-    handlePolygonCopy(
-      event,
-      isCopyMode,
-      canvasRef,
-      polygons,
-      setDraggedPolygon
-    );
+    handlePolygonCopy(event, isCopyMode, canvasRef, polygons, setDraggedPolygon);
   } else if (draggingPolygon) {
     const canvas = canvasRef.current;
     const rect = canvas.getBoundingClientRect();
@@ -389,12 +338,7 @@ const handleCanvasMouseMove = (
 };
 
 // Stop dragging on mouse up
-const handleCanvasMouseUp = (
-  setDraggingPolygon,
-  setSensorPopup,
-  draggingPolygon,
-  isCopyMode
-) => {
+const handleCanvasMouseUp = (setDraggingPolygon, setSensorPopup, draggingPolygon, isCopyMode) => {
   if (draggingPolygon && isCopyMode) {
     setSensorPopup(true);
   }
@@ -410,7 +354,7 @@ const handleDeletePolygon = (
   setPolygons,
   newPolygons,
   setNewPolygons,
-  setDeletedPolygonsIds,
+  setDeletedPolygonsIds
 ) => {
   const canvas = canvasRef.current;
   const ctx = canvas.getContext("2d");
@@ -427,19 +371,15 @@ const handleDeletePolygon = (
 
   const deletePolygons = polygons.filter((polygon) => isInsidePolygon(polygon));
 
-  const deletedPolygonsIds = deletePolygons.filter((polygon) => polygon._id).map((polygon) => polygon._id)
+  const deletedPolygonsIds = deletePolygons.filter((polygon) => polygon._id).map((polygon) => polygon._id);
 
-  if(setDeletedPolygonsIds) {
-    setDeletedPolygonsIds((prevIds) => [...prevIds, ...deletedPolygonsIds])
+  if (setDeletedPolygonsIds) {
+    setDeletedPolygonsIds((prevIds) => [...prevIds, ...deletedPolygonsIds]);
   }
 
   // Filter polygons
-  const updatedPolygons = polygons.filter(
-    (polygon) => !isInsidePolygon(polygon)
-  );
-  const updatedNewPolygons = newPolygons.filter(
-    (polygon) => !isInsidePolygon(polygon)
-  );
+  const updatedPolygons = polygons.filter((polygon) => !isInsidePolygon(polygon));
+  const updatedNewPolygons = newPolygons.filter((polygon) => !isInsidePolygon(polygon));
 
   // Update state
   setPolygons(updatedPolygons);
@@ -449,19 +389,12 @@ const handleDeletePolygon = (
 // attaching sensor to the polygon
 const updateSensorAttached = (polygonId, sensor, polygons, setPolygons) => {
   const updatedPolygons = polygons.map((polygon) => {
-    return polygon?.id === polygonId
-      ? { ...polygon, sensorAttached: sensor }
-      : polygon;
+    return polygon?.id === polygonId ? { ...polygon, sensorAttached: sensor } : polygon;
   });
   setPolygons(updatedPolygons);
 };
 
-const polygonsLabelHandler = (
-  selectedOption,
-  selectedPolygon,
-  polygons,
-  setPolygons
-) => {
+const polygonsLabelHandler = (selectedOption, selectedPolygon, polygons, setPolygons) => {
   console.log("fjl;kasjdfl;kasjdfl;as", selectedOption, selectedPolygon);
   let selectedPolygonId = selectedPolygon.id;
   setPolygons(
@@ -483,6 +416,7 @@ const sensorInfoSubmitHandler = (
   setPolygons,
   setSensorPopup,
   isBuilding,
+  setSelectedSensor,
   newPolygons,
   setNewPolygons
 ) => {
@@ -501,7 +435,7 @@ const sensorInfoSubmitHandler = (
           }
         : polygon
     );
-    const updatedNewPolygons = newPolygons.map((polygon) =>
+    const updatedNewPolygons = newPolygons?.map((polygon) =>
       polygon.id === selectedPolygon.id
         ? {
             ...polygon,
@@ -513,26 +447,19 @@ const sensorInfoSubmitHandler = (
           }
         : polygon
     );
+    newPolygons && setNewPolygons(updatedNewPolygons);
     setPolygons(updatedPolygons);
-    setNewPolygons(updatedNewPolygons);
     setSensorPopup(false);
+    setSelectedSensor("");
   } else {
     // If sensorIdInput is empty, we do not allow the polygon to be drawn.
     alert("without sensor id and sensor name polygon not draw");
   }
 };
 
-const handleCancelPolygon = (
-  setSensorPopup,
-  setPolygons,
-  selectedPolygon,
-  setCurrentPolygon,
-  setSelectedPolygon
-) => {
+const handleCancelPolygon = (setSensorPopup, setPolygons, selectedPolygon, setCurrentPolygon, setSelectedPolygon) => {
   setSensorPopup(false);
-  setPolygons((prevPolygons) =>
-    prevPolygons.filter((polygon) => polygon.id !== selectedPolygon?.id)
-  );
+  setPolygons((prevPolygons) => prevPolygons.filter((polygon) => polygon.id !== selectedPolygon?.id));
   setCurrentPolygon([]);
   setSelectedPolygon(null);
 };

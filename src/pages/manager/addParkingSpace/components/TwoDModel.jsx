@@ -306,7 +306,8 @@ const TwoDModel = ({
                     color,
                     setPolygons,
                     setSensorPopup,
-                    isBuilding
+                    isBuilding,
+                    setSelectedSensor
                   );
                   dispatch(removeFromAvailableSensors(selectedSensor));
                 }}

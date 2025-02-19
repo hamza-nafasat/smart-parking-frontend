@@ -85,6 +85,11 @@ const UpdateFloorModel = ({
     }
   };
 
+  const modelCloseHandler = () => {
+    handleCancelPolygon(setSensorPopup, setPolygons, selectedPolygon, setCurrentPolygon, setSelectedPolygon);
+    setSensorPopup(false);
+  };
+
   const onCropComplete = (croppedArea, croppedAreaPixels) => {
     setCroppedAreaPixels(croppedAreaPixels);
   };
@@ -268,7 +273,7 @@ const UpdateFloorModel = ({
         </>
       )}
       {sensorPopup && selectedPolygon && (
-        <Modal title="Add Sensor" onClose={() => setSensorPopup(false)}>
+        <Modal title="Add Sensor" onClose={modelCloseHandler} notClose>
           <div className="flex flex-col gap-2">
             <Input
               type="text"
@@ -280,9 +285,9 @@ const UpdateFloorModel = ({
 
             {!isBuilding && (
               <Dropdown
-                label="Sensor Name"
                 defaultText={"Select Sensor"}
                 options={availableSensors?.map((sensor) => ({ option: sensor.name, value: sensor._id }))}
+                label="Sensor Name"
                 onSelect={(selectedOption) => setSelectedSensor(selectedOption)}
               />
             )}
@@ -294,7 +299,6 @@ const UpdateFloorModel = ({
 
             <div className="flex justify-center gap-3">
               <Button
-                disabled={!polygonName}
                 text="Add"
                 width="w-[120px]"
                 onClick={() => {
@@ -307,6 +311,7 @@ const UpdateFloorModel = ({
                     setPolygons,
                     setSensorPopup,
                     isBuilding,
+                    setSelectedSensor,
                     newPolygons,
                     setNewPolygons
                   );

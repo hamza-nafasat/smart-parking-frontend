@@ -28,23 +28,38 @@ function EditFloorInfo() {
   const [polygonsForCreate, setPolygonsForCreate] = useState([]);
   const [polygonsForDelete, setPolygonsForDelete] = useState([]);
 
+  // if (!name || !noOfParkingSpace || !imageSrc || !polygonsForBackend) return toast.error("Fill all fields first");
+  // const formData = new FormData();
+  // formData.append("name", name);
+  // formData.append("noOfParkingSpace", noOfParkingSpace);
+  // formData.append("floorImage", imageSrc);
+  // formData.append("polygonData", JSON.stringify(polygonsForBackend));
+  // if (originalImage) formData.append("file", originalImage);
+  // try {
+  //   const res = await updateFloor({ id: floorId, data: formData }).unwrap();
+  //   if (res?.success) toast.success(res?.message);
+  //   await refetch();
+  //   return navigate(`/manager/floor-view/${buildingId}/${floorId}`);
+  // } catch (error) {
+  //   console.log("Error in update floor", error);
+  //   toast.error(error?.data?.message || "Something went wrong");
+  // }
+
   const saveClickHandler = async () => {
-    if (!name || !noOfParkingSpace || !imageSrc || !polygonsForBackend) return toast.error("Fill all fields first");
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("noOfParkingSpace", noOfParkingSpace);
-    formData.append("floorImage", imageSrc);
-    formData.append("polygonData", JSON.stringify(polygonsForBackend));
-    if (originalImage) formData.append("file", originalImage);
     try {
-      const res = await updateFloor({ id: floorId, data: formData }).unwrap();
-      if (res?.success) toast.success(res?.message);
-      await refetch();
-      return navigate(`/manager/floor-view/${buildingId}/${floorId}`);
-    } catch (error) {
-      console.log("Error in update floor", error);
-      toast.error(error?.data?.message || "Something went wrong");
-    }
+      // make data for update
+      let dataForUpdate = {};
+      if (name) dataForUpdate.name = name;
+      if (originalImage) dataForUpdate.file = originalImage;
+      if (noOfParkingSpace) dataForUpdate.noOfParkingSpace = noOfParkingSpace;
+      if (polygonsForCreate?.length)
+        dataForUpdate.polygonsForCreate = polygonsForCreate?.filter(
+          (p) => p.id && p.points && p.sensorId && p.color && p.fillColor
+        );
+      if (polygonsForDelete?.length) dataForUpdate.polygonsForDelete = polygonsForDelete;
+
+      // hit apis and update data
+    } catch (error) {}
   };
 
   const onUploadForFloorImage = (image, coordinates) => {
