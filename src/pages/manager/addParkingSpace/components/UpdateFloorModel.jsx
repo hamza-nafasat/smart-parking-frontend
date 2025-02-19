@@ -65,8 +65,6 @@ const UpdateFloorModel = ({
   const [selectedSensor, setSelectedSensor] = useState("No sensor");
   const [color, setColor] = useState("#18bc9c");
 
-  console.log("polygons", polygons);
-
   const openSensorPopup = (polygon) => {
     setSelectedPolygon(polygon);
     setSensorPopup(true);

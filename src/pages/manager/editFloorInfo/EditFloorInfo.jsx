@@ -13,9 +13,11 @@ function EditFloorInfo() {
   const params = useParams();
   const buildingId = params.buildingId;
   const floorId = params.id;
+
   const { data, refetch } = useGetSingleFloorQuery(floorId);
   const { data: slots } = useGetAllSlotsQuery(floorId);
   const [updateFloor, { isLoading }] = useUpdateSingleFloorMutation();
+
   const [name, setName] = useState("");
   const [noOfParkingSpace, setNumberOfParkingSpace] = useState();
   const [originalImage, setOriginalImage] = useState(null);
@@ -23,8 +25,8 @@ function EditFloorInfo() {
   const [polygonsForBackend, setPolygonsForBackend] = useState([]);
   const [imageSrc, setImageSrc] = useState(null);
 
-  const [newPolygons, setNewPolygons] = useState([]);
-  const [deletePolygonIds, setDeletedPolygonsIds] = useState([]);
+  const [polygonsForCreate, setPolygonsForCreate] = useState([]);
+  const [polygonsForDelete, setPolygonsForDelete] = useState([]);
 
   const saveClickHandler = async () => {
     if (!name || !noOfParkingSpace || !imageSrc || !polygonsForBackend) return toast.error("Fill all fields first");
@@ -74,8 +76,8 @@ function EditFloorInfo() {
     }
   }, [slots?.data]);
 
-  console.log("newPolygons", newPolygons);
-  console.log("deletePolygonIds", deletePolygonIds);
+  console.log("polygonsForCreate", polygonsForCreate);
+  console.log("polygonsForDelete", polygonsForDelete);
 
   return (
     <div>
@@ -106,10 +108,10 @@ function EditFloorInfo() {
               imageSrc={imageSrc}
               setImageSrc={setImageSrc}
               setOriginalImage={setOriginalImage}
-              newPolygons={newPolygons}
-              setNewPolygons={setNewPolygons}
-              deletePolygonIds={deletePolygonIds}
-              setDeletedPolygonsIds={setDeletedPolygonsIds}
+              newPolygons={polygonsForCreate}
+              setNewPolygons={setPolygonsForCreate}
+              deletePolygonIds={polygonsForDelete}
+              setDeletedPolygonsIds={setPolygonsForDelete}
             />
           </div>
         </div>
