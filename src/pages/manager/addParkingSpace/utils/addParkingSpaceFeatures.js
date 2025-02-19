@@ -319,7 +319,10 @@ const handleCanvasMouseMove = (
   } else if (draggingPolygon) {
     const canvas = canvasRef.current;
     const rect = canvas.getBoundingClientRect();
-    const x = event.clientX - rect.left;
+    const x = event.clientX - rect. = (setSensorPopup, setPolygons, selectedPolygon, setCurrentPolygon, setSelectedPolygon) => {
+      setSensorPopup(false);
+      setPolygons((prevPolygons) => prevPolygons.filter((polygon) => polygon.id !== selectedPolygon?.id));
+    left;
     const y = event.clientY - rect.top;
 
     const updatedPolygons = polygons.map((polygon) => {
