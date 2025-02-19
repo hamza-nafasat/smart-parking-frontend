@@ -86,7 +86,7 @@ const UpdateFloorModel = ({
   };
 
   const modelCloseHandler = () => {
-    handleCancelPolygon(setSensorPopup, setPolygons, selectedPolygon, setCurrentPolygon, setSelectedPolygon);
+    handleCancelPolygon(setSensorPopup, setPolygons, selectedPolygon, setCurrentPolygon, setSelectedPolygon, setNewPolygons);
     setSensorPopup(false);
   };
 
@@ -327,7 +327,8 @@ const UpdateFloorModel = ({
                     setPolygons,
                     selectedPolygon,
                     setCurrentPolygon,
-                    setSelectedPolygon
+                    setSelectedPolygon,
+                    setNewPolygons
                   )
                 }
               />

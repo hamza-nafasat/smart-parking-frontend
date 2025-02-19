@@ -457,9 +457,10 @@ const sensorInfoSubmitHandler = (
   }
 };
 
-const handleCancelPolygon = (setSensorPopup, setPolygons, selectedPolygon, setCurrentPolygon, setSelectedPolygon) => {
+const handleCancelPolygon = (setSensorPopup, setPolygons, selectedPolygon, setCurrentPolygon, setSelectedPolygon, setNewPolygons) => {
   setSensorPopup(false);
   setPolygons((prevPolygons) => prevPolygons.filter((polygon) => polygon.id !== selectedPolygon?.id));
+  setNewPolygons((prevPolygons) => prevPolygons.filter((polygon) => polygon.id !== selectedPolygon?.id));
   setCurrentPolygon([]);
   setSelectedPolygon(null);
 };
