@@ -306,7 +306,9 @@ const UpdateFloorModel = ({
                     color,
                     setPolygons,
                     setSensorPopup,
-                    isBuilding
+                    isBuilding,
+                    newPolygons,
+                    setNewPolygons
                   );
                   dispatch(removeFromAvailableSensors(selectedSensor));
                 }}

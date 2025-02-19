@@ -482,7 +482,9 @@ const sensorInfoSubmitHandler = (
   color,
   setPolygons,
   setSensorPopup,
-  isBuilding
+  isBuilding,
+  newPolygons,
+  setNewPolygons
 ) => {
   if (!name) return toast.error("Please select sensor name");
   if (!isBuilding && !selectedSensor) return toast.error("Please select sensor");
@@ -499,7 +501,20 @@ const sensorInfoSubmitHandler = (
           }
         : polygon
     );
+    const updatedNewPolygons = newPolygons.map((polygon) =>
+      polygon.id === selectedPolygon.id
+        ? {
+            ...polygon,
+            id: name,
+            sensorId: selectedSensor || "",
+            color: color,
+            fillColor: color,
+            labelPoint: polygon.labelPoint || "first",
+          }
+        : polygon
+    );
     setPolygons(updatedPolygons);
+    setNewPolygons(updatedNewPolygons);
     setSensorPopup(false);
   } else {
     // If sensorIdInput is empty, we do not allow the polygon to be drawn.
