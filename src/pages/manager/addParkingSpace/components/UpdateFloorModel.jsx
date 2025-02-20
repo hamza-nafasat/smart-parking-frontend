@@ -25,7 +25,7 @@ import {
 } from "../utils/addParkingSpaceFeatures";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetAllSensorsQuery } from "../../../../redux/apis/sensorApis";
-import { addAvailableSensors, removeFromAvailableSensors } from "../../../../redux/slices/sensorSlice";
+import { addAllSensors, addAvailableSensors, removeFromAvailableSensors } from "../../../../redux/slices/sensorSlice";
 
 const UpdateFloorModel = ({
   onUpload,
@@ -138,6 +138,7 @@ const UpdateFloorModel = ({
 
   useEffect(() => {
     if (sensors?.data) {
+      dispatch(addAllSensors(sensors?.data));
       const availableSensors = sensors?.data?.filter((sensor) => !sensor?.isConnected && sensor?.status);
       dispatch(addAvailableSensors(availableSensors));
     }
@@ -169,7 +170,8 @@ const UpdateFloorModel = ({
             openSensorPopup,
             newPolygons,
             setNewPolygons,
-            setDeletedPolygonsIds
+            setDeletedPolygonsIds,
+            dispatch
           )
         }
         onMouseDown={(event) =>
@@ -293,7 +295,7 @@ const UpdateFloorModel = ({
             {!isBuilding && (
               <Dropdown
                 defaultText={"Select Sensor"}
-                options={availableSensors?.map((sensor) => ({ option: sensor.name, value: sensor._id }))}
+                options={availableSensors?.map((sensor) => ({ option: sensor?.name, value: sensor?._id }))}
                 label="Sensor Name"
                 onSelect={(selectedOption) => setSelectedSensor(selectedOption)}
               />
