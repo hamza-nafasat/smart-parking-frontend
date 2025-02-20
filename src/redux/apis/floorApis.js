@@ -44,6 +44,7 @@ const floorApis = createApi({
         method: "PUT",
         body: data,
       }),
+      invalidatesTags: [{ type: "Floor", id: "LIST" }],
     }),
     // delete single floor
     deleteSingleFloor: builder.mutation({
