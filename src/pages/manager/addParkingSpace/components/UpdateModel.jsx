@@ -20,7 +20,6 @@ const UpdateModel = ({
   const [refreshKey, setRefreshKey] = useState(0);
   const deleteButtonHandler = () => {
     setRefreshKey((prev) => prev + 1);
-    setPolygons([]);
     setImageSrc(null);
     setOriginalImage(null);
   };
