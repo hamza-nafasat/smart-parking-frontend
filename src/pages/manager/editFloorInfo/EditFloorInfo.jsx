@@ -37,6 +37,7 @@ function EditFloorInfo() {
   const saveClickHandler = async () => {
     try {
       // make data for update
+      let message = "";
       let dataForUpdate = {};
       if (name) dataForUpdate.name = name;
       if (originalImage) dataForUpdate.file = originalImage;
@@ -52,9 +53,8 @@ function EditFloorInfo() {
       // -----------------------------------------------
       if (dataForUpdate?.polygonsForDelete?.length) {
         const slotsIds = dataForUpdate.polygonsForDelete?.join(",");
-        // console.log("slotsIds", slotsIds);
         const res = await deleteMultiSlots(slotsIds).unwrap();
-        if (res?.success) toast.success(res?.message);
+        if (res?.success) message += `${dataForUpdate.polygonsForDelete?.length} slots deleted`;
       }
       if (dataForUpdate?.polygonsForCreate?.length) {
         const slotsData = {
@@ -63,7 +63,7 @@ function EditFloorInfo() {
           floorId,
         };
         const res = await addMultiSlots(slotsData).unwrap();
-        if (res?.success) toast.success(res?.message);
+        if (res?.success) message += `,${dataForUpdate.polygonsForCreate?.length} slots created`;
       }
       // -----------------------------------------------
       // update floor
@@ -73,7 +73,7 @@ function EditFloorInfo() {
       if (originalImage) formData.append("file", originalImage);
 
       const res = await updateFloor({ id: floorId, data: formData }).unwrap();
-      if (res?.success) toast.success(res?.message);
+      if (res?.success) toast.success(`${message} and Floor updated successfully`);
       return navigate(`/manager/floor-view/${buildingId}/${floorId}`);
     } catch (error) {
       console.log("Error in update floor", error);

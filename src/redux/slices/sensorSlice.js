@@ -14,7 +14,8 @@ const sensorSlice = createSlice({
       state.availableSensors = state.availableSensors.filter((sensor) => sensor._id !== action.payload);
     },
     addInAvailableSensors: (state, action) => {
-      state.availableSensors.push(state.allSensors.find((sensor) => sensor._id == action.payload));
+      if (state.availableSensors.find((sensor) => sensor._id == action.payload)) return;
+      else state.availableSensors.push(state.allSensors.find((sensor) => sensor._id == action.payload));
     },
   },
 });
