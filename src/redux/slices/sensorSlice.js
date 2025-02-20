@@ -2,16 +2,23 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const sensorSlice = createSlice({
   name: "sensor",
-  initialState: { availableSensors: [] },
+  initialState: { allSensors: [], availableSensors: [] },
   reducers: {
+    addAllSensors: (state, action) => {
+      state.allSensors = action.payload;
+    },
     addAvailableSensors: (state, action) => {
       state.availableSensors = action.payload;
     },
     removeFromAvailableSensors: (state, action) => {
       state.availableSensors = state.availableSensors.filter((sensor) => sensor._id !== action.payload);
     },
+    addInAvailableSensors: (state, action) => {
+      state.availableSensors.push(state.allSensors.find((sensor) => sensor._id == action.payload));
+    },
   },
 });
 
-export const { addAvailableSensors, removeFromAvailableSensors } = sensorSlice.actions;
+export const { addAllSensors, addAvailableSensors, removeFromAvailableSensors, addInAvailableSensors } =
+  sensorSlice.actions;
 export default sensorSlice;
