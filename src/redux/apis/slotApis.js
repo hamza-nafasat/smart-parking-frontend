@@ -21,6 +21,10 @@ const slotApis = createApi({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: [
+        { type: "Slot", id: "LIST" },
+        { type: "Sensor", id: "LIST" },
+      ],
     }),
     // get all Slots
     getAllSlots: builder.query({
@@ -53,6 +57,14 @@ const slotApis = createApi({
       }),
       invalidatesTags: [{ type: "Slot", id: "LIST" }],
     }),
+    // delete multiple Slots
+    deleteMultipleSlots: builder.mutation({
+      query: (data) => ({
+        url: `/delete-multiple?slotIds=${data}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [{ type: "Slot", id: "LIST" }],
+    }),
   }),
 });
 
@@ -63,5 +75,6 @@ export const {
   useGetSingleSlotQuery,
   useUpdateSingleSlotMutation,
   useDeleteSingleSlotMutation,
+  useDeleteMultipleSlotsMutation,
 } = slotApis;
 export default slotApis;
