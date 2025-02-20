@@ -97,7 +97,7 @@ const Confirmation = ({ setCurrentStep }) => {
             id: polygon.id,
             color: polygon?.color,
             fillColor: polygon?.fillColor,
-            points: JSON.stringify(polygon?.points),
+            points: polygon?.points,
             sensorId: polygon.sensorId,
           };
           slotData.slots.push(singleSlot);
