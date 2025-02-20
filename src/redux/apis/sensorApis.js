@@ -13,6 +13,7 @@ const sensorApis = createApi({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: [{ type: "Sensor", id: "LIST" }],
     }),
     // get all sensors
     getAllSensors: builder.query({
@@ -20,6 +21,7 @@ const sensorApis = createApi({
         url: "/all",
         method: "GET",
       }),
+      providesTags: [{ type: "Sensor", id: "LIST" }],
     }),
     // get single sensor
     getSingleSensor: builder.query({
@@ -35,6 +37,7 @@ const sensorApis = createApi({
         method: "PUT",
         body: data,
       }),
+      invalidatesTags: [{ type: "Sensor", id: "LIST" }],
     }),
     // delete single sensor
     deleteSingleSensor: builder.mutation({
@@ -42,6 +45,7 @@ const sensorApis = createApi({
         url: `/single/${id}`,
         method: "DELETE",
       }),
+      invalidatesTags: [{ type: "Sensor", id: "LIST" }],
     }),
   }),
 });
