@@ -1,4 +1,5 @@
 import toast from "react-hot-toast";
+import { addInAvailableSensors } from "../../../../redux/slices/sensorSlice";
 
 // getCroppedImg.js
 const getCroppedImg = (imageSrc, crop) => {
@@ -149,7 +150,8 @@ const handleCanvasClick = (
   openSensorPopup,
   newPolygons,
   setNewPolygons,
-  setDeletedPolygonsIds
+  setDeletedPolygonsIds,
+  dispatch
 ) => {
   const canvas = canvasRef.current;
   const rect = canvas.getBoundingClientRect();
@@ -157,19 +159,29 @@ const handleCanvasClick = (
   const y = event.clientY - rect.top;
 
   if (isDeleteMode) {
-    handleDeletePolygon(x, y, canvasRef, polygons, setPolygons, newPolygons, setNewPolygons, setDeletedPolygonsIds);
+    handleDeletePolygon(
+      x,
+      y,
+      canvasRef,
+      polygons,
+      setPolygons,
+      newPolygons,
+      setNewPolygons,
+      setDeletedPolygonsIds,
+      dispatch
+    );
   } else if (isCopyMode && draggedPolygon) {
     // Handle copy-pasting of polygons
     const { _id, ...restPolygon } = draggedPolygon;
     const newPolygon = {
       ...restPolygon,
       id: `F1-PS${polygonCount}`,
-      // _id: `${draggedPolygon._id}_${Math.floor(Math.random() * 1000000)}`,
       points: draggedPolygon.points.map((point) => ({
         x: point.x + (x - draggedPolygon.points[0].x),
         y: point.y + (y - draggedPolygon.points[0].y),
       })),
     };
+    if (_id) newPolygon._id = _id;
     setPolygons([...polygons, newPolygon]);
     if (setNewPolygons) setNewPolygons([...newPolygons, newPolygon]);
     setPolygonCount(polygonCount + 1);
@@ -354,13 +366,12 @@ const handleDeletePolygon = (
   setPolygons,
   newPolygons,
   setNewPolygons,
-  setDeletedPolygonsIds
+  setDeletedPolygonsIds,
+  dispatch
 ) => {
+  let sensorIds = [];
   const canvas = canvasRef.current;
   const ctx = canvas.getContext("2d");
-
-  console.log("polygons in delete handle", polygons);
-
   const isInsidePolygon = (polygon) => {
     const path = new Path2D();
     path.moveTo(polygon.points[0].x, polygon.points[0].y);
@@ -368,19 +379,24 @@ const handleDeletePolygon = (
     path.closePath();
     return ctx.isPointInPath(path, x, y);
   };
-
+  // console.log("polygons in delete handle", isInsidePolygon);
   const deletePolygons = polygons.filter((polygon) => isInsidePolygon(polygon));
-
-  const deletedPolygonsIds = deletePolygons.filter((polygon) => polygon._id).map((polygon) => polygon._id);
+  const deletedPolygonsIds = deletePolygons.filter((polygon) => polygon._id);
 
   if (setDeletedPolygonsIds) {
+    sensorIds = deletePolygons?.map((polygon) => polygon?.sensorId);
+    // console.log("aaaaaaaaaaaaaaaaaaaaaaaaa", sensorIds?.[0]);
     setDeletedPolygonsIds((prevIds) => [...prevIds, ...deletedPolygonsIds]);
   }
 
   // Filter polygons
+  const removedNewPolygons = newPolygons.filter((polygon) => isInsidePolygon(polygon));
   const updatedPolygons = polygons.filter((polygon) => !isInsidePolygon(polygon));
   const updatedNewPolygons = newPolygons.filter((polygon) => !isInsidePolygon(polygon));
-
+  // console.log(removedNewPolygons);
+  if (!sensorIds?.length) sensorIds = removedNewPolygons?.map((polygon) => polygon?.sensorId);
+  // console.log("aaaaaaaaaaaaaaaaaaaaaaaaa", sensorIds?.[0]);
+  if (sensorIds?.length && dispatch) dispatch(addInAvailableSensors(sensorIds?.[0]));
   // Update state
   setPolygons(updatedPolygons);
   setNewPolygons(updatedNewPolygons);
@@ -395,7 +411,7 @@ const updateSensorAttached = (polygonId, sensor, polygons, setPolygons) => {
 };
 
 const polygonsLabelHandler = (selectedOption, selectedPolygon, polygons, setPolygons) => {
-  console.log("fjl;kasjdfl;kasjdfl;as", selectedOption, selectedPolygon);
+  // console.log("fjl;kasjdfl;kasjdfl;as", selectedOption, selectedPolygon);
   let selectedPolygonId = selectedPolygon.id;
   setPolygons(
     polygons.map((poly) => {
