@@ -14,7 +14,7 @@ import {
 import AddSensor from "./components/AddSensor";
 import EditSensor from "./components/EditSensor";
 import { useDispatch } from "react-redux";
-import { addAvailableSensors } from "../../../redux/slices/sensorSlice";
+import { addAllSensors, addAvailableSensors } from "../../../redux/slices/sensorSlice";
 
 const columns = (modalOpenHandler, statusToggleHandler, deleteHandler, isUpdating, isDeleting) => [
   {
@@ -113,6 +113,7 @@ const Sensors = () => {
 
   useEffect(() => {
     if (data?.data) {
+      dispatch(addAllSensors(data?.data));
       const availableSensors = data?.data?.filter((sensor) => !sensor?.isConnected);
       dispatch(addAvailableSensors(availableSensors));
     }
