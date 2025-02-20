@@ -25,7 +25,7 @@ import {
   handleMoveMode,
   sensorInfoSubmitHandler,
 } from "../utils/addParkingSpaceFeatures";
-import { addAvailableSensors, removeFromAvailableSensors } from "../../../../redux/slices/sensorSlice";
+import { addAllSensors, addAvailableSensors, removeFromAvailableSensors } from "../../../../redux/slices/sensorSlice";
 import { useGetAllSensorsQuery } from "../../../../redux/apis/sensorApis";
 
 const TwoDModel = ({
@@ -62,8 +62,6 @@ const TwoDModel = ({
   const [polygonName, setPolygonName] = useState("");
   const [selectedSensor, setSelectedSensor] = useState("");
   const [color, setColor] = useState("#18bc9c");
-
-  console.log("selected Sensor", selectedSensor);
 
   const onCropComplete = (croppedArea, croppedAreaPixels) => setCroppedAreaPixels(croppedAreaPixels);
 
@@ -132,6 +130,7 @@ const TwoDModel = ({
 
   useEffect(() => {
     if (sensors?.data) {
+      dispatch(addAllSensors(sensors?.data));
       const availableSensors = sensors?.data?.filter((sensor) => !sensor?.isConnected && sensor?.status);
       dispatch(addAvailableSensors(availableSensors));
     }
