@@ -6,7 +6,11 @@ import Button from "../../../components/shared/small/Button";
 import Input from "../../../components/shared/small/Input";
 import { useGetSingleFloorQuery, useUpdateSingleFloorMutation } from "../../../redux/apis/floorApis";
 import UpdateModel from "../addParkingSpace/components/UpdateModel";
-import { useGetAllSlotsQuery } from "../../../redux/apis/slotApis";
+import {
+  useCreateSlotsInBulkMutation,
+  useDeleteMultipleSlotsMutation,
+  useGetAllSlotsQuery,
+} from "../../../redux/apis/slotApis";
 
 function EditFloorInfo() {
   const navigate = useNavigate();
@@ -14,37 +18,22 @@ function EditFloorInfo() {
   const buildingId = params.buildingId;
   const floorId = params.id;
 
-  const { data, refetch } = useGetSingleFloorQuery(floorId);
+  const { data } = useGetSingleFloorQuery(floorId);
   const { data: slots } = useGetAllSlotsQuery(floorId);
   const [updateFloor, { isLoading }] = useUpdateSingleFloorMutation();
+  const [addMultiSlots] = useCreateSlotsInBulkMutation();
+  const [deleteMultiSlots] = useDeleteMultipleSlotsMutation();
 
   const [name, setName] = useState("");
   const [noOfParkingSpace, setNumberOfParkingSpace] = useState();
   const [originalImage, setOriginalImage] = useState(null);
   const [polygons, setPolygons] = useState([]);
-  const [polygonsForBackend, setPolygonsForBackend] = useState([]);
   const [imageSrc, setImageSrc] = useState(null);
 
   const [polygonsForCreate, setPolygonsForCreate] = useState([]);
   const [polygonsForDelete, setPolygonsForDelete] = useState([]);
 
-  // if (!name || !noOfParkingSpace || !imageSrc || !polygonsForBackend) return toast.error("Fill all fields first");
-  // const formData = new FormData();
-  // formData.append("name", name);
-  // formData.append("noOfParkingSpace", noOfParkingSpace);
-  // formData.append("floorImage", imageSrc);
-  // formData.append("polygonData", JSON.stringify(polygonsForBackend));
-  // if (originalImage) formData.append("file", originalImage);
-  // try {
-  //   const res = await updateFloor({ id: floorId, data: formData }).unwrap();
-  //   if (res?.success) toast.success(res?.message);
-  //   await refetch();
-  //   return navigate(`/manager/floor-view/${buildingId}/${floorId}`);
-  // } catch (error) {
-  //   console.log("Error in update floor", error);
-  //   toast.error(error?.data?.message || "Something went wrong");
-  // }
-
+  const onUploadForFloorImage = (image) => setImageSrc(image);
   const saveClickHandler = async () => {
     try {
       // make data for update
@@ -52,25 +41,50 @@ function EditFloorInfo() {
       if (name) dataForUpdate.name = name;
       if (originalImage) dataForUpdate.file = originalImage;
       if (noOfParkingSpace) dataForUpdate.noOfParkingSpace = noOfParkingSpace;
+
       if (polygonsForCreate?.length)
         dataForUpdate.polygonsForCreate = polygonsForCreate?.filter(
-          (p) => p.id && p.points && p.sensorId && p.color && p.fillColor
+          (p) => p?.id && p?.points && p?.sensorId && p?.color && p?.fillColor
         );
-      if (polygonsForDelete?.length) dataForUpdate.polygonsForDelete = polygonsForDelete;
+      if (polygonsForDelete?.length) dataForUpdate.polygonsForDelete = polygonsForDelete?.map((p) => p?._id);
 
-      // hit apis and update data
-    } catch (error) {}
-  };
+      // remove polygons first and then add new polygons
+      // -----------------------------------------------
+      if (dataForUpdate?.polygonsForDelete?.length) {
+        const slotsIds = dataForUpdate.polygonsForDelete?.join(",");
+        // console.log("slotsIds", slotsIds);
+        const res = await deleteMultiSlots(slotsIds).unwrap();
+        if (res?.success) toast.success(res?.message);
+      }
+      if (dataForUpdate?.polygonsForCreate?.length) {
+        const slotsData = {
+          slots: dataForUpdate?.polygonsForCreate,
+          buildingId,
+          floorId,
+        };
+        const res = await addMultiSlots(slotsData).unwrap();
+        if (res?.success) toast.success(res?.message);
+      }
+      // -----------------------------------------------
+      // update floor
+      const formData = new FormData();
+      if (dataForUpdate?.name) formData.append("name", dataForUpdate?.name);
+      if (dataForUpdate?.noOfParkingSpace) formData.append("noOfParkingSpace", dataForUpdate?.noOfParkingSpace);
+      if (originalImage) formData.append("file", originalImage);
 
-  const onUploadForFloorImage = (image, coordinates) => {
-    setImageSrc(image);
-    setPolygonsForBackend(coordinates);
+      const res = await updateFloor({ id: floorId, data: formData }).unwrap();
+      if (res?.success) toast.success(res?.message);
+      return navigate(`/manager/floor-view/${buildingId}/${floorId}`);
+    } catch (error) {
+      console.log("Error in update floor", error);
+      toast.error(error?.data?.message || "Something went wrong");
+    }
   };
 
   useEffect(() => {
     if (data?.data) {
       const floor = data?.data;
-      console.log("this is floor", floor);
+      // console.log("this is floor", floor);
       setName(floor.name);
       setNumberOfParkingSpace(floor.noOfParkingSpace);
       setImageSrc(floor?.twoDImage?.url);
@@ -85,14 +99,11 @@ function EditFloorInfo() {
         points: slot?.points,
         color: slot?.color,
         fillColor: slot?.fillColor,
+        sensorId: slot?.sensor,
       }));
       setPolygons(polygons);
-      setPolygonsForBackend(polygons);
     }
   }, [slots?.data]);
-
-  console.log("polygonsForCreate", polygonsForCreate);
-  console.log("polygonsForDelete", polygonsForDelete);
 
   return (
     <div>
