@@ -198,7 +198,7 @@ const handleCanvasClick = (
         id: `F1-PS${polygonCount}`,
       };
       setPolygons([...polygons, polygonWithId]);
-      setNewPolygons([...newPolygons, polygonWithId]);
+      if (setNewPolygons && newPolygons) setNewPolygons([...newPolygons, polygonWithId]);
       setPolygonCount(polygonCount + 1);
       setCurrentPolygon([]);
       openSensorPopup(polygonWithId);
@@ -382,24 +382,29 @@ const handleDeletePolygon = (
   // console.log("polygons in delete handle", isInsidePolygon);
   const deletePolygons = polygons.filter((polygon) => isInsidePolygon(polygon));
   const deletedPolygonsIds = deletePolygons.filter((polygon) => polygon._id);
-
-  if (setDeletedPolygonsIds) {
+  if (deletePolygons) {
     sensorIds = deletePolygons?.map((polygon) => polygon?.sensorId);
-    // console.log("aaaaaaaaaaaaaaaaaaaaaaaaa", sensorIds?.[0]);
-    setDeletedPolygonsIds((prevIds) => [...prevIds, ...deletedPolygonsIds]);
+    console.log("aaaaaaaaaaaaaaaaaaaaaaaaa", sensorIds?.[0]);
   }
 
-  // Filter polygons
-  const removedNewPolygons = newPolygons.filter((polygon) => isInsidePolygon(polygon));
-  const updatedPolygons = polygons.filter((polygon) => !isInsidePolygon(polygon));
-  const updatedNewPolygons = newPolygons.filter((polygon) => !isInsidePolygon(polygon));
-  // console.log(removedNewPolygons);
-  if (!sensorIds?.length) sensorIds = removedNewPolygons?.map((polygon) => polygon?.sensorId);
-  // console.log("aaaaaaaaaaaaaaaaaaaaaaaaa", sensorIds?.[0]);
+  if (setDeletedPolygonsIds) setDeletedPolygonsIds((prevIds) => [...prevIds, ...deletedPolygonsIds]);
+
+  if (newPolygons?.length) {
+    const removedNewPolygons = newPolygons?.filter((polygon) => isInsidePolygon(polygon));
+    const updatedPolygons = polygons?.filter((polygon) => !isInsidePolygon(polygon));
+    const updatedNewPolygons = newPolygons?.filter((polygon) => !isInsidePolygon(polygon));
+    if (!sensorIds?.length) sensorIds = removedNewPolygons?.map((polygon) => polygon?.sensorId);
+    setNewPolygons(updatedNewPolygons);
+    setPolygons(updatedPolygons);
+  } else {
+    const updatedPolygons = polygons?.filter((polygon) => !isInsidePolygon(polygon));
+    setPolygons(updatedPolygons);
+  }
   if (sensorIds?.length && dispatch) dispatch(addInAvailableSensors(sensorIds?.[0]));
+  // Filter polygons
+  // console.log(removedNewPolygons);
+  // console.log("aaaaaaaaaaaaaaaaaaaaaaaaa", sensorIds?.[0]);
   // Update state
-  setPolygons(updatedPolygons);
-  setNewPolygons(updatedNewPolygons);
 };
 
 // attaching sensor to the polygon
@@ -483,14 +488,15 @@ const handleCancelPolygon = (
 ) => {
   setSensorPopup(false);
   setPolygons((prevPolygons) => prevPolygons.filter((polygon) => polygon.id !== selectedPolygon?.id));
-  setNewPolygons((prevPolygons) => prevPolygons.filter((polygon) => polygon.id !== selectedPolygon?.id));
   setCurrentPolygon([]);
   setSelectedPolygon(null);
+  if (setNewPolygons)
+    setNewPolygons((prevPolygons) => prevPolygons.filter((polygon) => polygon.id !== selectedPolygon?.id));
 };
 
 const dataURLtoFile = (dataurl, filename) => {
   const arr = dataurl.split(",");
-  const mime = arr[0].match(/:(.*?);/)[1];
+  const mime = arr[0].match(/:(.*?);/)?.[1];
   const bstr = atob(arr[1]);
   let n = bstr.length;
   const u8arr = new Uint8Array(n);
