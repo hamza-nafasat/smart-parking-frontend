@@ -13,7 +13,10 @@ const slotApis = createApi({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: [{ type: "Slot", id: "LIST" }],
+      invalidatesTags: [
+        { type: "Slot", id: "LIST" },
+        { type: "Sensor", id: "LIST" },
+      ],
     }),
     createSlotsInBulk: builder.mutation({
       query: (data) => ({
@@ -48,6 +51,10 @@ const slotApis = createApi({
         method: "PUT",
         body: data,
       }),
+      invalidatesTags: [
+        { type: "Slot", id: "LIST" },
+        { type: "Sensor", id: "LIST" },
+      ],
     }),
     // delete single Slot
     deleteSingleSlot: builder.mutation({
@@ -55,7 +62,10 @@ const slotApis = createApi({
         url: `/single/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: [{ type: "Slot", id: "LIST" }],
+      invalidatesTags: [
+        { type: "Slot", id: "LIST" },
+        { type: "Sensor", id: "LIST" },
+      ],
     }),
     // delete multiple Slots
     deleteMultipleSlots: builder.mutation({
@@ -63,7 +73,10 @@ const slotApis = createApi({
         url: `/delete-multiple?slotIds=${data}`,
         method: "DELETE",
       }),
-      invalidatesTags: [{ type: "Slot", id: "LIST" }],
+      invalidatesTags: [
+        { type: "Slot", id: "LIST" },
+        { type: "Sensor", id: "LIST" },
+      ],
     }),
   }),
 });

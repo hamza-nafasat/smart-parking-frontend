@@ -12,6 +12,7 @@ import { userExist, userNotExist } from "./redux/slices/authSlice";
 
 // Loader (Non-Lazy Component)
 import Loader from "./components/shared/small/Loader";
+import useFetchAndMakeSensorSlice from "./components/hooks/useFetchAndMakeSensorSlice";
 
 // Lazy-loaded Components
 const LandingPage = lazy(() => import("./pages/landing/LandingPage"));
@@ -62,11 +63,11 @@ const UserViewSlip = lazy(() => import("./pages/user/bookingSummary/components/V
 const UserProfile = lazy(() => import("./pages/user/setting/Profile"));
 const BookingSlots = lazy(() => import("./pages/user/dashboard/components/BookingSlots"));
 
-
 function App() {
   const dispatch = useDispatch();
   const [checkLogin] = useCheckLoginMutation();
   const [isLoading, setIsLoading] = useState(true);
+  useFetchAndMakeSensorSlice();
 
   const checkUserLogin = useCallback(async () => {
     try {
@@ -87,7 +88,9 @@ function App() {
     if (document.cookie.includes("loggedInViaGoogle")) {
       console.log("cookie exist");
       toast.success("You are logged in via Google");
-      document.cookie = `loggedInViaGoogle=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${getEnv("DOMAIN")};`;
+      document.cookie = `loggedInViaGoogle=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${getEnv(
+        "DOMAIN"
+      )};`;
     }
   }, []);
   return (
