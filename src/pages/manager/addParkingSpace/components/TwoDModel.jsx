@@ -5,11 +5,12 @@ import { AiOutlineDelete } from "react-icons/ai";
 import { CiEdit } from "react-icons/ci";
 import { SlCursorMove } from "react-icons/sl";
 import { VscCopy } from "react-icons/vsc";
+import { useDispatch, useSelector } from "react-redux";
 import Button from "../../../../components/shared/small/Button";
 import Dropdown from "../../../../components/shared/small/Dropdown";
 import Input from "../../../../components/shared/small/Input";
 import Modal from "../../../../components/shared/small/Modal";
-import { useDispatch, useSelector } from "react-redux";
+import { removeFromAvailableSensors } from "../../../../redux/slices/sensorSlice";
 import {
   dataURLtoFile,
   drawCanvas,
@@ -25,8 +26,6 @@ import {
   handleMoveMode,
   sensorInfoSubmitHandler,
 } from "../utils/addParkingSpaceFeatures";
-import { addAllSensors, addAvailableSensors, removeFromAvailableSensors } from "../../../../redux/slices/sensorSlice";
-import { useGetAllSensorsQuery } from "../../../../redux/apis/sensorApis";
 
 const TwoDModel = ({
   onUpload,
@@ -39,8 +38,6 @@ const TwoDModel = ({
 }) => {
   const dispatch = useDispatch();
   const { availableSensors } = useSelector((state) => state.sensor);
-  const { data: sensors } = useGetAllSensorsQuery();
-
   const canvasRef = useRef(null);
   const [isDrawingEnabled, setIsDrawingEnabled] = useState(false);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
@@ -128,13 +125,6 @@ const TwoDModel = ({
     }
   }, [imageSrc]);
 
-  useEffect(() => {
-    if (sensors?.data) {
-      dispatch(addAllSensors(sensors?.data));
-      const availableSensors = sensors?.data?.filter((sensor) => !sensor?.isConnected && sensor?.status);
-      dispatch(addAvailableSensors(availableSensors));
-    }
-  }, [sensors?.data, dispatch]);
   return (
     <div className="relative">
       {!isDrawingEnabled && <BrowseFileBtn onFileChange={handleImageUpload} />}
@@ -159,7 +149,11 @@ const TwoDModel = ({
             setCurrentPolygon,
             polygons,
             currentPolygon,
-            openSensorPopup
+            openSensorPopup,
+            false,
+            false,
+            false,
+            dispatch
           )
         }
         onMouseDown={(event) =>
@@ -281,7 +275,7 @@ const TwoDModel = ({
             {!isBuilding && (
               <Dropdown
                 defaultText={"Select Sensor"}
-                options={availableSensors?.map((sensor) => ({ option: sensor.name, value: sensor._id }))}
+                options={availableSensors?.map((sensor) => ({ option: sensor?.name, value: sensor?._id }))}
                 label="Sensor Name"
                 onSelect={(selectedOption) => setSelectedSensor(selectedOption)}
               />
