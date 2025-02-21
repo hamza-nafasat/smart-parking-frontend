@@ -472,39 +472,34 @@ const sensorInfoSubmitHandler = (
 ) => {
   if (!name) return toast.error("Please select sensor name");
   if (!isBuilding && !selectedSensor) return toast.error("Please select sensor");
-  if (name) {
-    const updatedPolygons = polygons.map((polygon) =>
-      polygon.id === selectedPolygon.id
-        ? {
-            ...polygon,
-            id: name,
-            sensorId: selectedSensor || "",
-            color: color,
-            fillColor: color,
-            labelPoint: polygon.labelPoint || "first",
-          }
-        : polygon
-    );
-    const updatedNewPolygons = newPolygons?.map((polygon) =>
-      polygon.id === selectedPolygon.id
-        ? {
-            ...polygon,
-            id: name,
-            sensorId: selectedSensor || "",
-            color: color,
-            fillColor: color,
-            labelPoint: polygon.labelPoint || "first",
-          }
-        : polygon
-    );
-    newPolygons && setNewPolygons(updatedNewPolygons);
-    setPolygons(updatedPolygons);
-    setSensorPopup(false);
-    setSelectedSensor("");
-  } else {
-    // If sensorIdInput is empty, we do not allow the polygon to be drawn.
-    alert("without sensor id and sensor name polygon not draw");
-  }
+  const updatedPolygons = polygons?.map((polygon) => {
+    return polygon?.id == selectedPolygon?.id
+      ? {
+          ...polygon,
+          id: name,
+          sensorId: selectedSensor || "",
+          color: color,
+          fillColor: color,
+          labelPoint: polygon?.labelPoint || "first",
+        }
+      : polygon;
+  });
+  const updatedNewPolygons = newPolygons?.map((polygon) => {
+    return polygon?.id == selectedPolygon?.id
+      ? {
+          ...polygon,
+          id: name,
+          sensorId: selectedSensor || "",
+          color: color,
+          fillColor: color,
+          labelPoint: polygon?.labelPoint || "first",
+        }
+      : polygon;
+  });
+  if (updatedNewPolygons && setNewPolygons) setNewPolygons(updatedNewPolygons);
+  setPolygons(updatedPolygons);
+  setSensorPopup(false);
+  setSelectedSensor("");
 };
 
 const handleCancelPolygon = (

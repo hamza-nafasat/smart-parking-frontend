@@ -36,6 +36,8 @@ function EditFloorInfo() {
   const [polygonsForCreate, setPolygonsForCreate] = useState([]);
   const [polygonsForDelete, setPolygonsForDelete] = useState([]);
 
+  console.log("polygons for create", polygonsForCreate);
+
   const saveClickHandler = async () => {
     try {
       // make data for update

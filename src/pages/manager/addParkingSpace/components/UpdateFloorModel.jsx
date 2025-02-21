@@ -274,7 +274,13 @@ const UpdateFloorModel = ({
         </>
       )}
       {sensorPopup && selectedPolygon && (
-        <Modal width="w-[290px] sm:w-[400px]" border="border-2 border-primary" title="Add Sensor" onClose={modelCloseHandler} notClose>
+        <Modal
+          width="w-[290px] sm:w-[400px]"
+          border="border-2 border-primary"
+          title="Add Sensor"
+          onClose={modelCloseHandler}
+          notClose
+        >
           <div className="flex flex-col gap-2">
             <Input
               type="text"
@@ -326,7 +332,10 @@ const UpdateFloorModel = ({
                     setPolygons,
                     setSensorPopup,
                     isBuilding,
-                    setSelectedSensor
+                    setSelectedSensor,
+                    newPolygons,
+                    setNewPolygons,
+                    dispatch
                   );
                   dispatch(removeFromAvailableSensors(selectedSensor));
                 }}
