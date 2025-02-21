@@ -11,12 +11,15 @@ import {
   useDeleteMultipleSlotsMutation,
   useGetAllSlotsQuery,
 } from "../../../redux/apis/slotApis";
+import useFetchAndMakeSensorSlice from "../../../components/hooks/useFetchAndMakeSensorSlice";
 
 function EditFloorInfo() {
   const navigate = useNavigate();
   const params = useParams();
   const buildingId = params.buildingId;
   const floorId = params.id;
+
+  const { refetchHook } = useFetchAndMakeSensorSlice();
 
   const { data } = useGetSingleFloorQuery(floorId);
   const { data: slots } = useGetAllSlotsQuery(floorId);
@@ -65,8 +68,8 @@ function EditFloorInfo() {
         const res = await addMultiSlots(slotsData).unwrap();
         if (res?.success) message += `,${dataForUpdate.polygonsForCreate?.length} slots created`;
       }
-      // -----------------------------------------------
       // update floor
+      // -------------
       const formData = new FormData();
       if (dataForUpdate?.name) formData.append("name", dataForUpdate?.name);
       if (dataForUpdate?.noOfParkingSpace) formData.append("noOfParkingSpace", dataForUpdate?.noOfParkingSpace);
@@ -74,6 +77,8 @@ function EditFloorInfo() {
 
       const res = await updateFloor({ id: floorId, data: formData }).unwrap();
       if (res?.success) toast.success(`${message} and Floor updated successfully`);
+
+      await refetchHook();
       return navigate(`/manager/floor-view/${buildingId}/${floorId}`);
     } catch (error) {
       console.log("Error in update floor", error);
