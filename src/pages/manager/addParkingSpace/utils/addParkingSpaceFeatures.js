@@ -2,22 +2,51 @@ import toast from "react-hot-toast";
 import { addInAvailableSensors } from "../../../../redux/slices/sensorSlice";
 
 // getCroppedImg.js
+// const getCroppedImg = (imageSrc, crop) => {
+//   return new Promise((resolve) => {
+//     const image = new Image();
+//     image.src = imageSrc;
+//     image.onload = () => {
+//       const canvas = document.createElement("canvas");
+//       canvas.width = 800;
+//       canvas.height = 500;
+//       const ctx = canvas.getContext("2d");
+
+//       ctx.drawImage(image, crop.x, crop.y, crop.width, crop.height, 0, 0, canvas.width, canvas.height);
+
+//       canvas.toBlob((blob) => {
+//         resolve(URL.createObjectURL(blob));
+//       }, "image/jpeg");
+//     };
+//   });
+// };
+
+// Utility function to crop the image and return both cropped file and src
 const getCroppedImg = (imageSrc, crop) => {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const image = new Image();
     image.src = imageSrc;
     image.onload = () => {
       const canvas = document.createElement("canvas");
+      // You can adjust canvas dimensions as needed, e.g., using crop.width/height
       canvas.width = 800;
       canvas.height = 500;
       const ctx = canvas.getContext("2d");
-
       ctx.drawImage(image, crop.x, crop.y, crop.width, crop.height, 0, 0, canvas.width, canvas.height);
-
-      canvas.toBlob((blob) => {
-        resolve(URL.createObjectURL(blob));
-      }, "image/jpeg");
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) return reject(new Error("Canvas is empty"));
+          // Create a URL for preview
+          const croppedSrc = URL.createObjectURL(blob);
+          // Create a File object (if needed for backend upload)
+          const croppedFile = new File([blob], "croppedImage.jpg", { type: "image/jpeg" });
+          resolve({ croppedFile, croppedSrc });
+        },
+        "image/jpeg",
+        1
+      );
     };
+    image.onerror = (error) => reject(error);
   });
 };
 

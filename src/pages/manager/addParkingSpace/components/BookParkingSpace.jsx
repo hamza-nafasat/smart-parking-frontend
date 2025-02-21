@@ -64,9 +64,10 @@ const BookParkingSpace = () => {
 
   const handleCropConfirm = async () => {
     try {
-      const croppedImage = await getCroppedImg(imageSrc, croppedAreaPixels);
+      const { croppedFile, croppedSrc } = await getCroppedImg(imageSrc, croppedAreaPixels);
+      console.log("original not user image is", croppedFile);
       const img = new Image();
-      img.src = croppedImage;
+      img.src = croppedSrc;
       img.onload = () => setImage(img);
       setShowCropper(false);
     } catch (error) {

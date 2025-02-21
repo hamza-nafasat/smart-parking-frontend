@@ -18,7 +18,7 @@ function AddNewFloor() {
   const { refetchHook } = useFetchAndMakeSensorSlice();
   const [addSlotInBulk, { isLoading: isLoadingForSlot }] = useCreateSlotsInBulkMutation();
   const [name, setName] = useState("");
-  const [noOfParkingSpace, setNumberOfParkingSpace] = useState();
+  const [noOfParkingSpace, setNumberOfParkingSpace] = useState(0);
   const [originalImage, setOriginalImage] = useState(null);
   const [polygons, setPolygons] = useState([]);
   const [imageSrc, setImageSrc] = useState(null);

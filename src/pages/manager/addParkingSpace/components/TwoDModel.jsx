@@ -12,7 +12,6 @@ import Input from "../../../../components/shared/small/Input";
 import Modal from "../../../../components/shared/small/Modal";
 import { removeFromAvailableSensors } from "../../../../redux/slices/sensorSlice";
 import {
-  dataURLtoFile,
   drawCanvas,
   getCroppedImg,
   handleCancelPolygon,
@@ -52,8 +51,6 @@ const TwoDModel = ({ polygons, setPolygons, imageSrc, setImageSrc, setOriginalIm
   const [selectedSensor, setSelectedSensor] = useState("");
   const [color, setColor] = useState("#18bc9c");
 
-  const onCropComplete = (croppedArea, croppedAreaPixels) => setCroppedAreaPixels(croppedAreaPixels);
-
   const openSensorPopup = (polygon) => {
     setSelectedPolygon(polygon);
     setSensorPopup(true);
@@ -76,15 +73,13 @@ const TwoDModel = ({ polygons, setPolygons, imageSrc, setImageSrc, setOriginalIm
 
   const handleCropConfirm = async () => {
     try {
-      const croppedImage = await getCroppedImg(imageSrc, croppedAreaPixels);
+      const { croppedFile, croppedSrc } = await getCroppedImg(imageSrc, croppedAreaPixels);
       const img = new Image();
-      img.src = croppedImage;
+      img.src = croppedSrc;
       img.onload = () => setImage(img);
       setShowCropper(false);
-      setImageSrc(croppedImage);
-
-      const croppedImageFile = dataURLtoFile(croppedImage, "cropped_image.png");
-      setOriginalImage(croppedImageFile);
+      setImageSrc(croppedSrc);
+      setOriginalImage(croppedFile);
     } catch (error) {
       console.error("Crop failed:", error);
     }
@@ -96,9 +91,7 @@ const TwoDModel = ({ polygons, setPolygons, imageSrc, setImageSrc, setOriginalIm
   };
 
   useEffect(() => {
-    if (isDrawingEnabled) {
-      drawCanvas(canvasRef, isDrawingEnabled, image, polygons, currentPolygon, color);
-    }
+    if (isDrawingEnabled) drawCanvas(canvasRef, isDrawingEnabled, image, polygons, currentPolygon, color);
   }, [image, polygons, currentPolygon, isDrawingEnabled, color]);
 
   useEffect(() => {
@@ -171,7 +164,7 @@ const TwoDModel = ({ polygons, setPolygons, imageSrc, setImageSrc, setOriginalIm
               aspect={12 / 5}
               onCropChange={setCrop}
               onZoomChange={setZoom}
-              onCropComplete={onCropComplete}
+              onCropComplete={(croppedArea, croppedAreaPixels) => setCroppedAreaPixels(croppedAreaPixels)}
             />
             <div className="flex items-center gap-2 mt-4 z-[999] absolute bottom-6 right-6">
               <button onClick={() => setShowCropper(false)} className="bg-gray-500 text-white px-4 py-2 rounded">

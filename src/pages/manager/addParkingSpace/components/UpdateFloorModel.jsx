@@ -96,18 +96,15 @@ const UpdateFloorModel = ({
     setSensorPopup(false);
   };
 
-  const onCropComplete = (croppedArea, croppedAreaPixels) => {
-    setCroppedAreaPixels(croppedAreaPixels);
-  };
-
   const handleCropConfirm = async () => {
     try {
-      const croppedImage = await getCroppedImg(imageSrc, croppedAreaPixels);
+      const { croppedFile, croppedSrc } = await getCroppedImg(imageSrc, croppedAreaPixels);
       const img = new Image();
-      img.src = croppedImage;
+      img.src = croppedSrc;
       img.onload = () => setImage(img);
       setShowCropper(false);
-      setImageSrc(croppedImage);
+      setImageSrc(croppedSrc);
+      setOriginalImage(croppedFile);
     } catch (error) {
       console.error("Crop failed:", error);
     }
@@ -198,7 +195,7 @@ const UpdateFloorModel = ({
               aspect={12 / 5}
               onCropChange={setCrop}
               onZoomChange={setZoom}
-              onCropComplete={onCropComplete}
+              onCropComplete={(croppedArea, croppedAreaPixels) => setCroppedAreaPixels(croppedAreaPixels)}
             />
             <div className="flex items-center gap-2 mt-4 z-[999] absolute bottom-6 right-6">
               <button onClick={() => setShowCropper(false)} className="bg-gray-500 text-white px-4 py-2 rounded">
