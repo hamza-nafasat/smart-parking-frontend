@@ -84,6 +84,11 @@ function EditBuildingInfo() {
       setPolygons(building?.polygonData || []);
     }
   }, [data?.data]);
+
+  useEffect(() => {
+    if (oldImageSrc) setImageSrc(oldImageSrc);
+    if (polygons?.length) setBuilding({ ...building, buildingCoordinates: polygons });
+  }, [building, oldImageSrc, polygons]);
   return (
     <div className="mt-4">
       <h4 className="text-base md:text-xl font-medium text-[#414141] text-center">General Building Information</h4>
