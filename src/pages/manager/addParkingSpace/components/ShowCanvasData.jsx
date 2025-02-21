@@ -1,6 +1,5 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Button from "../../../../components/shared/small/Button";
 import { RxCross2 } from "react-icons/rx";
 
 // Helper function to convert hex to rgba with opacity
@@ -13,9 +12,7 @@ const convertHexToRgba = (hex, opacity) => {
   return `rgba(${r}, ${g}, ${b}, ${opacity})`;
 };
 
-// eslint-disable-next-line react/prop-types
 const ShowCanvasData = ({ image, polygons, view, heatmap = false }) => {
-  const navigate = useNavigate();
   const canvasRef = useRef(null);
   const [selectedPolygon, setSelectedPolygon] = useState(null);
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
@@ -68,25 +65,14 @@ const ShowCanvasData = ({ image, polygons, view, heatmap = false }) => {
           if (!polygon || !polygon.points) return;
 
           // Calculate the center of the polygon
-          const centerX =
-            polygon.points.reduce((sum, p) => sum + p.x, 0) /
-            polygon.points.length;
-          const centerY =
-            polygon.points.reduce((sum, p) => sum + p.y, 0) /
-            polygon.points.length;
+          const centerX = polygon.points.reduce((sum, p) => sum + p.x, 0) / polygon.points.length;
+          const centerY = polygon.points.reduce((sum, p) => sum + p.y, 0) / polygon.points.length;
 
           // Define gradient size based on polygon's intensity or a default radius
           const radius = polygon.radius || 50; // Default radius if not provided
 
           // Create radial gradient with polygon color in the center and yellow at the edges
-          const gradient = ctx.createRadialGradient(
-            centerX,
-            centerY,
-            0,
-            centerX,
-            centerY,
-            radius
-          );
+          const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
 
           // Set color stops:
           // - center: polygon's color
@@ -111,9 +97,7 @@ const ShowCanvasData = ({ image, polygons, view, heatmap = false }) => {
           ctx.closePath();
 
           // Fill polygon with a semi-transparent color
-          ctx.fillStyle = polygon.fillColor
-            ? convertHexToRgba(polygon.fillColor, 0.5)
-            : "rgba(255, 255, 255, 0.5)";
+          ctx.fillStyle = polygon.fillColor ? convertHexToRgba(polygon.fillColor, 0.5) : "rgba(255, 255, 255, 0.5)";
           ctx.fill();
 
           // Draw border of the polygon
@@ -121,9 +105,7 @@ const ShowCanvasData = ({ image, polygons, view, heatmap = false }) => {
           ctx.lineWidth = 2;
           ctx.stroke();
           // Add event listener for the polygon click detection
-          canvas.addEventListener("click", (e) =>
-            handlePolygonClick(e, polygon)
-          );
+          canvas.addEventListener("click", (e) => handlePolygonClick(e, polygon));
 
           // Draw label for the polygon (ID)
           const labelX = polygon.points[0]?.x;
@@ -143,20 +125,8 @@ const ShowCanvasData = ({ image, polygons, view, heatmap = false }) => {
             ctx.fillStyle = "#FFFFFF";
             ctx.beginPath();
             ctx.moveTo(boxX + 4, boxY);
-            ctx.arcTo(
-              boxX + boxWidth,
-              boxY,
-              boxX + boxWidth,
-              boxY + boxHeight,
-              4
-            );
-            ctx.arcTo(
-              boxX + boxWidth,
-              boxY + boxHeight,
-              boxX,
-              boxY + boxHeight,
-              4
-            );
+            ctx.arcTo(boxX + boxWidth, boxY, boxX + boxWidth, boxY + boxHeight, 4);
+            ctx.arcTo(boxX + boxWidth, boxY + boxHeight, boxX, boxY + boxHeight, 4);
             ctx.arcTo(boxX, boxY + boxHeight, boxX, boxY, 4);
             ctx.arcTo(boxX, boxY, boxX + boxWidth, boxY, 4);
             ctx.closePath();
@@ -195,13 +165,8 @@ const ShowCanvasData = ({ image, polygons, view, heatmap = false }) => {
           {view === "building-view" ? (
             <div>
               <div className="flex justify-between items-center">
-                <h6 className="text-2xl font-bold text-center grow text-black">
-                  Floor Details
-                </h6>
-                <div
-                  className="cursor-pointer bg-primary rounded-full p-2"
-                  onClick={() => setSelectedPolygon(null)}
-                >
+                <h6 className="text-2xl font-bold text-center grow text-black">Floor Details</h6>
+                <div className="cursor-pointer bg-primary rounded-full p-2" onClick={() => setSelectedPolygon(null)}>
                   <RxCross2 color="#fff" />
                 </div>
               </div>
@@ -209,10 +174,7 @@ const ShowCanvasData = ({ image, polygons, view, heatmap = false }) => {
                 <h6 className="text-lg font-bold">Parking List:</h6>
                 <ul className="text-sm my-1 space-y-2">
                   <li className="list-disc ml-4">
-                    <span className="font-bold text-base">
-                      Booked Parking:
-                    </span>{" "}
-                    0
+                    <span className="font-bold text-base">Booked Parking:</span> 0
                   </li>
                   <li className="list-disc ml-4">
                     {" "}
@@ -222,11 +184,10 @@ const ShowCanvasData = ({ image, polygons, view, heatmap = false }) => {
                 <p className="text-lg mt-3 font-bold">Total Parking: 2</p>
               </div>
               <div className="flex justify-center gap-4">
-                <Button
+                {/* <Button
                   width="w-[120px]"
                   text="Go to Floor"
-                  // onClick={() => navigate(`/dashboard/floor-view/`)}
-                />
+                /> */}
               </div>
             </div>
           ) : (
@@ -234,8 +195,7 @@ const ShowCanvasData = ({ image, polygons, view, heatmap = false }) => {
               <h6 className="text-xl font-bold text-center">Parking Details</h6>
               <div className="my-4 space-y-2">
                 <h6 className="text-base">
-                  <span className="font-bold text-base">Parking Name:</span>{" "}
-                  Parking one
+                  <span className="font-bold text-base">Parking Name:</span> Parking one
                 </h6>
                 <p className="text-base">
                   <span className="font-bold text-base">Booked:</span> No
