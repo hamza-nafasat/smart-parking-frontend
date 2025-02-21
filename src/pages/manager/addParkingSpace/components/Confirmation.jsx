@@ -2,18 +2,21 @@
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { AccordionEditIcon } from "../../../../assets/svgs/Icon";
+import useFetchAndMakeSensorSlice from "../../../../components/hooks/useFetchAndMakeSensorSlice";
 import Button from "../../../../components/shared/small/Button";
 import { useCreateBuildingMutation } from "../../../../redux/apis/buildingApis";
 import { useCreateFloorsInBulkMutation } from "../../../../redux/apis/floorApis";
+import { useCreateSlotsInBulkMutation } from "../../../../redux/apis/slotApis";
 import { resetBuildings } from "../../../../redux/slices/buildingSlice";
 import { resetFloors, setActiveAccordionIndex } from "../../../../redux/slices/floorSlice";
 import { customObjectId } from "../../../../utils/features";
 import { floors as sensors } from "../utils/addParkingSpaceFeatures";
-import { useCreateSlotsInBulkMutation } from "../../../../redux/apis/slotApis";
 
 const Confirmation = ({ setCurrentStep }) => {
   const dispatch = useDispatch();
   const { buildingGeneralInfo } = useSelector((state) => state.building);
+
+  const { refetchHook } = useFetchAndMakeSensorSlice();
 
   const { floors } = useSelector((state) => state.floor);
   const [createBuilding, { isLoading }] = useCreateBuildingMutation();
@@ -127,7 +130,7 @@ const Confirmation = ({ setCurrentStep }) => {
           if (!resForSlots?.success) throw new Error(resForSlots?.message);
         })
       );
-
+      await refetchHook();
       toast.success(`${message} and ${slots} Slots added successfully`);
       console.log(`${message} and ${slots} Slots added successfully`);
 
@@ -140,6 +143,7 @@ const Confirmation = ({ setCurrentStep }) => {
       toast.error(error?.data?.message || "Something went wrong");
     }
   };
+
   return (
     <div className="mt-4">
       <h4 className="text-base md:text-xl font-medium text-[#414141] text-center">Confirmation</h4>
