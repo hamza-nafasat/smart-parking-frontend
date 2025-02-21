@@ -11,6 +11,7 @@ import { useDeleteSingleFloorMutation, useGetSingleFloorQuery } from "../../../.
 import { alertsData, spacesCardsData } from "../../../admin/buildingInfo/utils/buildingData";
 import TwoDModelView from "../../addParkingSpace/components/TwoDModelView";
 import { useGetAllSlotsQuery } from "../../../../redux/apis/slotApis";
+import useFetchAndMakeSensorSlice from "../../../../components/hooks/useFetchAndMakeSensorSlice";
 
 const FloorView = () => {
   const params = useParams();
@@ -22,6 +23,7 @@ const FloorView = () => {
   const { data } = useGetSingleFloorQuery(floorId);
   const [polygons, setPolygons] = useState([]);
   const { data: slots } = useGetAllSlotsQuery(floorId);
+  const { refetchHook } = useFetchAndMakeSensorSlice();
 
   const floorDeleteHandler = (id) => {
     confirmAlert({
@@ -34,7 +36,10 @@ const FloorView = () => {
             if (!id) return toast.error("Please Provide Floor Id");
             try {
               const res = await deleteFloor(id).unwrap();
-              console.log("floor delete response", res);
+              if (res?.success) {
+                toast.success(res?.message || "Floor Deleted Successfully");
+                await refetchHook();
+              }
               return navigate(`/manager/building-view/${buildingId}`);
             } catch (error) {
               console.log("error in delete floor", error);
