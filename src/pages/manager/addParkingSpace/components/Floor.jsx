@@ -40,11 +40,10 @@ const Floor = ({ isOpen, onToggle, floorNumber }) => {
   const [noOfParkingSpace, setNumberOfParkingSpace] = useState();
   const [originalImage, setOriginalImage] = useState(null);
   const [polygons, setPolygons] = useState([]);
-  const [polygonsForBackend, setPolygonsForBackend] = useState([]);
   const [imageSrc, setImageSrc] = useState(null);
 
   const saveClickHandler = () => {
-    if (!name || !noOfParkingSpace || !imageSrc || !polygonsForBackend || !originalImage)
+    if (!name || !noOfParkingSpace || !imageSrc || !polygons || !originalImage)
       return toast.error("Fill all fields first");
     dispatch(
       addFloor({
@@ -52,17 +51,12 @@ const Floor = ({ isOpen, onToggle, floorNumber }) => {
         name,
         noOfParkingSpace,
         floorImage: imageSrc,
-        polygonData: polygonsForBackend,
+        polygonData: polygons,
         file: originalImage,
       })
     );
     toast.success(`floor ${floorNumber} data added successfully`);
     dispatch(setActiveAccordionIndex(Number(activeAccordionIndex) + 1));
-  };
-
-  const onUploadForFloorImage = (image, coordinates) => {
-    setImageSrc(image);
-    setPolygonsForBackend(coordinates);
   };
 
   useEffect(() => {
@@ -71,7 +65,6 @@ const Floor = ({ isOpen, onToggle, floorNumber }) => {
       if (floor) {
         setName(floor?.name || "");
         setNumberOfParkingSpace(floor?.noOfParkingSpace || "");
-        setPolygonsForBackend(floor?.polygonData || []);
         setPolygons(floor?.polygonData || []);
         setImageSrc(floor?.floorImage || null);
         setOriginalImage(floor?.file || null);
@@ -79,7 +72,6 @@ const Floor = ({ isOpen, onToggle, floorNumber }) => {
     } else {
       setName("");
       setNumberOfParkingSpace("");
-      setPolygonsForBackend([]);
       setPolygons([]);
       setImageSrc(null);
       setOriginalImage(null);
@@ -112,7 +104,6 @@ const Floor = ({ isOpen, onToggle, floorNumber }) => {
             <div className="lg:col-span-3 flex justify-center">
               <UploadModel
                 heading="Upload Floor TwoD Model"
-                onUpload={onUploadForFloorImage}
                 polygons={polygons}
                 setPolygons={setPolygons}
                 imageSrc={imageSrc}

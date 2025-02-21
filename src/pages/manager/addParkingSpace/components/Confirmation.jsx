@@ -218,10 +218,6 @@ const GeneralInfoSec = ({ setCurrentStep }) => {
 const FloorSensorInfoSec = ({ setCurrentStep, floor }) => {
   const dispatch = useDispatch();
   const { activeAccordionIndex } = useSelector((state) => state.floor);
-  // const removeFloorFromRedux = () => {
-  //   dispatch(removeFloor(floor?.floorNumber));
-  //   dispatch(decrementFloorsNumber(floor?.floorNumber));
-  // };
 
   const editFloorHandler = (index) => {
     setCurrentStep(1);

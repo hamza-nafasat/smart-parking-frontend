@@ -51,7 +51,6 @@ const GeneralInfo = ({ setCurrentStep }) => {
 
   // use effect which get data form redux and set if data not exist he just reset the data
   useEffect(() => {
-    console.log("hello2");
     if (buildingGeneralInfo) {
       setBuilding({
         name: buildingGeneralInfo.name || "",
@@ -86,7 +85,6 @@ const GeneralInfo = ({ setCurrentStep }) => {
   }, [buildingGeneralInfo]);
 
   useEffect(() => {
-    console.log("helo");
     if (polygons.length > 0) setBuilding({ ...building, buildingCoordinates: polygons });
     if (imageSrc) setBuilding({ ...building, buildingImage: imageSrc });
   }, [building, imageSrc, polygons]);
