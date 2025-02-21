@@ -21,12 +21,10 @@ function AddNewFloor() {
   const [noOfParkingSpace, setNumberOfParkingSpace] = useState();
   const [originalImage, setOriginalImage] = useState(null);
   const [polygons, setPolygons] = useState([]);
-  const [polygonsForBackend, setPolygonsForBackend] = useState([]);
   const [imageSrc, setImageSrc] = useState(null);
 
   const saveClickHandler = async () => {
-    if (!name || !noOfParkingSpace || !polygonsForBackend || !originalImage)
-      return toast.error("Fill all fields first");
+    if (!name || !noOfParkingSpace || !polygons || !originalImage) return toast.error("Fill all fields first");
     const floorId = customObjectId();
     const formData = new FormData();
     const slotData = { slots: [] };
@@ -35,12 +33,12 @@ function AddNewFloor() {
     formData.append("name", name);
     formData.append("buildingId", buildingId);
     formData.append("noOfParkingSpace", noOfParkingSpace);
-    formData.append("polygonData", JSON.stringify(polygonsForBackend));
+    formData.append("polygonData", JSON.stringify(polygons));
     if (originalImage) formData.append("file", originalImage);
     // create slots data
     slotData.floorId = floorId;
     slotData.buildingId = buildingId;
-    polygonsForBackend?.forEach((polygon) => {
+    polygons?.forEach((polygon) => {
       if (!polygon.id || !polygon.points || !polygon.sensorId)
         return toast.error("Please Fill all required fields each Slot");
       const singleSlot = {
@@ -67,11 +65,6 @@ function AddNewFloor() {
     }
   };
 
-  const onUploadForFloorImage = (image, coordinates) => {
-    setImageSrc(image);
-    setPolygonsForBackend(coordinates);
-  };
-
   return (
     <div>
       <div className="flex items-center justify-between bg-primary rounded-[4px] px-4 md:px-8 py-2">
@@ -87,7 +80,7 @@ function AddNewFloor() {
         <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
           <Input type="text" placeholder="Floor name" value={name} onChange={(e) => setName(e.target.value)} />
           <Input
-            type="text"
+            type="number"
             placeholder="Number of parking spaces"
             value={noOfParkingSpace}
             onChange={(e) => setNumberOfParkingSpace(e.target.value)}
@@ -95,7 +88,6 @@ function AddNewFloor() {
           <div className="lg:col-span-3 flex justify-center">
             <UploadModel
               heading="Upload Floor TwoD Model"
-              onUpload={onUploadForFloorImage}
               polygons={polygons}
               setPolygons={setPolygons}
               imageSrc={imageSrc}

@@ -4,7 +4,6 @@ import DeleteIcon from "../../../../assets/svgs/building/DeleteIcon";
 import TwoDModel from "./TwoDModel";
 
 const UploadModel = ({
-  onUpload,
   polygons,
   setPolygons,
   imageSrc,
@@ -31,7 +30,6 @@ const UploadModel = ({
       <div className="mt-4 flex justify-center">
         <TwoDModel
           key={refreshKey}
-          onUpload={onUpload}
           polygons={polygons}
           setPolygons={setPolygons}
           imageSrc={imageSrc}

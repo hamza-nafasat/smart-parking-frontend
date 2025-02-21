@@ -27,15 +27,7 @@ import {
   sensorInfoSubmitHandler,
 } from "../utils/addParkingSpaceFeatures";
 
-const TwoDModel = ({
-  onUpload,
-  polygons,
-  setPolygons,
-  imageSrc,
-  setImageSrc,
-  setOriginalImage,
-  isBuilding = false,
-}) => {
+const TwoDModel = ({ polygons, setPolygons, imageSrc, setImageSrc, setOriginalImage, isBuilding = false }) => {
   const dispatch = useDispatch();
   const { availableSensors } = useSelector((state) => state.sensor);
   const canvasRef = useRef(null);
@@ -108,10 +100,6 @@ const TwoDModel = ({
       drawCanvas(canvasRef, isDrawingEnabled, image, polygons, currentPolygon, color);
     }
   }, [image, polygons, currentPolygon, isDrawingEnabled, color]);
-
-  useEffect(() => {
-    if (onUpload) onUpload(imageSrc, polygons);
-  }, [imageSrc, polygons]);
 
   useEffect(() => {
     if (imageSrc) {
