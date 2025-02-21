@@ -2,18 +2,20 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import { AccordionEditIcon } from "../../../assets/svgs/Icon";
+import useFetchAndMakeSensorSlice from "../../../components/hooks/useFetchAndMakeSensorSlice";
 import Button from "../../../components/shared/small/Button";
 import Input from "../../../components/shared/small/Input";
 import { useCreateFloorMutation } from "../../../redux/apis/floorApis";
+import { useCreateSlotsInBulkMutation } from "../../../redux/apis/slotApis";
 import { customObjectId } from "../../../utils/features";
 import UploadModel from "../addParkingSpace/components/UploadModel";
-import { useCreateSlotsInBulkMutation } from "../../../redux/apis/slotApis";
 
 function AddNewFloor() {
   const navigate = useNavigate();
   const params = useParams();
   const buildingId = params.buildingId;
   const [addFloor, { isLoading }] = useCreateFloorMutation();
+  const { refetchHook } = useFetchAndMakeSensorSlice();
   const [addSlotInBulk, { isLoading: isLoadingForSlot }] = useCreateSlotsInBulkMutation();
   const [name, setName] = useState("");
   const [noOfParkingSpace, setNumberOfParkingSpace] = useState();
@@ -56,6 +58,7 @@ function AddNewFloor() {
       if (res.success) {
         const slotRes = await addSlotInBulk(slotData).unwrap();
         if (slotRes?.success) toast.success(`Floor and ${slotRes?.data?.length} slots created successfully`);
+        refetchHook();
         return navigate(`/manager/building-view/${buildingId}`);
       }
     } catch (error) {
