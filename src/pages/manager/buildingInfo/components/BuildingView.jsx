@@ -14,6 +14,7 @@ import { useGetAllFloorsQuery } from "../../../../redux/apis/floorApis";
 import { alertsData, spacesCardsData } from "../../../admin/buildingInfo/utils/buildingData";
 import TwoDModelView from "../../addParkingSpace/components/TwoDModelView";
 import useFetchAndMakeSensorSlice from "../../../../components/hooks/useFetchAndMakeSensorSlice";
+import ShowCanvasData from "../../addParkingSpace/components/ShowCanvasData";
 
 const BuildingView = () => {
   const navigate = useNavigate();
@@ -108,9 +109,10 @@ const BuildingView = () => {
           </div>
           <div className="mt-4">
             {/* <img src={buildingData?.twoDImage?.url} alt="image" className="rounded-lg object-cover" /> */}
-            <TwoDModelView
+            <ShowCanvasData
               polygons={buildingData?.polygonData ? buildingData?.polygonData : []}
-              imageSrc={buildingData?.twoDImage?.url}
+              image={buildingData?.twoDImage?.url}
+              view="building-view"
             />
           </div>
         </div>

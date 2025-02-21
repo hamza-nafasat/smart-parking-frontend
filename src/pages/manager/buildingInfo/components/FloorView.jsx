@@ -4,14 +4,14 @@ import toast from "react-hot-toast";
 import { FaTrash } from "react-icons/fa6";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { GreenEdit } from "../../../../assets/svgs/Icon";
+import useFetchAndMakeSensorSlice from "../../../../components/hooks/useFetchAndMakeSensorSlice";
 import Alerts from "../../../../components/shared/large/Alerts";
 import FloorDetail from "../../../../components/shared/large/FloorDetail";
 import { PrimaryWidgetCard, SecondaryWidgetCard } from "../../../../components/shared/large/WidgetCard";
 import { useDeleteSingleFloorMutation, useGetSingleFloorQuery } from "../../../../redux/apis/floorApis";
-import { alertsData, spacesCardsData } from "../../../admin/buildingInfo/utils/buildingData";
-import TwoDModelView from "../../addParkingSpace/components/TwoDModelView";
 import { useGetAllSlotsQuery } from "../../../../redux/apis/slotApis";
-import useFetchAndMakeSensorSlice from "../../../../components/hooks/useFetchAndMakeSensorSlice";
+import { alertsData, spacesCardsData } from "../../../admin/buildingInfo/utils/buildingData";
+import ShowCanvasData from "../../addParkingSpace/components/ShowCanvasData";
 
 const FloorView = () => {
   const params = useParams();
@@ -111,10 +111,10 @@ const FloorView = () => {
           </div>
           <div className="mt-4">
             {/* <img src={floorData?.twoDImage?.url} alt="image" className="rounded-lg object-cover" /> */}
-            <TwoDModelView
+            <ShowCanvasData
               polygons={polygons?.length ? polygons : floorData?.polygonData ? floorData?.polygonData : []}
               // polygons={polygons}
-              imageSrc={floorData?.twoDImage?.url}
+              image={floorData?.twoDImage?.url}
             />
           </div>
         </div>
@@ -125,10 +125,10 @@ const FloorView = () => {
       <div className="shadow-md rounded-lg bg-white border-[1px] p-4 mt-4">
         <h4 className="font-[600] mb-4">Ramps View</h4>
         <div className="">
-          <TwoDModelView
+          <ShowCanvasData
             polygons={polygons?.length ? polygons : floorData?.polygonData ? floorData?.polygonData : []}
             // polygons={polygons}
-            imageSrc={floorData?.twoDImage?.url}
+            image={floorData?.twoDImage?.url}
           />
         </div>
       </div>

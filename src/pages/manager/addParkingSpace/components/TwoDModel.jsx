@@ -243,7 +243,7 @@ const TwoDModel = ({ polygons, setPolygons, imageSrc, setImageSrc, setOriginalIm
         </>
       )}
       {sensorPopup && selectedPolygon && (
-        <Modal title="Add Sensor" onClose={modelCloseHandler} notClose>
+        <Modal width="w-[290px] sm:w-[400px]" border="border-2 border-primary" title="Add Sensor" onClose={modelCloseHandler} notClose>
           <div className="flex flex-col gap-2">
             <Input
               type="text"
@@ -267,9 +267,23 @@ const TwoDModel = ({ polygons, setPolygons, imageSrc, setImageSrc, setOriginalIm
               <input type="color" value={color} onChange={(e) => setColor(e.target.value)} />
             </div>
 
-            <div className="flex justify-center gap-3">
+            <div className="flex justify-center gap-3 mt-5">
               <Button
-                text="Add"
+                bg="bg-transparent hover:bg-primary !text-primary hover:!text-white"
+                width="w-[120px]"
+                text="Cancel"
+                onClick={() =>
+                  handleCancelPolygon(
+                    setSensorPopup,
+                    setPolygons,
+                    selectedPolygon,
+                    setCurrentPolygon,
+                    setSelectedPolygon
+                  )
+                }
+              />
+              <Button
+                text="Save"
                 width="w-[120px]"
                 onClick={() => {
                   sensorInfoSubmitHandler(
@@ -285,19 +299,6 @@ const TwoDModel = ({ polygons, setPolygons, imageSrc, setImageSrc, setOriginalIm
                   );
                   dispatch(removeFromAvailableSensors(selectedSensor));
                 }}
-              />
-              <Button
-                width="w-[120px]"
-                text="cancel"
-                onClick={() =>
-                  handleCancelPolygon(
-                    setSensorPopup,
-                    setPolygons,
-                    selectedPolygon,
-                    setCurrentPolygon,
-                    setSelectedPolygon
-                  )
-                }
               />
             </div>
           </div>
