@@ -13,6 +13,7 @@ import { useDeleteSingleBuildingMutation, useGetSingleBuildingQuery } from "../.
 import { useGetAllFloorsQuery } from "../../../../redux/apis/floorApis";
 import { alertsData, spacesCardsData } from "../../../admin/buildingInfo/utils/buildingData";
 import TwoDModelView from "../../addParkingSpace/components/TwoDModelView";
+import useFetchAndMakeSensorSlice from "../../../../components/hooks/useFetchAndMakeSensorSlice";
 
 const BuildingView = () => {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ const BuildingView = () => {
   const [deleteBuilding] = useDeleteSingleBuildingMutation();
   const { data } = useGetSingleBuildingQuery(buildingId);
   const { data: floorsData } = useGetAllFloorsQuery(buildingId);
+  const { refetchHook } = useFetchAndMakeSensorSlice();
 
   // building delete handler
   const buildingDeleteHandler = (id) => {
@@ -34,7 +36,10 @@ const BuildingView = () => {
             if (!id) return toast.error("Please Provide Building Id");
             try {
               const res = await deleteBuilding(id).unwrap();
-
+              if (res.success) {
+                toast.success(res?.message || "Building Deleted Successfully");
+                await refetchHook();
+              }
               console.log("building delete response", res);
               return navigate("/manager/building-info");
             } catch (error) {
