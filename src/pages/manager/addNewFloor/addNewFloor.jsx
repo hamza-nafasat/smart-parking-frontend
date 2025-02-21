@@ -32,7 +32,7 @@ function AddNewFloor() {
     formData.append("_id", floorId);
     formData.append("name", name);
     formData.append("buildingId", buildingId);
-    formData.append("noOfParkingSpace", noOfParkingSpace);
+    formData.append("noOfParkingSpace", String(noOfParkingSpace));
     formData.append("polygonData", JSON.stringify(polygons));
     if (originalImage) formData.append("file", originalImage);
     // create slots data

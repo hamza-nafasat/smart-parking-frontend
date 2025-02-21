@@ -28,7 +28,6 @@ import { useGetAllSensorsQuery } from "../../../../redux/apis/sensorApis";
 import { addAllSensors, addAvailableSensors, removeFromAvailableSensors } from "../../../../redux/slices/sensorSlice";
 
 const UpdateFloorModel = ({
-  onUpload,
   polygons,
   setPolygons,
   imageSrc,
@@ -119,10 +118,6 @@ const UpdateFloorModel = ({
       drawCanvas(canvasRef, isDrawingEnabled, image, polygons, currentPolygon, color);
     }
   }, [image, polygons, currentPolygon, isDrawingEnabled, color]);
-
-  useEffect(() => {
-    if (onUpload) onUpload(imageSrc, polygons);
-  }, [imageSrc, polygons]);
 
   useEffect(() => {
     if (imageSrc) {

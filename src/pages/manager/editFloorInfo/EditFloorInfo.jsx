@@ -21,7 +21,7 @@ function EditFloorInfo() {
 
   const { refetchHook } = useFetchAndMakeSensorSlice();
 
-  const { data } = useGetSingleFloorQuery(floorId);
+  const { data, refetch: refetchFloor } = useGetSingleFloorQuery(floorId);
   const { data: slots } = useGetAllSlotsQuery(floorId);
   const [updateFloor, { isLoading }] = useUpdateSingleFloorMutation();
   const [addMultiSlots] = useCreateSlotsInBulkMutation();
@@ -36,7 +36,6 @@ function EditFloorInfo() {
   const [polygonsForCreate, setPolygonsForCreate] = useState([]);
   const [polygonsForDelete, setPolygonsForDelete] = useState([]);
 
-  const onUploadForFloorImage = (image) => setImageSrc(image);
   const saveClickHandler = async () => {
     try {
       // make data for update
@@ -77,8 +76,7 @@ function EditFloorInfo() {
 
       const res = await updateFloor({ id: floorId, data: formData }).unwrap();
       if (res?.success) toast.success(`${message} and Floor updated successfully`);
-
-      await refetchHook();
+      await Promise.all([refetchFloor(), refetchHook()]);
       return navigate(`/manager/floor-view/${buildingId}/${floorId}`);
     } catch (error) {
       console.log("Error in update floor", error);
@@ -125,7 +123,7 @@ function EditFloorInfo() {
         <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
           <Input type="text" placeholder="Floor name" value={name} onChange={(e) => setName(e.target.value)} />
           <Input
-            type="text"
+            type="number"
             placeholder="Number of parking spaces"
             value={noOfParkingSpace}
             onChange={(e) => setNumberOfParkingSpace(e.target.value)}
@@ -133,7 +131,6 @@ function EditFloorInfo() {
           <div className="lg:col-span-3 flex justify-center">
             <UpdateModel
               heading="Upload Floor TwoD Model"
-              onUpload={onUploadForFloorImage}
               polygons={polygons}
               setPolygons={setPolygons}
               imageSrc={imageSrc}

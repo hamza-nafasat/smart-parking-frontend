@@ -4,7 +4,6 @@ import DeleteIcon from "../../../../assets/svgs/building/DeleteIcon";
 import UpdateFloorModel from "./UpdateFloorModel";
 
 const UpdateModel = ({
-  onUpload,
   polygons,
   setPolygons,
   imageSrc,
@@ -34,7 +33,6 @@ const UpdateModel = ({
       <div className="mt-4 flex justify-center">
         <UpdateFloorModel
           key={refreshKey}
-          onUpload={onUpload}
           polygons={polygons}
           setPolygons={setPolygons}
           imageSrc={imageSrc}

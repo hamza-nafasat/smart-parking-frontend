@@ -13,6 +13,7 @@ import { userExist, userNotExist } from "./redux/slices/authSlice";
 // Loader (Non-Lazy Component)
 import Loader from "./components/shared/small/Loader";
 import useFetchAndMakeSensorSlice from "./components/hooks/useFetchAndMakeSensorSlice";
+import useDisableNumberInputScroll from "./components/hooks/useDisableNumberInputScroll";
 
 // Lazy-loaded Components
 const LandingPage = lazy(() => import("./pages/landing/LandingPage"));
@@ -67,7 +68,9 @@ function App() {
   const dispatch = useDispatch();
   const [checkLogin] = useCheckLoginMutation();
   const [isLoading, setIsLoading] = useState(true);
+  // hooks
   useFetchAndMakeSensorSlice();
+  useDisableNumberInputScroll();
 
   const checkUserLogin = useCallback(async () => {
     try {

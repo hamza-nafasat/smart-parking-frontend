@@ -27,17 +27,7 @@ const GeneralInfo = ({ setCurrentStep }) => {
     description: "",
   });
   const formDataHandler = (e) => setBuilding({ ...building, [e.target.name]: e.target.value });
-
-  // function which is called inside TwoDModel
-  const onUploadForBuildingImage = (image, coordinates) => {
-    setBuilding({
-      ...building,
-      buildingImage: image,
-      buildingCoordinates: coordinates,
-    });
-  };
   const buildingTypeHandler = (name, value) => setBuilding({ ...building, [name]: value });
-
   // function call on next which validate data store in redux and go to next step
   const validationHandler = () => {
     if (
@@ -50,8 +40,9 @@ const GeneralInfo = ({ setCurrentStep }) => {
       !building.description ||
       !building.buildingImage ||
       !originalImage
-    )
+    ) {
       return toast.error("Please fill all the fields");
+    }
     console.log("building", building);
     dispatch(addBuildingGeneralInfo({ ...building, file: originalImage }));
     dispatch(addFloorsSample(Number(building?.noOfFloors || 0)));
@@ -60,6 +51,7 @@ const GeneralInfo = ({ setCurrentStep }) => {
 
   // use effect which get data form redux and set if data not exist he just reset the data
   useEffect(() => {
+    console.log("hello2");
     if (buildingGeneralInfo) {
       setBuilding({
         name: buildingGeneralInfo.name || "",
@@ -93,7 +85,12 @@ const GeneralInfo = ({ setCurrentStep }) => {
     }
   }, [buildingGeneralInfo]);
 
-  console.log("buildingGeneralInfo", buildingGeneralInfo);
+  useEffect(() => {
+    console.log("helo");
+    if (polygons.length > 0) setBuilding({ ...building, buildingCoordinates: polygons });
+    if (imageSrc) setBuilding({ ...building, buildingImage: imageSrc });
+  }, [building, imageSrc, polygons]);
+
   return (
     <div className="mt-4">
       <h4 className="text-base md:text-xl font-medium text-[#414141] text-center">General Building Information</h4>
@@ -138,7 +135,6 @@ const GeneralInfo = ({ setCurrentStep }) => {
         <div className="lg:col-span-3">
           <UploadModel
             heading="Upload Building TwoD Model"
-            onUpload={onUploadForBuildingImage}
             polygons={polygons}
             setPolygons={setPolygons}
             imageSrc={imageSrc}
