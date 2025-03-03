@@ -1,6 +1,8 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useRef, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
+import Button from "../../../../components/shared/small/Button";
+import { Link, useNavigate } from "react-router-dom";
 
 // Helper function to convert hex to rgba with opacity
 const convertHexToRgba = (hex, opacity) => {
@@ -12,11 +14,11 @@ const convertHexToRgba = (hex, opacity) => {
   return `rgba(${r}, ${g}, ${b}, ${opacity})`;
 };
 
-const ShowCanvasData = ({ image, polygons, view, heatmap = false }) => {
+const ShowSingleFloor = ({ image, polygons, view, heatmap = false }) => {
   const canvasRef = useRef(null);
   const [selectedPolygon, setSelectedPolygon] = useState(null);
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
-  console.log("polygonsss", polygons);
+  console.log("polygons", polygons);
 
   // Function to handle polygon click detection
   const handlePolygonClick = (e, polygon) => {
@@ -220,10 +222,12 @@ const ShowCanvasData = ({ image, polygons, view, heatmap = false }) => {
                 <p className="text-lg mt-3 font-bold">Total Parking: 2</p>
               </div>
               <div className="flex justify-center gap-4">
-                {/* <Button
-                  width="w-[120px]"
-                  text="Go to Floor"
-                /> */}
+                <Link
+                  className="bg-primary py-2 px-5 rounded-md text-white font-semibold"
+                  to={`/user/booking/${selectedPolygon?.id}`}
+                >
+                  Book Slot
+                </Link>
               </div>
             </div>
           ) : (
@@ -254,4 +258,4 @@ const ShowCanvasData = ({ image, polygons, view, heatmap = false }) => {
   );
 };
 
-export default ShowCanvasData;
+export default ShowSingleFloor;

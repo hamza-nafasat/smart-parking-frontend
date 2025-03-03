@@ -26,43 +26,93 @@ const ResetPassword = lazy(() => import("./pages/auth/ResetPassword"));
 
 // Admin
 const Admin = lazy(() => import("./pages/admin/index"));
-const AdminDashboard = lazy(() => import("./pages/admin/dashboard/AdminDashboard"));
-const BuildingInfo = lazy(() => import("./pages/admin/buildingInfo/BuildingInfo"));
-const ParkingSummary = lazy(() => import("./pages/admin/parkingSummary/ParkingSummary"));
+const AdminDashboard = lazy(() =>
+  import("./pages/admin/dashboard/AdminDashboard")
+);
+const BuildingInfo = lazy(() =>
+  import("./pages/admin/buildingInfo/BuildingInfo")
+);
+const ParkingSummary = lazy(() =>
+  import("./pages/admin/parkingSummary/ParkingSummary")
+);
 const Wallet = lazy(() => import("./pages/admin/wallet/Wallet"));
-const ViewSlipAdmin = lazy(() => import("./pages/admin/dashboard/components/ViewSlip"));
-const WalletTransactionsDetail = lazy(() => import("./pages/admin/wallet/components/WalletTransactonsDetails"));
-const BuildingView = lazy(() => import("./pages/admin/buildingInfo/components/BuildingView"));
+const ViewSlipAdmin = lazy(() =>
+  import("./pages/admin/dashboard/components/ViewSlip")
+);
+const WalletTransactionsDetail = lazy(() =>
+  import("./pages/admin/wallet/components/WalletTransactonsDetails")
+);
+const BuildingView = lazy(() =>
+  import("./pages/admin/buildingInfo/components/BuildingView")
+);
 
 // Manager
 const Manager = lazy(() => import("./pages/manager/index"));
-const ManagerDashboard = lazy(() => import("./pages/manager/dashboard/ManagerDashboard"));
-const ManagerBuildingInfo = lazy(() => import("./pages/manager/buildingInfo/BuildingInfo"));
-const ManagerBuildingView = lazy(() => import("./pages/manager/buildingInfo/components/BuildingView"));
-const ManagerFloorView = lazy(() => import("./pages/manager/buildingInfo/components/FloorView"));
-const ManagerParkingSummary = lazy(() => import("./pages/manager/parkingSummary/ParkingSummary"));
+const ManagerDashboard = lazy(() =>
+  import("./pages/manager/dashboard/ManagerDashboard")
+);
+const ManagerBuildingInfo = lazy(() =>
+  import("./pages/manager/buildingInfo/BuildingInfo")
+);
+const ManagerBuildingView = lazy(() =>
+  import("./pages/manager/buildingInfo/components/BuildingView")
+);
+const ManagerFloorView = lazy(() =>
+  import("./pages/manager/buildingInfo/components/FloorView")
+);
+const ManagerParkingSummary = lazy(() =>
+  import("./pages/manager/parkingSummary/ParkingSummary")
+);
 const ManagerWallet = lazy(() => import("./pages/manager/wallet/Wallet"));
 const ManagerProfile = lazy(() => import("./pages/manager/settings/Profile"));
-const AddParking = lazy(() => import("./pages/manager/addParkingSpace/components/AddParking"));
+const AddParking = lazy(() =>
+  import("./pages/manager/addParkingSpace/components/AddParking")
+);
 const Sensors = lazy(() => import("./pages/manager/sensors/Sensors"));
-const EditBuildingInfo = lazy(() => import("./pages/manager/editBuildingInfo/EditBuildingInfo"));
-const EditFloorInfo = lazy(() => import("./pages/manager/editFloorInfo/EditFloorInfo"));
-const AddNewFloor = lazy(() => import("./pages/manager/addNewFloor/addNewFloor"));
+const EditBuildingInfo = lazy(() =>
+  import("./pages/manager/editBuildingInfo/EditBuildingInfo")
+);
+const EditFloorInfo = lazy(() =>
+  import("./pages/manager/editFloorInfo/EditFloorInfo")
+);
+const AddNewFloor = lazy(() =>
+  import("./pages/manager/addNewFloor/addNewFloor")
+);
 
 // User
 const User = lazy(() => import("./pages/user/index"));
-const UserDashboard = lazy(() => import("./pages/user/dashboard/UserDashboard"));
-const BookingSummary = lazy(() => import("./pages/user/bookingSummary/BookingSummary"));
-const UserBuildingInfo = lazy(() => import("./pages/user/buildingInfo/BuildingInfo"));
-const AddParkingSpace = lazy(() => import("./pages/manager/addParkingSpace/AddParkingSpace"));
-const FloorView = lazy(() => import("./pages/admin/buildingInfo/components/FloorView"));
+const UserDashboard = lazy(() =>
+  import("./pages/user/dashboard/UserDashboard")
+);
+const BookingSummary = lazy(() =>
+  import("./pages/user/bookingSummary/BookingSummary")
+);
+const UserBuildingInfo = lazy(() =>
+  import("./pages/user/buildingInfo/BuildingInfo")
+);
+const AddParkingSpace = lazy(() =>
+  import("./pages/manager/addParkingSpace/AddParkingSpace")
+);
+const FloorView = lazy(() =>
+  import("./pages/admin/buildingInfo/components/FloorView")
+);
 const Booking = lazy(() => import("./pages/user/dashboard/components/Booking"));
-const ConfirmBooking = lazy(() => import("./pages/user/dashboard/components/ConfirmBooking"));
-const PaymentSuccess = lazy(() => import("./pages/user/dashboard/components/PaymentSuccess"));
-const PaymentFail = lazy(() => import("./pages/user/dashboard/components/PaymentFail"));
-const UserViewSlip = lazy(() => import("./pages/user/bookingSummary/components/ViewSlip"));
+const ConfirmBooking = lazy(() =>
+  import("./pages/user/dashboard/components/ConfirmBooking")
+);
+const PaymentSuccess = lazy(() =>
+  import("./pages/user/dashboard/components/PaymentSuccess")
+);
+const PaymentFail = lazy(() =>
+  import("./pages/user/dashboard/components/PaymentFail")
+);
+const UserViewSlip = lazy(() =>
+  import("./pages/user/bookingSummary/components/ViewSlip")
+);
 const UserProfile = lazy(() => import("./pages/user/setting/Profile"));
-const BookingSlots = lazy(() => import("./pages/user/dashboard/components/BookingSlots"));
+const BookingSlots = lazy(() =>
+  import("./pages/user/dashboard/components/BookingSlots")
+);
 
 function App() {
   const dispatch = useDispatch();
@@ -108,7 +158,10 @@ function App() {
               <Route path="/login" element={<SignIn />} />
               <Route path="/register" element={<SignUp />} />
               <Route path="/forget-password" element={<ForgetPassword />} />
-              <Route path="/reset-password/:token" element={<ResetPassword />} />
+              <Route
+                path="/reset-password/:token"
+                element={<ResetPassword />}
+              />
             </Route>
 
             <Route element={<ProtectedRoutes requiresAuth role={"admin"} />}>
@@ -119,7 +172,10 @@ function App() {
                 <Route path="floor-view/:id" element={<FloorView />} />
                 <Route path="parking-summary" element={<ParkingSummary />} />
                 <Route path="wallet" element={<Wallet />} />
-                <Route path="wallet-transactions-detail" element={<WalletTransactionsDetail />} />
+                <Route
+                  path="wallet-transactions-detail"
+                  element={<WalletTransactionsDetail />}
+                />
                 <Route path="view-slip/:id" element={<ViewSlipAdmin />} />
               </Route>
             </Route>
@@ -128,12 +184,27 @@ function App() {
               <Route path="/manager" element={<Manager />}>
                 <Route index element={<ManagerDashboard />} />
                 <Route path="building-info" element={<ManagerBuildingInfo />} />
-                <Route path="building-view/:id" element={<ManagerBuildingView />} />
-                <Route path="edit-building-info/:id" element={<EditBuildingInfo />} />
-                <Route path="floor-view/:buildingId/:id" element={<ManagerFloorView />} />
+                <Route
+                  path="building-view/:id"
+                  element={<ManagerBuildingView />}
+                />
+                <Route
+                  path="edit-building-info/:id"
+                  element={<EditBuildingInfo />}
+                />
+                <Route
+                  path="floor-view/:buildingId/:id"
+                  element={<ManagerFloorView />}
+                />
                 <Route path="add-floor/:buildingId" element={<AddNewFloor />} />
-                <Route path="edit-floor-info/:buildingId/:id" element={<EditFloorInfo />} />
-                <Route path="parking-summary" element={<ManagerParkingSummary />} />
+                <Route
+                  path="edit-floor-info/:buildingId/:id"
+                  element={<EditFloorInfo />}
+                />
+                <Route
+                  path="parking-summary"
+                  element={<ManagerParkingSummary />}
+                />
                 <Route path="sensors" element={<Sensors />} />
                 <Route path="wallet" element={<ManagerWallet />} />
                 <Route path="profile" element={<ManagerProfile />} />
@@ -149,7 +220,7 @@ function App() {
                 <Route path="building-info" element={<UserBuildingInfo />} />
                 <Route path="booking-summary" element={<BookingSummary />} />
                 <Route path="view-slip" element={<UserViewSlip />} />
-                <Route path="booking" element={<Booking />} />
+                <Route path="booking/:id" element={<Booking />} />
                 <Route path="confirm-booking" element={<ConfirmBooking />} />
                 <Route path="payment-success" element={<PaymentSuccess />} />
                 <Route path="payment-failed" element={<PaymentFail />} />

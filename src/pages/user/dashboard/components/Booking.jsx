@@ -66,11 +66,6 @@ const Booking = () => {
               </div>
             </div>
           </div>
-          <img
-            src={slotsImg}
-            alt="img"
-            className="w-full sm:w-[350px] md:w-[400px]"
-          />
           <div className="w-full px-5 ">
             <List list={{ title: "From", value: "Basement B-1" }} />
             <List
