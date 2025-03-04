@@ -38,10 +38,25 @@ const Confirmation = ({ setCurrentStep }) => {
         description: buildingGeneralInfo?.description || "",
         type: buildingGeneralInfo?.type || "",
         file: buildingGeneralInfo?.file || "",
+        longitude: buildingGeneralInfo?.longitude || "",
+        latitude: buildingGeneralInfo?.latitude || "",
         polygonData: buildingGeneralInfo?.buildingCoordinates || "",
       };
-      const { name, address, area, email, description, type, file, polygonData, noOfFloors } = data;
-      if (!name || !address || !area || !email || !description || !type || !file || !polygonData || !noOfFloors)
+      const { name, address, area, email, description, type, file, polygonData, noOfFloors, longitude, latitude } =
+        data;
+      if (
+        !name ||
+        !address ||
+        !area ||
+        !email ||
+        !description ||
+        !type ||
+        !file ||
+        !polygonData ||
+        !noOfFloors ||
+        !longitude ||
+        !latitude
+      )
         return toast.error("Please Fill all required fields for building");
       const formDataForBuilding = new FormData();
       const formDataForFloor = new FormData();
@@ -54,6 +69,8 @@ const Confirmation = ({ setCurrentStep }) => {
       formDataForBuilding.append("email", email);
       formDataForBuilding.append("description", description);
       formDataForBuilding.append("type", type);
+      formDataForBuilding.append("longitude", longitude);
+      formDataForBuilding.append("latitude", latitude);
       formDataForBuilding.append("noOfFloors", noOfFloors);
       formDataForBuilding.append("file", file);
       formDataForBuilding.append("polygonData", JSON.stringify(polygonData));
@@ -198,8 +215,8 @@ const GeneralInfoSec = ({ setCurrentStep }) => {
         />
         {/* building list */}
         <div className="flex flex-col justify-center">
-          <List name="Building" value={buildingGeneralInfo?.name} />
-          <List name="Building Address" value={buildingGeneralInfo?.address} />
+          <List name="Name" value={buildingGeneralInfo?.name} />
+          <List name="Address" value={buildingGeneralInfo?.address} />
           <List name="Total Area" value={buildingGeneralInfo?.area} />
           <List name="Total number of floors" value={buildingGeneralInfo?.noOfFloors} />
           <List name="Second E-mail" value={buildingGeneralInfo?.email} />
@@ -207,6 +224,10 @@ const GeneralInfoSec = ({ setCurrentStep }) => {
         </div>
 
         <div>
+          <h6 className="text-xs sm:text-sm font-semibold text-[#353535]">Longitude:</h6>
+          <p className="mt-1 text-xs sm:text-sm font-medium text-[#41414199]">{buildingGeneralInfo?.longitude}</p>
+          <h6 className="text-xs sm:text-sm font-semibold text-[#353535]">Latitude:</h6>
+          <p className="mt-1 text-xs sm:text-sm font-medium text-[#41414199]">{buildingGeneralInfo?.latitude}</p>
           <h6 className="text-xs sm:text-sm font-semibold text-[#353535]">Description:</h6>
           <p className="mt-1 text-xs sm:text-sm font-medium text-[#41414199]">{buildingGeneralInfo?.description}</p>
         </div>

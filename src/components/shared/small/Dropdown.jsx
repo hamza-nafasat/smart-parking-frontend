@@ -1,13 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { GoChevronDown } from "react-icons/go";
 
-const Dropdown = ({
-  options,
-  defaultText = "Select",
-  onSelect,
-  label,
-  labelWeight,
-}) => {
+const Dropdown = ({ options, defaultText = "Select", onSelect, label, labelWeight, className = "" }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState(null);
   const dropdownRef = useRef(null);
@@ -32,13 +26,9 @@ const Dropdown = ({
   }, []);
 
   return (
-    <div className="relative w-full" ref={dropdownRef}>
+    <div className={`relative w-full ${className}`} ref={dropdownRef}>
       {label && (
-        <label
-          className={`text-[#000] text-sm md:text-base mb-2 block ${
-            labelWeight ? labelWeight : "font-normal"
-          }`}
-        >
+        <label className={`text-[#000] text-sm md:text-base mb-2 block ${labelWeight ? labelWeight : "font-normal"}`}>
           {label}
         </label>
       )}
@@ -47,14 +37,8 @@ const Dropdown = ({
         className="w-full h-[45px] px-4 border border-[#E0E0E9] rounded-lg text-sm text-[#383838E5] flex items-center justify-between"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <span className="text-sm text-[#383838E5]">
-          {selected ? selected.option : defaultText}
-        </span>
-        <div
-          className={`transition-all duration-300 ${
-            isOpen ? "rotate-0" : "rotate-180"
-          }`}
-        >
+        <span className="text-sm text-[#383838E5]">{selected ? selected.option : defaultText}</span>
+        <div className={`transition-all duration-300 ${isOpen ? "rotate-0" : "rotate-180"}`}>
           <GoChevronDown fontSize={20} color="#292D3280" />
         </div>
       </button>

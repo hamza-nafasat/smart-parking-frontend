@@ -43,8 +43,11 @@ const Floor = ({ isOpen, onToggle, floorNumber }) => {
   const [imageSrc, setImageSrc] = useState(null);
 
   const saveClickHandler = () => {
-    if (!name || !noOfParkingSpace || !imageSrc || !polygons || !originalImage)
-      return toast.error("Fill all fields first");
+    if (!name || !noOfParkingSpace || !imageSrc || !originalImage) return toast.error("Fill all fields first");
+    // if (!polygons.length) return toast.error("Create at least one slot with polygons");
+
+    console.log("polygons", polygons);
+    console.log("jelo");
     dispatch(
       addFloor({
         floorNumber,

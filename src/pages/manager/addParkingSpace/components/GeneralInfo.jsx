@@ -22,6 +22,8 @@ const GeneralInfo = ({ setCurrentStep }) => {
     noOfFloors: "",
     email: "",
     type: "",
+    latitude: "",
+    longitude: "",
     buildingImage: null,
     buildingCoordinates: [],
     description: "",
@@ -38,6 +40,8 @@ const GeneralInfo = ({ setCurrentStep }) => {
       !building.email ||
       !building.type ||
       !building.description ||
+      !building.latitude ||
+      !building.longitude ||
       !building.buildingImage ||
       !originalImage
     ) {
@@ -60,6 +64,8 @@ const GeneralInfo = ({ setCurrentStep }) => {
         email: buildingGeneralInfo.email || "",
         type: buildingGeneralInfo.type || "",
         buildingImage: buildingGeneralInfo.buildingImage || null,
+        latitude: buildingGeneralInfo.latitude || "",
+        longitude: buildingGeneralInfo.longitude || "",
         buildingCoordinates: buildingGeneralInfo.buildingCoordinates || [],
         description: buildingGeneralInfo.description || "",
       });
@@ -74,6 +80,8 @@ const GeneralInfo = ({ setCurrentStep }) => {
         noOfFloors: "",
         email: "",
         type: "",
+        latitude: "",
+        longitude: "",
         buildingImage: null,
         buildingCoordinates: [],
         description: "",
@@ -122,7 +130,22 @@ const GeneralInfo = ({ setCurrentStep }) => {
           value={building.email}
           onChange={formDataHandler}
         />
+        <Input
+          type="number"
+          placeholder="Latitude"
+          name="latitude"
+          value={building.latitude}
+          onChange={formDataHandler}
+        />
+        <Input
+          type="number"
+          placeholder="Longitude"
+          name="longitude"
+          value={building.longitude}
+          onChange={formDataHandler}
+        />
         <Dropdown
+          className="col-span-2"
           defaultText="Building Type"
           options={[
             { option: "Commercial", value: "commercial" },
