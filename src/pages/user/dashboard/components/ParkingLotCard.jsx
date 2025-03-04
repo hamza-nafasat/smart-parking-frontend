@@ -1,49 +1,36 @@
-import React from "react";
-import {
-  LocationIcon,
-  TwentyFourSevenIcon,
-} from "../../../../assets/svgs/Icon";
-import Button from "../../../../components/shared/small/Button";
-import { Link } from "react-router-dom";
+/* eslint-disable react/prop-types */
+import { LocationIcon, TwentyFourSevenIcon } from '../../../../assets/svgs/Icon';
+import Button from '../../../../components/shared/small/Button';
+import { Link } from 'react-router-dom';
 
-const ParkingLotCard = ({ level, name, inMap = false }) => {
+const ParkingLotCard = ({ level = 'high', item, inMap = false }) => {
   return (
-    <div className={`${inMap ? "" : "border-[2px] shadow-sm rounded-lg p-3"}`}>
+    <div className={`${inMap ? '' : 'border-[2px] shadow-sm rounded-lg p-3'}`}>
       <div className="mb-1 ml-2">
         <AvailabilityBar level={level} />
       </div>
-      <div className="flex flex-col md:flex-row gap-2 items-center">
+      <div className="flex flex-col md:flex-row gap-2 items-center mb-3">
         <img
-          src="https://placehold.co/181x97"
+          src={item?.twoDImage?.url}
           alt="image"
           className={`${
-            inMap
-              ? "w-[100px] h-[97px] rounded-xl object-cover"
-              : "w-[181px] h-[97px] rounded-xl object-cover"
+            inMap ? 'w-[100px] h-[97px] rounded-xl object-cover' : 'w-[181px] h-[97px] rounded-xl object-cover'
           }`}
         />
-        <div className={`${inMap ? "flex flex-col" : "flex flex-col gap-1"}`}>
-          <h3 className="text-base md:text-lg font-bold">{name}</h3>
+        <div className={`${inMap ? 'flex flex-col' : 'flex flex-col gap-1'}`}>
+          <h3 className="text-base md:text-lg font-bold">{item.name}</h3>
           <div className="flex gap-2 items-center">
             <LocationIcon />
-
-            <p className="text-[#9FA1A8] text-[10px]">
-              1051 18th St NW, Washington, DC 20006
-            </p>
+            <p className="text-[#9FA1A8] text-[10px]">{item?.address}</p>
           </div>
           <div className="flex gap-2 items-center">
             <TwentyFourSevenIcon />
-
-            <p className="text-[#9FA1A8] text-[10px]">
-              24 hours CCTV and Parking services
-            </p>
+            <p className="text-[#9FA1A8] text-[10px]">24 hours CCTV and Parking services</p>
           </div>
         </div>
       </div>
-      <div className={`${inMap ? "" : "p-2 border-y-[1px] my-2"}`}>
-        <p className="text-[#B5B7C0] text-sm font-[500]">
-          Near : M1 line & line 152 ,13. 32
-        </p>
+      <div className={`${inMap ? '' : 'p-2 border-y-[1px] my-2'}`}>
+        <p className="text-[#B5B7C0] text-sm font-[500]">Near : M1 line & line 152 ,13. 32</p>
       </div>
       <Link to="/user/booking-slot">
         <Button text="Book a Spot" width="w-full md:w-[120px]" />
@@ -57,11 +44,11 @@ export default ParkingLotCard;
 const AvailabilityBar = ({ level }) => {
   const getFillLevel = () => {
     switch (level) {
-      case "high":
+      case 'high':
         return 3;
-      case "medium":
+      case 'medium':
         return 2;
-      case "low":
+      case 'low':
         return 1;
       default:
         return 0;
@@ -75,9 +62,7 @@ const AvailabilityBar = ({ level }) => {
       {[...Array(3)].map((_, index) => (
         <div
           key={index}
-          className={`w-[19px] h-[8px] rounded ${
-            index < fillLevel ? "bg-[#18BC9C]" : "bg-[#E5E9E8]"
-          }`}
+          className={`w-[19px] h-[8px] rounded ${index < fillLevel ? 'bg-[#18BC9C]' : 'bg-[#E5E9E8]'}`}
         />
       ))}
       <p className="text-sm text-[#B5B7C0] capitalize">{level} Availability</p>

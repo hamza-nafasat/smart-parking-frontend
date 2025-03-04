@@ -1,45 +1,60 @@
-import { useEffect, useState } from 'react';
-import ParkingLotCard from './components/ParkingLotCard';
-import VisitedParkingCard from './components/VisitedParkingCard';
-import { parkingLotDatas, visitedParking } from './utils/dashboardData';
-import Map from './components/Map';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
 import { CiSearch } from 'react-icons/ci';
 import { HiOutlineArrowLeft } from 'react-icons/hi';
-import CustomTextfield from './components/CustomTextfield';
 import { ImLocation2 } from 'react-icons/im';
-import { CalenderSm, TimeSm } from '../../../assets/svgs/Icon';
-import { useGetAllBuildingsQuery } from '../../../redux/apis/buildingApis';
+import Button from '../../../components/shared/small/Button';
+import { useGetAllBuildingsForUserQuery } from '../../../redux/apis/buildingApis';
+import CustomTextfield from './components/CustomTextfield';
+import Map from './components/Map';
+import ParkingLotCard from './components/ParkingLotCard';
+import VisitedParkingCard from './components/VisitedParkingCard';
+import { visitedParking } from './utils/dashboardData';
 
 const UserDashboard = () => {
-  const totalLot = parkingLotDatas.length;
   const [bookingOpen, setBookingOpen] = useState(false);
-  const [location, setLocation] = useState({ lat: null, lng: null });
-  const { data, refetch } = useGetAllBuildingsQuery(location);
+  const [location, setLocation] = useState({ lat: 0, lng: 0 });
+  const { data, refetch } = useGetAllBuildingsForUserQuery(location);
+  const [city, setCity] = useState('');
+  const [gettedBuildingCity, setGettedBuildingCity] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    if ('geolocation' in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          console.log('position', position);
-          setLocation({ lat: position.coords.latitude, lng: position.coords.longitude });
-          refetch({ lat: position.coords.latitude, lng: position.coords.longitude });
-        },
-        (err) => console.log('Something went wrong while getting location', err)
-      );
-    } else {
-      console.log('Geolocation is not supported by your browser');
+  const handleSearch = async () => {
+    try {
+      setIsLoading(true);
+      if (!city) return toast.error('please enter a city name');
+      const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(city)}`;
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      const data = await response.json();
+      console.log('Fetched data:', data);
+      if (data && data.length > 0) {
+        const result = data[0];
+        setLocation({ lat: parseFloat(result.lat), lng: parseFloat(result.lon) });
+        await refetch({ lat: parseFloat(result.lat), lng: parseFloat(result.lon) });
+        setGettedBuildingCity(city);
+      } else {
+        toast.error('Please Enter the correct city');
+      }
+      setIsLoading(false);
+    } catch (err) {
+      setIsLoading(false);
+      console.log('Something went wrong while getting location', err);
+      toast.error('Please Enter the correct city');
     }
-  }, [refetch]);
+  };
 
   return (
     <div>
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4  justify-between">
+      <div className="grid grid-cols-1  gap-4 justify-between">
         <div className="">
           <h4 className="text-sm md:text-base font-bold">Where</h4>
           <div className="flex flex-col md:flex-row items-center md:gap-5 gap-2">
             <CustomTextfield
               placeholder="Washington, DC"
               intext="You are in:"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
               icon={<ImLocation2 fontSize={20} color="#7E7E7E" />}
             />
             <CustomTextfield
@@ -49,23 +64,12 @@ const UserDashboard = () => {
             />
           </div>
         </div>
-        <div>
-          <h4 className="text-sm md:text-base font-bold">When</h4>
-          <div className="flex flex-col md:flex-row items-center md:gap-5 gap-2 ">
-            <CustomTextfield
-              type="date"
-              placeholder="Washington, DC"
-              intext="Date:"
-              icon={<CalenderSm fontSize={18} color="#7E7E7E" />}
-            />
-            <CustomTextfield
-              type="time"
-              placeholder="Independence Ave , NW"
-              intext="Time:"
-              icon={<TimeSm fontSize={20} color="#7E7E7E" />}
-            />
-          </div>
-        </div>
+        <Button
+          disable={isLoading || !city}
+          className={`${(isLoading || !city) && 'opacity-25 cursor-not-allowed'}`}
+          text={'Search'}
+          onClick={handleSearch}
+        />
       </div>
       <div className="grid grid-cols-12 gap-4 relative">
         <div className="fixed right-0 z-[999]">
@@ -90,13 +94,19 @@ const UserDashboard = () => {
         {/* Left Column (Fixed col-span-4) */}
         <div className="col-span-12 xl:col-span-4 mt-4">
           <p className="mb-2 flex items-center text-sm text-[#B5B7C0] gap-1">
-            There are <span className="font-bold text-sm text-[#000]">{totalLot} parking lots</span> in Washington DC
+            There are{' '}
+            <span className="font-bold text-sm text-[#000]">{data?.data?.length || 0} available parking Stations</span>
+            {gettedBuildingCity ? ` in ${gettedBuildingCity}` : ''}
           </p>
+
           <div className="space-y-2">
             {' '}
             {/* Wrap ParkingLotCard items in a container */}
-            {parkingLotDatas?.map((item, i) => (
+            {/* {parkingLotDatas?.map((item, i) => (
               <ParkingLotCard key={i} level={item?.level} name={item?.name} />
+            ))} */}
+            {data?.data?.map((item, i) => (
+              <ParkingLotCard key={i} item={item} />
             ))}
           </div>
         </div>

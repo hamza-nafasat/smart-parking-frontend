@@ -16,8 +16,16 @@ const buildingApis = createApi({
     }),
     // get all buildings
     getAllBuildings: builder.query({
+      query: () => ({
+        url: `/all`,
+        method: 'GET',
+      }),
+      providesTags: [{ type: 'Building', id: 'LIST' }],
+    }),
+    // get all buildings for user with lat lng
+    getAllBuildingsForUser: builder.query({
       query: ({ lat, lng }) => ({
-        url: `/all?lat=${lat}&lng=${lng}`,
+        url: `/all?lat=${lat || ''}&lng=${lng || ''}`,
         method: 'GET',
       }),
       providesTags: [{ type: 'Building', id: 'LIST' }],
@@ -52,8 +60,10 @@ const buildingApis = createApi({
 export const {
   useCreateBuildingMutation,
   useGetAllBuildingsQuery,
+  useGetAllBuildingsForUserQuery,
   useGetSingleBuildingQuery,
   useUpdateSingleBuildingMutation,
+
   useDeleteSingleBuildingMutation,
 } = buildingApis;
 export default buildingApis;
