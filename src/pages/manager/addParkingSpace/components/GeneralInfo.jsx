@@ -1,13 +1,13 @@
 /* eslint-disable react/prop-types */
-import Input from "../../../../components/shared/small/Input";
-import Dropdown from "../../../../components/shared/small/Dropdown";
-import UploadModel from "./UploadModel";
-import Button from "../../../../components/shared/small/Button";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import toast from "react-hot-toast";
-import { addBuildingGeneralInfo } from "../../../../redux/slices/buildingSlice";
-import { addFloorsSample } from "../../../../redux/slices/floorSlice";
+import Input from '../../../../components/shared/small/Input';
+import Dropdown from '../../../../components/shared/small/Dropdown';
+import UploadModel from './UploadModel';
+import Button from '../../../../components/shared/small/Button';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import toast from 'react-hot-toast';
+import { addBuildingGeneralInfo } from '../../../../redux/slices/buildingSlice';
+import { addFloorsSample } from '../../../../redux/slices/floorSlice';
 
 const GeneralInfo = ({ setCurrentStep }) => {
   const [polygons, setPolygons] = useState([]);
@@ -16,17 +16,17 @@ const GeneralInfo = ({ setCurrentStep }) => {
   const { buildingGeneralInfo } = useSelector((state) => state.building);
   const [originalImage, setOriginalImage] = useState(null);
   const [building, setBuilding] = useState({
-    name: "",
-    address: "",
-    area: "",
-    noOfFloors: "",
-    email: "",
-    type: "",
-    latitude: "",
-    longitude: "",
+    name: '',
+    address: '',
+    area: '',
+    noOfFloors: '',
+    email: '',
+    type: '',
+    latitude: '',
+    longitude: '',
     buildingImage: null,
     buildingCoordinates: [],
-    description: "",
+    description: '',
   });
   const formDataHandler = (e) => setBuilding({ ...building, [e.target.name]: e.target.value });
   const buildingTypeHandler = (name, value) => setBuilding({ ...building, [name]: value });
@@ -45,9 +45,9 @@ const GeneralInfo = ({ setCurrentStep }) => {
       !building.buildingImage ||
       !originalImage
     ) {
-      return toast.error("Please fill all the fields");
+      return toast.error('Please fill all the fields');
     }
-    console.log("building", building);
+    console.log('building', building);
     dispatch(addBuildingGeneralInfo({ ...building, file: originalImage }));
     dispatch(addFloorsSample(Number(building?.noOfFloors || 0)));
     setCurrentStep(1);
@@ -57,34 +57,34 @@ const GeneralInfo = ({ setCurrentStep }) => {
   useEffect(() => {
     if (buildingGeneralInfo) {
       setBuilding({
-        name: buildingGeneralInfo.name || "",
-        address: buildingGeneralInfo.address || "",
-        area: buildingGeneralInfo.area || "",
-        noOfFloors: buildingGeneralInfo.noOfFloors || "",
-        email: buildingGeneralInfo.email || "",
-        type: buildingGeneralInfo.type || "",
+        name: buildingGeneralInfo.name || '',
+        address: buildingGeneralInfo.address || '',
+        area: buildingGeneralInfo.area || '',
+        noOfFloors: buildingGeneralInfo.noOfFloors || '',
+        email: buildingGeneralInfo.email || '',
+        type: buildingGeneralInfo.type || '',
         buildingImage: buildingGeneralInfo.buildingImage || null,
-        latitude: buildingGeneralInfo.latitude || "",
-        longitude: buildingGeneralInfo.longitude || "",
+        latitude: buildingGeneralInfo.latitude || '',
+        longitude: buildingGeneralInfo.longitude || '',
         buildingCoordinates: buildingGeneralInfo.buildingCoordinates || [],
-        description: buildingGeneralInfo.description || "",
+        description: buildingGeneralInfo.description || '',
       });
       setOriginalImage(buildingGeneralInfo?.file || null);
       setImageSrc(buildingGeneralInfo.buildingImage || null);
       setPolygons(buildingGeneralInfo.buildingCoordinates || []);
     } else {
       setBuilding({
-        name: "",
-        address: "",
-        area: "",
-        noOfFloors: "",
-        email: "",
-        type: "",
-        latitude: "",
-        longitude: "",
+        name: '',
+        address: '',
+        area: '',
+        noOfFloors: '',
+        email: '',
+        type: '',
+        latitude: '',
+        longitude: '',
         buildingImage: null,
         buildingCoordinates: [],
-        description: "",
+        description: '',
       });
       setOriginalImage(null);
       setImageSrc(null);
@@ -144,14 +144,15 @@ const GeneralInfo = ({ setCurrentStep }) => {
           value={building.longitude}
           onChange={formDataHandler}
         />
+
         <Dropdown
           className="col-span-2"
           defaultText="Building Type"
           options={[
-            { option: "Commercial", value: "commercial" },
-            { option: "Residential", value: "residential" },
+            { option: 'Commercial', value: 'commercial' },
+            { option: 'Residential', value: 'residential' },
           ]}
-          onSelect={(value) => buildingTypeHandler("type", value)}
+          onSelect={(value) => buildingTypeHandler('type', value)}
         />
         <div className="lg:col-span-3">
           <UploadModel

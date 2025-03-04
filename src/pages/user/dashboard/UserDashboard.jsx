@@ -1,20 +1,35 @@
-import { useState } from "react";
-import ParkingLotCard from "./components/ParkingLotCard";
-import VisitedParkingCard from "./components/VisitedParkingCard";
-import { parkingLotDatas, visitedParking } from "./utils/dashboardData";
-import Map from "./components/Map";
-import { CiSearch } from "react-icons/ci";
-import { HiOutlineArrowLeft } from "react-icons/hi";
-import CustomTextfield from "./components/CustomTextfield";
-import { ImLocation2 } from "react-icons/im";
-import { CalenderSm, TimeSm } from "../../../assets/svgs/Icon";
+import { useEffect, useState } from 'react';
+import ParkingLotCard from './components/ParkingLotCard';
+import VisitedParkingCard from './components/VisitedParkingCard';
+import { parkingLotDatas, visitedParking } from './utils/dashboardData';
+import Map from './components/Map';
+import { CiSearch } from 'react-icons/ci';
+import { HiOutlineArrowLeft } from 'react-icons/hi';
+import CustomTextfield from './components/CustomTextfield';
+import { ImLocation2 } from 'react-icons/im';
+import { CalenderSm, TimeSm } from '../../../assets/svgs/Icon';
+import { useGetAllBuildingsQuery } from '../../../redux/apis/buildingApis';
 
 const UserDashboard = () => {
   const totalLot = parkingLotDatas.length;
   const [bookingOpen, setBookingOpen] = useState(false);
-  const handleToggleSideBooking = () => {
-    setBookingOpen(!bookingOpen);
-  };
+  const [location, setLocation] = useState({ lat: null, lng: null });
+  const { data, refetch } = useGetAllBuildingsQuery(location);
+
+  useEffect(() => {
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          console.log('position', position);
+          setLocation({ lat: position.coords.latitude, lng: position.coords.longitude });
+          refetch({ lat: position.coords.latitude, lng: position.coords.longitude });
+        },
+        (err) => console.log('Something went wrong while getting location', err)
+      );
+    } else {
+      console.log('Geolocation is not supported by your browser');
+    }
+  }, [refetch]);
 
   return (
     <div>
@@ -55,20 +70,18 @@ const UserDashboard = () => {
       <div className="grid grid-cols-12 gap-4 relative">
         <div className="fixed right-0 z-[999]">
           <div
-            onClick={handleToggleSideBooking}
+            onClick={() => setBookingOpen(!bookingOpen)}
             className="bg-primary text-white cursor-pointer py-3 px-7 rounded-t-md text-sm font-bold flex gap-2 items-center"
           >
             <HiOutlineArrowLeft
-              className={`transition-all duration-300 ${
-                bookingOpen ? "rotate-180" : "rotate-0"
-              }`}
+              className={`transition-all duration-300 ${bookingOpen ? 'rotate-180' : 'rotate-0'}`}
               fontSize={16}
             />
             View Current Bookings
           </div>
           <div
             className={`fixed right-0 transition-transform duration-300 ${
-              bookingOpen ? "translate-x-0" : "translate-x-full"
+              bookingOpen ? 'translate-x-0' : 'translate-x-full'
             }`}
           >
             <CurrentBookingList />
@@ -77,14 +90,10 @@ const UserDashboard = () => {
         {/* Left Column (Fixed col-span-4) */}
         <div className="col-span-12 xl:col-span-4 mt-4">
           <p className="mb-2 flex items-center text-sm text-[#B5B7C0] gap-1">
-            There are{" "}
-            <span className="font-bold text-sm text-[#000]">
-              {totalLot} parking lots
-            </span>{" "}
-            in Washington DC
+            There are <span className="font-bold text-sm text-[#000]">{totalLot} parking lots</span> in Washington DC
           </p>
           <div className="space-y-2">
-            {" "}
+            {' '}
             {/* Wrap ParkingLotCard items in a container */}
             {parkingLotDatas?.map((item, i) => (
               <ParkingLotCard key={i} level={item?.level} name={item?.name} />
@@ -97,9 +106,7 @@ const UserDashboard = () => {
           </div>
           <div className="p-5 border-[2px] shadow-md rounded-md">
             <div className="flex flex-wrap items-center justify-between gap-4 mb-3">
-              <h2 className="text-base font-bold text-[#414141]">
-                Your most visited car parks
-              </h2>
+              <h2 className="text-base font-bold text-[#414141]">Your most visited car parks</h2>
               <div className="flex md:flex-row flex-col items-center gap-5">
                 <div className="flex items-center gap-2 bg-[#F9FBFF] border border-[#e7e7e7] rounded-[10px] py-2 px-4">
                   <CiSearch fontSize={20} color="#7E7E7E" />
@@ -110,9 +117,7 @@ const UserDashboard = () => {
                   />
                 </div>
                 <div className="w-full flex items-center gap-2 bg-[#F9FBFF] border border-[#e7e7e7] rounded-[10px] py-2 px-4">
-                  <p className="text-xs md:text-base text-[#7E7E7E] text-nowrap">
-                    Short by:
-                  </p>
+                  <p className="text-xs md:text-base text-[#7E7E7E] text-nowrap">Short by:</p>
                   <select className="w-full bg-transparent border-none focus:outline-none text-xs md:text-base text-[#3D3C42]">
                     <option value="">Newest</option>
                     <option value="">Older</option>
@@ -159,11 +164,7 @@ const CurrentBookingList = () => {
 const SingleBookingCard = () => {
   return (
     <div className="py-2 border-b-[2px] flex flex-col items-center gap-2">
-      <img
-        src="https://placehold.co/240x43"
-        alt="image"
-        className="w-[204px] h-[43px] rounded-xl object-cover"
-      />
+      <img src="https://placehold.co/240x43" alt="image" className="w-[204px] h-[43px] rounded-xl object-cover" />
       <div className="w-full flex justify-between">
         <div className="flex flex-col">
           <p className="text-xs font-[700]">The Portals Parking</p>

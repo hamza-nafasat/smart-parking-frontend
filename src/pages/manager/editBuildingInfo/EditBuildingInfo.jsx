@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
-import { useNavigate, useParams } from "react-router-dom";
-import Button from "../../../components/shared/small/Button";
-import Dropdown from "../../../components/shared/small/Dropdown";
-import Input from "../../../components/shared/small/Input";
-import { useGetSingleBuildingQuery, useUpdateSingleBuildingMutation } from "../../../redux/apis/buildingApis";
-import UploadModel from "../addParkingSpace/components/UploadModel";
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import { useNavigate, useParams } from 'react-router-dom';
+import Button from '../../../components/shared/small/Button';
+import Dropdown from '../../../components/shared/small/Dropdown';
+import Input from '../../../components/shared/small/Input';
+import { useGetSingleBuildingQuery, useUpdateSingleBuildingMutation } from '../../../redux/apis/buildingApis';
+import UploadModel from '../addParkingSpace/components/UploadModel';
 
 function EditBuildingInfo() {
   const navigate = useNavigate();
@@ -16,14 +16,16 @@ function EditBuildingInfo() {
   const [oldImageSrc, setOldImageSrc] = useState(null);
   const [imageSrc, setImageSrc] = useState(null);
   const [building, setBuilding] = useState({
-    name: "",
-    address: "",
-    area: "",
-    email: "",
-    type: "",
+    name: '',
+    address: '',
+    area: '',
+    email: '',
+    type: '',
+    latitude: '',
+    longitude: '',
     buildingImage: null,
     buildingCoordinates: [],
-    description: "",
+    description: '',
   });
 
   const onUploadForBuildingImage = (image, coordinates) => {
@@ -43,26 +45,30 @@ function EditBuildingInfo() {
       !building.area ||
       !building.email ||
       !building.type ||
+      !building.latitude ||
+      !building.longitude ||
       !building.description ||
       !building.buildingCoordinates
     )
-      return toast.error("Please fill all the fields");
+      return toast.error('Please fill all the fields');
     try {
       const formDate = new FormData();
-      formDate.append("name", building.name);
-      formDate.append("address", building.address);
-      formDate.append("area", building.area);
-      formDate.append("email", building.email);
-      formDate.append("type", building.type);
-      formDate.append("description", building.description);
-      formDate.append("polygonData", JSON.stringify(building.buildingCoordinates));
-      if (building.buildingImage !== oldImageSrc) formDate.append("file", building.buildingImage);
+      formDate.append('name', building.name);
+      formDate.append('address', building.address);
+      formDate.append('area', building.area);
+      formDate.append('email', building.email);
+      formDate.append('type', building.type);
+      formDate.append('latitude', building.latitude);
+      formDate.append('longitude', building.longitude);
+      formDate.append('description', building.description);
+      formDate.append('polygonData', JSON.stringify(building.buildingCoordinates));
+      if (building.buildingImage !== oldImageSrc) formDate.append('file', building.buildingImage);
       const res = await updateBuilding({ id: buildingId, data: formDate }).unwrap();
       if (res?.success) toast.success(res?.message);
       await refetch();
       return navigate(`/manager/building-view/${buildingId}`);
     } catch (error) {
-      console.log("error while update building", error);
+      console.log('error while update building', error);
     }
   };
 
@@ -70,14 +76,16 @@ function EditBuildingInfo() {
     if (data?.data) {
       const building = data?.data;
       setBuilding({
-        name: building.name || "",
-        address: building.address || "",
-        area: building.area || "",
-        email: building.email || "",
-        type: building.type || "",
+        name: building.name || '',
+        address: building.address || '',
+        area: building.area || '',
+        email: building.email || '',
+        type: building.type || '',
+        latitude: building?.location?.coordinates?.[0] || '',
+        longitude: building?.location?.coordinates?.[1] || '',
         buildingImage: building?.twoDImage?.url || null,
         buildingCoordinates: building.polygonData || [],
-        description: building.description || "",
+        description: building.description || '',
       });
       setOldImageSrc(building?.twoDImage?.url || null);
       setImageSrc(building?.twoDImage?.url || null);
@@ -89,6 +97,7 @@ function EditBuildingInfo() {
     if (oldImageSrc) setImageSrc(oldImageSrc);
     if (polygons?.length) setBuilding({ ...building, buildingCoordinates: polygons });
   }, [building, oldImageSrc, polygons]);
+
   return (
     <div className="mt-4">
       <h4 className="text-base md:text-xl font-medium text-[#414141] text-center">General Building Information</h4>
@@ -109,20 +118,34 @@ function EditBuildingInfo() {
           onChange={formDataHandler}
         />
         <Input
-          className="col-span-2"
           type="email"
           placeholder="Email address"
           name="email"
           value={building.email}
           onChange={formDataHandler}
         />
+        <Input
+          type="number"
+          placeholder="latitude"
+          name="latitude"
+          value={building.latitude}
+          onChange={formDataHandler}
+        />
+        <Input
+          type="number"
+          placeholder="longitude"
+          name="longitude"
+          value={building.longitude}
+          onChange={formDataHandler}
+        />
         <Dropdown
-          defaultText={building.type || "Select Type"}
+          className="col-span-3"
+          defaultText={building.type || 'Select Type'}
           options={[
-            { option: "Commercial", value: "commercial" },
-            { option: "Residential", value: "residential" },
+            { option: 'Commercial', value: 'commercial' },
+            { option: 'Residential', value: 'residential' },
           ]}
-          onSelect={(value) => buildingTypeHandler("type", value)}
+          onSelect={(value) => buildingTypeHandler('type', value)}
         />
         <div className="lg:col-span-3">
           <UploadModel
@@ -146,7 +169,7 @@ function EditBuildingInfo() {
         <div className="lg:col-span-3 flex justify-end">
           <Button
             disabled={isLoading}
-            className={`${isLoading ? "opacity-50 pointer-events-none" : ""}`}
+            className={`${isLoading ? 'opacity-50 pointer-events-none' : ''}`}
             width="w-[150px]"
             type="button"
             text="Update Building"
