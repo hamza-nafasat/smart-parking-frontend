@@ -149,7 +149,7 @@ function App() {
                 <Route path="building-info" element={<UserBuildingInfo />} />
                 <Route path="booking-summary" element={<BookingSummary />} />
                 <Route path="view-slip" element={<UserViewSlip />} />
-                <Route path="booking/:id" element={<Booking />} />
+                <Route path="booking/:slotId" element={<Booking />} />
                 <Route path="confirm-booking" element={<ConfirmBooking />} />
                 <Route path="payment-success" element={<PaymentSuccess />} />
                 <Route path="payment-failed" element={<PaymentFail />} />
