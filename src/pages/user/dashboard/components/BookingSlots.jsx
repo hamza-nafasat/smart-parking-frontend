@@ -1,16 +1,15 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from 'react';
-import CustomTextfield from './CustomTextfield';
-import { BackIcon, CalenderSm, LocationIcon, TimeSm, TwentyFourSevenIcon } from '../../../../assets/svgs/Icon';
-import { HiOutlineArrowLeft } from 'react-icons/hi';
 import { CiSearch } from 'react-icons/ci';
-import { AvailabilityBar } from './ParkingLotCard';
+import { HiOutlineArrowLeft } from 'react-icons/hi';
 import { useNavigate, useParams } from 'react-router-dom';
-import ShowSingleFloor from './ShowSingleFloor';
-import { canvasData } from '../utils/dashboardData';
-import { useGetAllFloorsQuery } from '../../../../redux/apis/floorApis';
+import { BackIcon, LocationIcon, TwentyFourSevenIcon } from '../../../../assets/svgs/Icon';
 import { useGetSingleBuildingQuery } from '../../../../redux/apis/buildingApis';
+import { useGetAllFloorsQuery } from '../../../../redux/apis/floorApis';
 import { useGetAllSlotsQuery } from '../../../../redux/apis/slotApis';
+import { canvasData } from '../utils/dashboardData';
+import { AvailabilityBar } from './ParkingLotCard';
+import ShowSingleFloor from './ShowSingleFloor';
 
 const BookingSlots = () => {
   const buildingId = useParams().buildingId;
@@ -25,64 +24,23 @@ const BookingSlots = () => {
   useEffect(() => {
     if (data?.data) {
       setFloors(data.data);
-      setSelectedFloor(data.data[0]);
-      refetch(data.data[0]._id);
+      setSelectedFloor(data?.data?.[0]);
+      refetch(data?.data?.[0]?._id);
     }
   }, [data?.data, refetch]);
 
   useEffect(() => {
     if (slots?.data) {
-      setPolygons(
-        slots?.data?.map((slot) => ({
-          id: slot.id,
-          points: slot.points,
-          color: slot.color,
-          fillColor: slot.fillColor,
-          _id: slot._id,
-        }))
-      );
+      setPolygons(slots?.data);
     }
   }, [slots?.data]);
   const navigate = useNavigate();
   return (
     <div className="flex flex-col items-center gap-4 relative">
-      <div className="md:flex-row flex-col items-center shadow-md rounded-lg p-3 border-[1px] flex justify-between gap-5 w-full">
-        <div className="flex gap-4 items-center">
-          <div onClick={() => navigate(-1)} className="cursor-pointer">
-            <BackIcon />
-          </div>
-          <div>
-            <h3>{selectedFloor?.name}</h3>
-            <div className="flex items-center gap-3">
-              <div>
-                <LocationIcon />
-              </div>
-              <h5 className="text-[8px]">{building?.data?.address}</h5>
-            </div>
-          </div>
-        </div>
-        <div className="flex flex-col md:flex-row gap-4 items-center">
-          <CustomTextfield
-            type="date"
-            placeholder="Washington, DC"
-            intext="Date:"
-            icon={<CalenderSm fontSize={18} color="#7E7E7E" />}
-          />
-          <CustomTextfield
-            type="time"
-            placeholder="Independence Ave , NW"
-            intext="Start time:"
-            icon={<TimeSm fontSize={20} color="#7E7E7E" />}
-          />
-          <CustomTextfield
-            type="time"
-            placeholder="Independence Ave , NW"
-            intext="End time:"
-            icon={<TimeSm fontSize={20} color="#7E7E7E" />}
-          />
-        </div>
+      <div onClick={() => navigate(-1)} className="cursor-pointer self-start">
+        <BackIcon />
       </div>
-      {/* //////////////////////////////////// */}
+      {/* ====================================== */}
       <div className="fixed top-80 right-0 z-[999]">
         <div
           onClick={() => setBookingOpen(!bookingOpen)}
@@ -102,7 +60,7 @@ const BookingSlots = () => {
           <CurrentFloorPlaceList floors={floors} setSelectedFloor={setSelectedFloor} refetch={refetch} />
         </div>
       </div>
-      {/* //////////////////////////////////// */}
+      {/* ====================================== */}
       <div className="w-full flex items-start gap-5">
         <div className="flex flex-col md:flex-row gap-2 items-center mb-5">
           <div className={`flex flex-col gap-1"}`}>

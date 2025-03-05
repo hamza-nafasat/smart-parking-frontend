@@ -17,7 +17,6 @@ const ShowSingleFloor = ({ image, polygons, view, heatmap = false }) => {
   const canvasRef = useRef(null);
   const [selectedPolygon, setSelectedPolygon] = useState(null);
   const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
-  console.log('polygons', polygons);
 
   // Function to handle polygon click detection
   const handlePolygonClick = (e, polygon) => {
@@ -37,7 +36,6 @@ const ShowSingleFloor = ({ image, polygons, view, heatmap = false }) => {
     const isInside = ctx.isPointInPath(mouseX, mouseY);
     if (isInside) {
       setSelectedPolygon(polygon); // Set selected polygon to display in the popup
-
       // Calculate the position for the popup near the polygon
       const { x, y } = polygon.points[0]; // Take the first point of the polygon
       const padding = 10; // Adjust padding from the polygon
@@ -63,7 +61,7 @@ const ShowSingleFloor = ({ image, polygons, view, heatmap = false }) => {
       if (heatmap) {
         // Draw heatmap-style polygons
         polygons?.forEach((polygon) => {
-          if (!polygon || !polygon.points) return;
+          if (!polygon || !polygon?.points) return;
 
           // Calculate the center of the polygon
           const centerX = polygon.points.reduce((sum, p) => sum + p.x, 0) / polygon.points.length;
@@ -198,13 +196,20 @@ const ShowSingleFloor = ({ image, polygons, view, heatmap = false }) => {
               <h6 className="text-xl font-bold text-center">Parking Details</h6>
               <div className="my-4 space-y-2">
                 <h6 className="text-base">
-                  <span className="font-bold text-base">Parking Name:</span> Parking one
+                  <span className="font-bold text-base">Name:</span> {selectedPolygon?.id}
                 </h6>
                 <p className="text-base">
-                  <span className="font-bold text-base">Booked:</span> No
+                  <span className="font-bold text-base">Booked:</span> {selectedPolygon?.isBooked ? 'yes' : 'no'}
                 </p>
               </div>
-              <div className="flex justify-end">
+              <div className="flex align-center gap-4">
+                <Link
+                  to={`/user/booking/${selectedPolygon?._id}`}
+                  className="bg-primary hover:bg-[#a5a5a5] text-white px-4 py-1 rounded-md font-semibold w-full transition-all "
+                  onClick={() => setSelectedPolygon(null)}
+                >
+                  Book a Slot
+                </Link>
                 <button
                   className="bg-primary hover:bg-[#a5a5a5] text-white px-4 py-1 rounded-md font-semibold w-full transition-all "
                   onClick={() => setSelectedPolygon(null)}
