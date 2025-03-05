@@ -100,11 +100,6 @@ const UserDashboard = () => {
           </p>
 
           <div className="space-y-2">
-            {' '}
-            {/* Wrap ParkingLotCard items in a container */}
-            {/* {parkingLotDatas?.map((item, i) => (
-              <ParkingLotCard key={i} level={item?.level} name={item?.name} />
-            ))} */}
             {data?.data?.map((item, i) => (
               <ParkingLotCard key={i} item={item} />
             ))}
