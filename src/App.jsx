@@ -153,7 +153,7 @@ function App() {
                 <Route path="confirm-booking" element={<ConfirmBooking />} />
                 <Route path="payment-success" element={<PaymentSuccess />} />
                 <Route path="payment-failed" element={<PaymentFail />} />
-                <Route path="booking-slot" element={<BookingSlots />} />
+                <Route path="booking-slot/:buildingId" element={<BookingSlots />} />
                 <Route path="profile" element={<UserProfile />} />
               </Route>
             </Route>
