@@ -203,13 +203,16 @@ const ShowSingleFloor = ({ image, polygons, view, heatmap = false }) => {
                 </p>
               </div>
               <div className="flex align-center gap-4">
-                <Link
-                  to={`/user/booking/${selectedPolygon?._id}`}
-                  className="bg-primary hover:bg-[#a5a5a5] text-white px-4 py-1 rounded-md font-semibold w-full transition-all "
-                  onClick={() => setSelectedPolygon(null)}
-                >
-                  Book a Slot
-                </Link>
+                {!selectedPolygon?.isBooked && (
+                  <Link
+                    to={`/user/booking/${selectedPolygon?._id}`}
+                    className="bg-primary hover:bg-[#a5a5a5] text-white px-4 py-1 rounded-md font-semibold w-full transition-all "
+                    onClick={() => setSelectedPolygon(null)}
+                  >
+                    Book a Slot
+                  </Link>
+                )}
+
                 <button
                   className="bg-primary hover:bg-[#a5a5a5] text-white px-4 py-1 rounded-md font-semibold w-full transition-all "
                   onClick={() => setSelectedPolygon(null)}
