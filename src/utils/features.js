@@ -1,16 +1,26 @@
-import getEnv from "../configs/config";
-import { v4 as uuid } from "uuid";
+import getEnv from '../configs/config';
+import { v4 as uuid } from 'uuid';
 
 const areCookiesEnabled = () => {
-  document.cookie = `checkCookieBlocker=1; SameSite=None; Secure; path=/; domain=${getEnv("DOMAIN")}`;
-  const isCookieSet = document.cookie.includes("checkCookieBlocker=");
-  console.log("Cookies enabled: ", isCookieSet);
+  document.cookie = `checkCookieBlocker=1; SameSite=None; Secure; path=/; domain=${getEnv('DOMAIN')}`;
+  const isCookieSet = document.cookie.includes('checkCookieBlocker=');
+  console.log('Cookies enabled: ', isCookieSet);
 
   return isCookieSet;
 };
 
-function customObjectId() {
-  return uuid().replace(/-/g, "").substring(0, 24);
-}
+const customObjectId = () => uuid().replace(/-/g, '').substring(0, 24);
 
-export { areCookiesEnabled, customObjectId };
+const timeFormate = (dateTime) => {
+  return new Date(dateTime).toLocaleString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+    timeZone: 'Asia/Karachi',
+  });
+};
+
+export { areCookiesEnabled, customObjectId, timeFormate };
