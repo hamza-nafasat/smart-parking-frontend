@@ -8,6 +8,8 @@ import floorSlice from "./slices/floorSlice";
 import sensorApis from "./apis/sensorApis";
 import slotApis from "./apis/slotApis";
 import sensorSlice from "./slices/sensorSlice";
+import bookingApis from "./apis/bookingApis";
+import bookingSlice from "./slices/bookingSlice";
 
 const store = configureStore({
   reducer: {
@@ -17,11 +19,13 @@ const store = configureStore({
     [floorApis.reducerPath]: floorApis.reducer,
     [slotApis.reducerPath]: slotApis.reducer,
     [sensorApis.reducerPath]: sensorApis.reducer,
+    [bookingApis.reducerPath]: bookingApis.reducer,
     // slices
     [authSlice.name]: authSlice.reducer,
     [buildingSlice.name]: buildingSlice.reducer,
     [floorSlice.name]: floorSlice.reducer,
     [sensorSlice.name]: sensorSlice.reducer,
+    [bookingSlice.name]: bookingSlice.reducer
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware({ serializableCheck: false })
@@ -29,7 +33,8 @@ const store = configureStore({
       .concat(buildingApis.middleware)
       .concat(floorApis.middleware)
       .concat(slotApis.middleware)
-      .concat(sensorApis.middleware);
+      .concat(sensorApis.middleware).
+      concat(bookingApis.middleware);
   },
 });
 
