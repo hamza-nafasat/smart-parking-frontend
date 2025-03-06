@@ -32,7 +32,7 @@ const ParkingLotCard = ({ level = 'high', item, inMap = false }) => {
       <div className={`${inMap ? '' : 'p-2 border-y-[1px] my-2'}`}>
         <p className="text-[#B5B7C0] text-sm font-[500]">Near : M1 line & line 152 ,13. 32</p>
       </div>
-      <Link to={`/user/booking-slot/${item._id}`}>
+      <Link to={`/user/booking-slot/${item?._id}`}>
         <Button text="Book a Spot" width="w-full md:w-[120px]" />
       </Link>
     </div>
