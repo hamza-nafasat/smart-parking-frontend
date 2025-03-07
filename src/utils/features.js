@@ -22,5 +22,12 @@ const timeFormate = (dateTime) => {
     timeZone: 'Asia/Karachi',
   });
 };
+const dateFormate = (dateTime) => {
+  return new Date(dateTime).toLocaleString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+};
 
-export { areCookiesEnabled, customObjectId, timeFormate };
+export { areCookiesEnabled, customObjectId, timeFormate, dateFormate };
