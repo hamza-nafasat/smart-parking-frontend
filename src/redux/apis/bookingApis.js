@@ -52,7 +52,7 @@ const bookingApis = createApi({
 
 export const {
   useCreateBookingMutation,
-  useGetAllBookingQuery,
+  useGetAllBookingsQuery,
   useGetSingleBookingQuery,
   useUpdateSingleBookingMutation,
   useDeleteSingleBookingMutation,
