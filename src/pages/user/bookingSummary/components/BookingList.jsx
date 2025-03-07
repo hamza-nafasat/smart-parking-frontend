@@ -8,7 +8,8 @@ import Slider from 'react-slick';
 import { Calender, HouseIcon, RedDelete, Time, TotalParkingIcon } from '../../../../assets/svgs/Icon';
 import Button from '../../../../components/shared/small/Button';
 import { useGetAllBookingsQuery } from '../../../../redux/apis/bookingApis';
-import { dateFormate, timeFormate } from '../../../../utils/features';
+import { dateFormate } from '../../../../utils/features';
+import Loader from '../../../../components/shared/small/Loader';
 
 // Carousel settings for image slider
 const carouselSettings = {
@@ -32,7 +33,9 @@ const BookingList = ({ listData }) => {
   const offset = currentPage * itemsPerPage;
   const currentBuildings = data?.data?.slice(offset, offset + itemsPerPage);
 
-  return (
+  return isLoading ? (
+    <Loader />
+  ) : (
     <div>
       {currentBuildings?.map((booking, index) => (
         <SingleBuilding key={index} booking={booking} />
