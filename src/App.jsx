@@ -148,7 +148,7 @@ function App() {
                 <Route index element={<UserDashboard />} />
                 <Route path="building-info" element={<UserBuildingInfo />} />
                 <Route path="booking-summary" element={<BookingSummary />} />
-                <Route path="view-slip" element={<UserViewSlip />} />
+                <Route path="view-slip/:bookingId" element={<UserViewSlip />} />
                 <Route path="booking/:slotId" element={<Booking />} />
                 <Route path="confirm-booking" element={<ConfirmBooking />} />
                 <Route path="payment-success" element={<PaymentSuccess />} />
