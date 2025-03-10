@@ -6,10 +6,9 @@ import ReactPaginate from 'react-paginate';
 import { useNavigate } from 'react-router-dom';
 import Slider from 'react-slick';
 import { Calender, HouseIcon, RedDelete, Time, TotalParkingIcon } from '../../../../assets/svgs/Icon';
-import Button from '../../../../components/shared/small/Button';
+import Loader from '../../../../components/shared/small/Loader';
 import { useGetAllBookingsQuery } from '../../../../redux/apis/bookingApis';
 import { dateFormate } from '../../../../utils/features';
-import Loader from '../../../../components/shared/small/Loader';
 
 // Carousel settings for image slider
 const carouselSettings = {
@@ -154,10 +153,10 @@ const SingleBuilding = ({ booking }) => {
         </div>
       </div>
       <div className="flex flex-col mx-auto md:mx-0 items-center justify-center md:justify-between md:gap-0 gap-4">
-        <Button text="Book Again" width="w-[100px]" />
+        {/* <Button text="Book Again" width="w-[100px]" /> */}
         <button
           className="text-primary text-sm md:text-base font-bold underline h-fit"
-          onClick={() => navigate(`/user/view-slip`)}
+          onClick={() => navigate(`/user/view-slip/${booking?._id}`)}
         >
           View Slip
         </button>
