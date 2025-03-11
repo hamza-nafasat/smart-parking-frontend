@@ -39,6 +39,14 @@ const bookingApis = createApi({
       }),
       invalidatesTags: [{ type: 'Booking', id: 'LIST' }],
     }),
+    // cancel signal booking 
+    cancelSingleBooking: builder.mutation({
+      query: (id) => ({
+        url: `/single/cancel/${id}`,
+        method: 'PUT',
+      }),
+      invalidatesTags: [{ type: 'Booking', id: 'LIST' }],
+    }),
     // delete single booking
     deleteSingleBooking: builder.mutation({
       query: (id) => ({
@@ -55,6 +63,7 @@ export const {
   useGetAllBookingsQuery,
   useGetSingleBookingQuery,
   useUpdateSingleBookingMutation,
+  useCancelSingleBookingMutation,
   useDeleteSingleBookingMutation,
 } = bookingApis;
 export default bookingApis;

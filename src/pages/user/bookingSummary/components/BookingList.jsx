@@ -7,8 +7,10 @@ import { useNavigate } from 'react-router-dom';
 import Slider from 'react-slick';
 import { Calender, HouseIcon, RedDelete, Time, TotalParkingIcon } from '../../../../assets/svgs/Icon';
 import Loader from '../../../../components/shared/small/Loader';
-import { useGetAllBookingsQuery } from '../../../../redux/apis/bookingApis';
+import { useCancelSingleBookingMutation, useGetAllBookingsQuery } from '../../../../redux/apis/bookingApis';
 import { dateFormate } from '../../../../utils/features';
+import { confirmAlert } from 'react-confirm-alert';
+import toast from 'react-hot-toast';
 
 // Carousel settings for image slider
 const carouselSettings = {
@@ -24,7 +26,7 @@ const carouselSettings = {
 
 // Main component
 const BookingList = ({ listData }) => {
-  const { data, isLoading } = useGetAllBookingsQuery();
+  const { data, isLoading, refetch } = useGetAllBookingsQuery();
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 4;
 
@@ -37,7 +39,7 @@ const BookingList = ({ listData }) => {
   ) : (
     <div>
       {currentBuildings?.map((booking, index) => (
-        <SingleBuilding key={index} booking={booking} />
+        <SingleBuilding key={index} refetch={refetch} booking={booking} />
       ))}
 
       <ReactPaginate
@@ -73,7 +75,37 @@ const BookingList = ({ listData }) => {
 export default BookingList;
 
 // Single building component
-const SingleBuilding = ({ booking }) => {
+const SingleBuilding = ({ booking, refetch }) => {
+  const [cancelBooking, { isLoading }] = useCancelSingleBookingMutation();
+
+  const cancelBookingHandler = (id) => {
+    confirmAlert({
+      title: 'Cancel Booking',
+      message: 'Are you sure, you want to cancel this booking?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: async () => {
+            if (!id) return toast.error('Please Provide Booking Id');
+            try {
+              const res = await cancelBooking(id).unwrap();
+              if (res?.success) {
+                toast.success(res?.message || 'Floor Deleted Successfully');
+                await refetch();
+              }
+            } catch (error) {
+              console.log('Error while cancelling booking', error);
+              toast.error(error?.data?.message || 'Something went wrong');
+            }
+          },
+        },
+        {
+          label: 'No',
+        },
+      ],
+    });
+  };
+
   const navigate = useNavigate();
   return (
     <div className="flex flex-wrap justify-between gap-4 md:gap-6 building-slider border-b border-[#00000037] py-4">
@@ -109,7 +141,12 @@ const SingleBuilding = ({ booking }) => {
                 {booking?.status}
               </h3>
               {booking.status == 'active' && (
-                <div className="cursor-pointer p-1 flex justify-center items-center bg-[#FF474F14] rounded-full border-[1px] border-[#FF474F]">
+                <div
+                  onClick={() => cancelBookingHandler(booking?._id)}
+                  className={`cursor-pointer p-1 flex justify-center items-center bg-[#FF474F14] rounded-full border-[1px] border-[#FF474F] ${
+                    isLoading ? 'cursor-not-allowed pointer-events-none' : ''
+                  }`}
+                >
                   <RedDelete />
                 </div>
               )}
