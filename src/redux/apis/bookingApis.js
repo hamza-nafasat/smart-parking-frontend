@@ -39,7 +39,7 @@ const bookingApis = createApi({
       }),
       invalidatesTags: [{ type: 'Booking', id: 'LIST' }],
     }),
-    // cancel signal booking 
+    // cancel signal booking
     cancelSingleBooking: builder.mutation({
       query: (id) => ({
         url: `/single/cancel/${id}`,

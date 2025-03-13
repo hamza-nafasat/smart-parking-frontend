@@ -54,6 +54,13 @@ const buildingApis = createApi({
       }),
       invalidatesTags: [{ type: 'Building', id: 'LIST' }],
     }),
+    // get most visited buildings
+    getMostVisitedBuildings: builder.query({
+      query: () => ({
+        url: '/most-visited-buildings',
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -63,7 +70,7 @@ export const {
   useGetAllBuildingsForUserQuery,
   useGetSingleBuildingQuery,
   useUpdateSingleBuildingMutation,
-
   useDeleteSingleBuildingMutation,
+  useGetMostVisitedBuildingsQuery,
 } = buildingApis;
 export default buildingApis;
