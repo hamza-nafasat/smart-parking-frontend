@@ -50,7 +50,7 @@ const BookingSlots = () => {
             className={`transition-all duration-300 ${bookingOpen ? 'rotate-180' : 'rotate-0'}`}
             fontSize={16}
           />
-          Floor B-1
+          Floors
         </div>
         <div
           className={`fixed right-0 transition-transform duration-300 ${
@@ -112,12 +112,14 @@ const SingleBasement = ({ floor, setSelectedFloor, refetch }) => {
   };
   return (
     <div className="py-2 border-b-[1px] cursor-pointer" onClick={onClick}>
-      <AvailabilityBar level="low" />
+      <AvailabilityBar level={floor?.availability} />
       <div className="flex items-center justify-between">
         <h1 className="text-base">{floor?.id}</h1>
         <div className="flex flex-col items-center">
           <p className="text-[8px] text-gray-500">{floor?.name}</p>
-          <p className="font-bold">102 Sp</p>
+          <p className="font-bold">
+            {floor?.availableSlots}/{floor?.totalSlots} free
+          </p>
         </div>
       </div>
     </div>
