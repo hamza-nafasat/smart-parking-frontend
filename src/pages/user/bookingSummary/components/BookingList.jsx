@@ -140,7 +140,7 @@ const SingleBuilding = ({ booking, refetch }) => {
                 <GoDotFill />
                 {booking?.status}
               </h3>
-              {booking.status == 'active' && (
+              {booking?.status == 'active' && new Date(booking?.startTime).getTime() > new Date().getTime() && (
                 <div
                   onClick={() => cancelBookingHandler(booking?._id)}
                   className={`cursor-pointer p-1 flex justify-center items-center bg-[#FF474F14] rounded-full border-[1px] border-[#FF474F] ${
