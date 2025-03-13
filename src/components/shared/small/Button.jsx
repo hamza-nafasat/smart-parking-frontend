@@ -1,11 +1,11 @@
 /* eslint-disable react/prop-types */
 const Button = ({
-  text,
-  bg = "bg-primary hover:bg-transparent hover:text-primary",
-  height = "h-[41px]",
-  width = "w-full sm:w-auto",
-  color = "text-white",
-  className = "",
+  text = 'button',
+  bg = 'bg-primary hover:bg-transparent hover:text-primary',
+  height = 'h-[41px]',
+  width = 'w-full sm:w-auto',
+  color = 'text-white',
+  className = '',
   ...rest
 }) => {
   return (
