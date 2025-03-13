@@ -9,7 +9,6 @@ import CustomTextfield from './components/CustomTextfield';
 import Map from './components/Map';
 import ParkingLotCard from './components/ParkingLotCard';
 import VisitedParkingCard from './components/VisitedParkingCard';
-import { visitedParking } from './utils/dashboardData';
 
 const UserDashboard = () => {
   const [bookingOpen, setBookingOpen] = useState(false);
@@ -18,6 +17,7 @@ const UserDashboard = () => {
   const [city, setCity] = useState('');
   const [gettedBuildingCity, setGettedBuildingCity] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [search, setSearch] = useState('');
 
   const handleSearch = async () => {
     try {
@@ -44,6 +44,10 @@ const UserDashboard = () => {
     }
   };
 
+  const handleEnterClick = (e) => {
+    if (e.key === 'Enter') handleSearch();
+  };
+
   return (
     <div>
       <div className="grid grid-cols-1  gap-4 justify-between">
@@ -54,12 +58,8 @@ const UserDashboard = () => {
               placeholder="Washington, DC"
               intext="You are in:"
               value={city}
+              onKeyUp={handleEnterClick}
               onChange={(e) => setCity(e.target.value)}
-              icon={<ImLocation2 fontSize={20} color="#7E7E7E" />}
-            />
-            <CustomTextfield
-              placeholder="Independence Ave , NW"
-              intext="Street:"
               icon={<ImLocation2 fontSize={20} color="#7E7E7E" />}
             />
           </div>
@@ -117,21 +117,16 @@ const UserDashboard = () => {
                   <CiSearch fontSize={20} color="#7E7E7E" />
                   <input
                     type="text"
+                    onChange={(e) => setSearch(e.target.value)}
+                    value={search}
                     placeholder="Search"
                     className="w-full text-xs md:text-base bg-transparent border-none focus:outline-none text-[#7E7E7E]"
                   />
                 </div>
-                <div className="w-full flex items-center gap-2 bg-[#F9FBFF] border border-[#e7e7e7] rounded-[10px] py-2 px-4">
-                  <p className="text-xs md:text-base text-[#7E7E7E] text-nowrap">Short by:</p>
-                  <select className="w-full bg-transparent border-none focus:outline-none text-xs md:text-base text-[#3D3C42]">
-                    <option value="">Newest</option>
-                    <option value="">Older</option>
-                  </select>
-                </div>
               </div>
             </div>
             <div>
-              <VisitedParkingCard listData={visitedParking} />
+              <VisitedParkingCard search={search} />
             </div>
           </div>
         </div>
