@@ -24,7 +24,6 @@ const Booking = () => {
     startTime: '',
     endTime: '',
   });
-  console.log('single', slot);
 
   const createBookingHandler = async () => {
     if (
