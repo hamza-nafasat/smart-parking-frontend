@@ -1,14 +1,18 @@
-import React from "react";
-import Button from "../../../../components/shared/small/Button";
-import { useNavigate } from "react-router-dom";
-import Transaction from "../../../../components/shared/large/Transaction";
+/* eslint-disable react/prop-types */
+import { useNavigate } from 'react-router-dom';
+import Transaction from '../../../../components/shared/large/Transaction';
+import Button from '../../../../components/shared/small/Button';
+import { useGetAllPaymentsWithMyAccountQuery } from '../../../../redux/apis/paymentApis';
 
 const TransactionsList = ({ listData, height }) => {
+  const { data: payments } = useGetAllPaymentsWithMyAccountQuery();
+
+  console.log('data of payments', payments);
   const navigate = useNavigate();
   return (
     <div
       className={`bg-white border border-[#2B2B2B33] rounded-[18px] p-4 shadow-md ${
-        height ? height : "h-[400px]"
+        height ? height : 'h-[400px]'
       } overflow-y-scroll custom-scroll`}
     >
       <div className="flex items-center justify-between gap-4 pb-4">
@@ -28,11 +32,7 @@ const TransactionsList = ({ listData, height }) => {
         ))}
       </div>
       <div className="mt-4">
-        <Button
-          text="See more"
-          width="w-full"
-          onClick={() => navigate("/admin/wallet-transactions-detail")}
-        />
+        <Button text="See more" width="w-full" onClick={() => navigate('/admin/wallet-transactions-detail')} />
       </div>
     </div>
   );

@@ -15,15 +15,14 @@ const paymentApis = createApi({
         body: data,
       }),
     }),
-    createAccountLink: builder.mutation({
-      query: (data) => ({
-        url: '/create-account-link',
-        method: 'POST',
-        body: data,
+    getAllPaymentsWithMyAccount: builder.query({
+      query: () => ({
+        url: '/my-payments',
+        method: 'GET',
       }),
     }),
   }),
 });
 
-export const { useCreatePaymentIntentMutation, useCreateAccountLinkMutation } = paymentApis;
+export const { useCreatePaymentIntentMutation, useGetAllPaymentsWithMyAccountQuery } = paymentApis;
 export default paymentApis;
