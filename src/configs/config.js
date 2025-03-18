@@ -3,6 +3,7 @@ const config = Object.freeze({
   DOMAIN: import.meta.env.VITE_DOMAIN,
   ENVIRONMENT: import.meta.env.VITE_ENV,
   STRIPE_PUBLISH_KEY: import.meta.env.VITE_STRIPE_PUBLISH_KEY,
+  STRIPE_CONNECT_CLIENT_ID: import.meta.env.VITE_STRIPE_CONNECT_CLIENT_ID,
 });
 
 const getEnv = (key) => {

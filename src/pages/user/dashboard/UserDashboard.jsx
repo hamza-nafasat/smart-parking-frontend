@@ -9,11 +9,12 @@ import CustomTextfield from './components/CustomTextfield';
 import Map from './components/Map';
 import ParkingLotCard from './components/ParkingLotCard';
 import VisitedParkingCard from './components/VisitedParkingCard';
+import Loader from '../../../components/shared/small/Loader';
 
 const UserDashboard = () => {
   const [bookingOpen, setBookingOpen] = useState(false);
   const [location, setLocation] = useState({ lat: 0, lng: 0 });
-  const { data, refetch } = useGetAllBuildingsForUserQuery(location);
+  const { data, refetch, isLoading: isLoadingBuildings } = useGetAllBuildingsForUserQuery(location);
   const [city, setCity] = useState('');
   const [gettedBuildingCity, setGettedBuildingCity] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -48,7 +49,9 @@ const UserDashboard = () => {
     if (e.key === 'Enter') handleSearch();
   };
 
-  return (
+  return isLoadingBuildings ? (
+    <Loader />
+  ) : (
     <div>
       <div className="grid grid-cols-1  gap-4 justify-between">
         <div className="">

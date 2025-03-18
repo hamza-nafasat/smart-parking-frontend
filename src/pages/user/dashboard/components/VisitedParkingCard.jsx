@@ -2,14 +2,13 @@
 import { useEffect, useState } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa6';
 import ReactPaginate from 'react-paginate';
-import Loader from '../../../../components/shared/small/Loader';
-import { useGetMostVisitedBuildingsQuery } from '../../../../redux/apis/buildingApis';
 import { Link } from 'react-router-dom';
 import Button from '../../../../components/shared/small/Button';
+import { useGetMostVisitedBuildingsQuery } from '../../../../redux/apis/buildingApis';
 
 const VisitedParkingCard = ({ search }) => {
   const [buildings, setBuildings] = useState([]);
-  const { data, isLoading } = useGetMostVisitedBuildingsQuery();
+  const { data } = useGetMostVisitedBuildingsQuery();
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 4;
   const offset = currentPage * itemsPerPage;
@@ -26,9 +25,7 @@ const VisitedParkingCard = ({ search }) => {
     }
   }, [data?.data, search]);
 
-  return isLoading ? (
-    <Loader />
-  ) : (
+  return (
     <div>
       {parkingList?.map((building, index) => (
         <SingleVisitingWidget key={index} building={building} />

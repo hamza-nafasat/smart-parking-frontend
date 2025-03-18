@@ -137,7 +137,6 @@ function App() {
                 <Route path="sensors" element={<Sensors />} />
                 <Route path="wallet" element={<ManagerWallet />} />
                 <Route path="profile" element={<ManagerProfile />} />
-                <Route path="profile" element={<ManagerProfile />} />
                 <Route path="add-parking-space" element={<AddParkingSpace />} />
                 <Route path="add-parking" element={<AddParking />} />
               </Route>

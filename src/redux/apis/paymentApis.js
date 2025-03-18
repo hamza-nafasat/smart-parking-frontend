@@ -15,8 +15,15 @@ const paymentApis = createApi({
         body: data,
       }),
     }),
+    createAccountLink: builder.mutation({
+      query: (data) => ({
+        url: '/create-account-link',
+        method: 'POST',
+        body: data,
+      }),
+    }),
   }),
 });
 
-export const { useCreatePaymentIntentMutation } = paymentApis;
+export const { useCreatePaymentIntentMutation, useCreateAccountLinkMutation } = paymentApis;
 export default paymentApis;
