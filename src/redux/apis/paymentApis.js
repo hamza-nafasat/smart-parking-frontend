@@ -21,8 +21,16 @@ const paymentApis = createApi({
         method: 'GET',
       }),
     }),
+    withDrawAmount: builder.mutation({
+      query: (data) => ({
+        url: '/withdrawal',
+        method: 'POST',
+        body: data,
+      }),
+    }),
   }),
 });
 
-export const { useCreatePaymentIntentMutation, useGetAllPaymentsWithMyAccountQuery } = paymentApis;
+export const { useCreatePaymentIntentMutation, useGetAllPaymentsWithMyAccountQuery, useWithDrawAmountMutation } =
+  paymentApis;
 export default paymentApis;
