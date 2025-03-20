@@ -1,18 +1,19 @@
 /* eslint-disable react/prop-types */
 import { useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { FaChevronDown } from 'react-icons/fa';
 import { HiOutlineDownload } from 'react-icons/hi';
 import { useSelector } from 'react-redux';
+import getEnv from '../../../configs/config';
+import { useGetAllPaymentsWithMyAccountQuery, useWithDrawAmountMutation } from '../../../redux/apis/paymentApis';
 import Button from '../small/Button';
-import Dropdown from '../small/Dropdown';
 import Input from '../small/Input';
 import Modal from '../small/Modal';
-import getEnv from '../../../configs/config';
 
 const Balance = () => {
   const { user } = useSelector((state) => state.auth);
   const [modal, setModal] = useState(false);
-
+  const { data: payments } = useGetAllPaymentsWithMyAccountQuery();
   const redirectUri = encodeURIComponent(`${getEnv('SERVER_URL')}/api/payment/stripe/oauth/callback`);
   const stripeConnectUrl = `https://connect.stripe.com/oauth/authorize?response_type=code&client_id=${getEnv(
     'STRIPE_CONNECT_CLIENT_ID'
@@ -35,7 +36,9 @@ const Balance = () => {
         <FaChevronDown fontSize={22} color="#18bc9c" />
       </div>
       <h6 className="my-4 md:my-6 text-[#414141] text-base md:text-lg font-bold">Total Balance</h6>
-      {/* <h2 className="text-[#414141] text-2xl md:text-[42px] font-bold">$ {balance}</h2> */}
+      <h2 className="text-[#414141] text-2xl md:text-[42px] font-bold">
+        {payments?.data?.balance?.pending?.[0]?.amount / 100} $
+      </h2>
 
       {user?.stripeAccountId ? (
         <button
@@ -66,27 +69,31 @@ const Balance = () => {
 
 export default Balance;
 
-const Withdraw = ({ amount, onClose }) => {
+const Withdraw = ({ onClose }) => {
+  const [amount, setAmount] = useState(0);
+  const [withDrawAmount] = useWithDrawAmountMutation();
+
+  const withDrawAmountHandler = async (amount) => {
+    try {
+      if (!amount) return toast.error('Amount is required');
+      const res = await withDrawAmount({ amount }).unwrap();
+      console.log('res', res);
+    } catch (error) {
+      toast.error('Insufficient balance');
+      console.log(error);
+    }
+  };
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div>
-        <Dropdown
-          defaultText="Country Name"
-          options={[
-            { option: 'Primary', value: 'primary' },
-            { option: 'Secondary', value: 'secondary' },
-          ]}
-        />
-      </div>
-      <div>
-        <Input type="text" placeholder="Enter account" />
+        <Input type="number" placeholder="Enter account" value={amount} onChange={(e) => setAmount(e.target.value)} />
       </div>
       <div className="md:col-span-2 flex items-center justify-between">
         <h5 className="text-sm md:text-base font-semibold text-[#414141]">Withdraw Amount</h5>
         <h5 className="text-sm md:text-base font-semibold text-[#414141]">10 USD</h5>
       </div>
       <div className="md:col-span-2 flex flex-col items-center gap-4 justify-center mt-4">
-        <Button text="WITHDRAWAL" width="w-[145px]" />
+        <Button onClick={() => withDrawAmountHandler(amount)} text="WITHDRAWAL" width="w-[145px]" />
         <button onClick={onClose} className="text-primary hover:text-[#414141] text-sm font-semibold">
           Dismiss
         </button>
