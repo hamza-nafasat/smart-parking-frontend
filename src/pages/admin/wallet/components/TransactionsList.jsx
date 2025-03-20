@@ -27,7 +27,10 @@ const TransactionsList = ({ listData, height }) => {
         </div>
       </div>
       <div className="mt-3">
-        {listData.map((transaction, i) => (
+        {/* {listData.map((transaction, i) => (
+          <Transaction key={i} transaction={transaction} />
+        ))} */}
+        {payments?.data?.filteredIntents?.map((transaction, i) => (
           <Transaction key={i} transaction={transaction} />
         ))}
       </div>
