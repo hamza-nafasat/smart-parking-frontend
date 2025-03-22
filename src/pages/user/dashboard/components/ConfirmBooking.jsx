@@ -13,7 +13,7 @@ import { useState } from 'react';
 
 const ConfirmBooking = () => {
   const dispatch = useDispatch();
-  const [createBooking, { isLoading }] = useCreateBookingMutation();
+  const [createBooking] = useCreateBookingMutation();
   const [deleteBooking] = useDeleteSingleBookingMutation();
   const { booking } = useSelector((state) => state?.booking);
 
@@ -22,9 +22,11 @@ const ConfirmBooking = () => {
   const [createPaymentIntent] = useCreatePaymentIntentMutation();
 
   const [cardComplete, setCardComplete] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const createBookingHandler = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     if (!cardComplete) return toast.error('Please Enter Card Details');
     const { slotId, contactNumber, plateNumber, email, endTime, firstName, lastName, startTime } = booking;
     if (!contactNumber || !plateNumber || !email || !endTime || !firstName || !lastName || !startTime || !slotId)
@@ -62,7 +64,9 @@ const ConfirmBooking = () => {
           console.log('error via create payment intent', error);
         }
       }
+      setIsLoading(false);
     } catch (error) {
+      setIsLoading(false);
       toast.error(error?.data?.message || 'Something went wrong');
       console.log('Error in create booking', error);
     }

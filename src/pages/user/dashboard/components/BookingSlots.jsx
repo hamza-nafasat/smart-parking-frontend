@@ -10,6 +10,7 @@ import { useGetAllSlotsQuery } from '../../../../redux/apis/slotApis';
 import { canvasData } from '../utils/dashboardData';
 import { AvailabilityBar } from './ParkingLotCard';
 import ShowSingleFloor from './ShowSingleFloor';
+import Loader from '../../../../components/shared/small/Loader';
 
 const BookingSlots = () => {
   const buildingId = useParams().buildingId;
@@ -19,7 +20,8 @@ const BookingSlots = () => {
   const [polygons, setPolygons] = useState([]);
   const { data: building } = useGetSingleBuildingQuery(buildingId);
   const { data } = useGetAllFloorsQuery(buildingId);
-  const { data: slots, refetch } = useGetAllSlotsQuery(selectedFloor?._id);
+  const { data: slots, refetch,isLoading } = useGetAllSlotsQuery(selectedFloor?._id);
+console.log("polygons",polygons)
 
   useEffect(() => {
     if (data?.data) {
@@ -35,7 +37,7 @@ const BookingSlots = () => {
     }
   }, [slots?.data]);
   const navigate = useNavigate();
-  return (
+  return (isLoading ? <Loader /> :
     <div className="flex flex-col items-center gap-4 relative">
       <div onClick={() => navigate(-1)} className="cursor-pointer self-start">
         <BackIcon />
