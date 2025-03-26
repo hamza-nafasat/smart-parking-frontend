@@ -1,25 +1,23 @@
-import CustomAreaChart from "../../../components/charts/CustomAreaChart";
-import Balance from "../../../components/shared/large/Balance";
-import EarningCard from "../../../components/shared/large/EarningCard";
-import TransactionsList from "../../admin/wallet/components/TransactionsList";
-import AccountDetails from "./components/AccountDetails";
-import { transactionsData } from "./utils/WalletData";
+import CustomAreaChart from '../../../components/charts/CustomAreaChart';
+import Balance from '../../../components/shared/large/Balance';
+import EarningCard from '../../../components/shared/large/EarningCard';
+import TransactionsList from '../../admin/wallet/components/TransactionsList';
 
 const earningsData = [
-  { name: "02 july", uv: 4566.0 },
-  { name: "03 july", uv: 3566.0 },
-  { name: "05 july", uv: 2566.0 },
-  { name: "11 july", uv: 3455.0 },
-  { name: "12 july", uv: 3455.0 },
-  { name: "15 july", uv: 4455.0 },
-  { name: "16 july", uv: 2233.0 },
-  { name: "17 july", uv: 1122.0 },
-  { name: "19 july", uv: 2222.0 },
-  { name: "21 july", uv: 3333.0 },
-  { name: "24 july", uv: 1111.0 },
-  { name: "24 july", uv: 3333.0 },
-  { name: "25 july", uv: 1323.0 },
-  { name: "26 july", uv: 6666.0 },
+  { name: '02 july', uv: 4566.0 },
+  { name: '03 july', uv: 3566.0 },
+  { name: '05 july', uv: 2566.0 },
+  { name: '11 july', uv: 3455.0 },
+  { name: '12 july', uv: 3455.0 },
+  { name: '15 july', uv: 4455.0 },
+  { name: '16 july', uv: 2233.0 },
+  { name: '17 july', uv: 1122.0 },
+  { name: '19 july', uv: 2222.0 },
+  { name: '21 july', uv: 3333.0 },
+  { name: '24 july', uv: 1111.0 },
+  { name: '24 july', uv: 3333.0 },
+  { name: '25 july', uv: 1323.0 },
+  { name: '26 july', uv: 6666.0 },
 ];
 const Wallet = () => {
   return (
@@ -43,16 +41,11 @@ const Wallet = () => {
           </div>
           <CustomAreaChart data={earningsData} strokeWidth={4} height={480} />
         </div>
-        <div className=" w-full bg-white rounded-lg border-[1px] shadow-lg mt-4 p-4 ">
-          <div className="">
-            <AccountDetails />
-          </div>
-        </div>
       </div>
       <div className="col-span-12 lg:col-span-4">
         <Balance balance={100000} />
         <div className="mt-4">
-          <TransactionsList listData={transactionsData} height="h-[700px]" />
+          <TransactionsList height="h-[470px]" />
         </div>
       </div>
     </div>
@@ -60,3 +53,11 @@ const Wallet = () => {
 };
 
 export default Wallet;
+
+{
+  /* <div className=" w-full bg-white rounded-lg border-[1px] shadow-lg mt-4 p-4 ">
+          <div className="">
+            <AccountDetails />
+          </div>
+        </div> */
+}
