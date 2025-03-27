@@ -26,8 +26,8 @@ const ConfirmBooking = () => {
 
   const createBookingHandler = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
     if (!cardComplete) return toast.error('Please Enter Card Details');
+    setIsLoading(true);
     const { slotId, contactNumber, plateNumber, email, endTime, firstName, lastName, startTime } = booking;
     if (!contactNumber || !plateNumber || !email || !endTime || !firstName || !lastName || !startTime || !slotId)
       return toast.error('Please Select All Fields');
@@ -64,11 +64,11 @@ const ConfirmBooking = () => {
           console.log('error via create payment intent', error);
         }
       }
-      setIsLoading(false);
     } catch (error) {
-      setIsLoading(false);
       toast.error(error?.data?.message || 'Something went wrong');
       console.log('Error in create booking', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 

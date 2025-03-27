@@ -1,6 +1,7 @@
 import CustomAreaChart from '../../../components/charts/CustomAreaChart';
 import Balance from '../../../components/shared/large/Balance';
 import EarningCard from '../../../components/shared/large/EarningCard';
+import { useGetAllPaymentsWithMyAccountQuery } from '../../../redux/apis/paymentApis';
 import TransactionsList from '../../admin/wallet/components/TransactionsList';
 
 const earningsData = [
@@ -20,10 +21,11 @@ const earningsData = [
   { name: '26 july', uv: 6666.0 },
 ];
 const Wallet = () => {
+  const { data } = useGetAllPaymentsWithMyAccountQuery();
   return (
     <div className="grid grid-cols-12 gap-4">
       <div className="col-span-12 lg:col-span-8 ">
-        <EarningCard earning={2323} booking={54} />
+        <EarningCard earning={data?.data?.todayBalance / 100 || 0} booking={data?.data?.todayBookings || 0} />
         <div className="bg-white rounded-lg border-[1px] shadow-lg mt-4 flex-1">
           <div className="flex items-center justify-between p-4">
             <h3 className="font-bold text-base">Earnings Overview</h3>
@@ -43,7 +45,7 @@ const Wallet = () => {
         </div>
       </div>
       <div className="col-span-12 lg:col-span-4">
-        <Balance balance={100000} />
+        <Balance payments={data} balance={100000} />
         <div className="mt-4">
           <TransactionsList height="h-[470px]" />
         </div>

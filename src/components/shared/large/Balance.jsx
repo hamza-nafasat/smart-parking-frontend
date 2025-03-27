@@ -1,12 +1,11 @@
+/* eslint-disable react/prop-types */
 import { FaChevronDown } from 'react-icons/fa';
 import { HiOutlineDownload } from 'react-icons/hi';
 import { useSelector } from 'react-redux';
 import getEnv from '../../../configs/config';
-import { useGetAllPaymentsWithMyAccountQuery } from '../../../redux/apis/paymentApis';
 
-const Balance = () => {
+const Balance = ({ payments }) => {
   const { user } = useSelector((state) => state.auth);
-  const { data: payments } = useGetAllPaymentsWithMyAccountQuery();
   const redirectUri = encodeURIComponent(`${getEnv('SERVER_URL')}/api/payment/stripe/oauth/callback`);
   const stripeConnectUrl = `https://connect.stripe.com/oauth/authorize?response_type=code&client_id=${getEnv(
     'STRIPE_CONNECT_CLIENT_ID'
@@ -30,7 +29,7 @@ const Balance = () => {
       </div>
       <h6 className="my-4 md:my-6 text-[#414141] text-base md:text-lg font-bold">Total Balance</h6>
       <h2 className="text-[#414141] text-2xl md:text-[42px] font-bold">
-        {payments?.data?.balance?.available?.[0]?.amount / 100} $
+        {payments?.data?.balance?.available?.[0]?.amount / 100 || 0} $
       </h2>
 
       {!user?.stripeAccountId && (
