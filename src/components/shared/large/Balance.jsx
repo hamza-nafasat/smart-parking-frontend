@@ -27,10 +27,20 @@ const Balance = ({ payments }) => {
         </div>
         <FaChevronDown fontSize={22} color="#18bc9c" />
       </div>
-      <h6 className="my-4 md:my-6 text-[#414141] text-base md:text-lg font-bold">Total Balance</h6>
-      <h2 className="text-[#414141] text-2xl md:text-[42px] font-bold">
-        {payments?.data?.balance?.available?.[0]?.amount / 100 || 0} $
-      </h2>
+      <div className="flex items-center gap-6 justify-between">
+        <div>
+          <h6 className="my-4 md:my-6 text-[#414141] text-base md:text-lg font-bold">Pending Balance</h6>
+          <h3 className="text-[#414141] text-2xl md:text-[35px] font-bold text-center">
+            {payments?.data?.balance?.pending?.[0]?.amount / 100 || 0} $
+          </h3>
+        </div>
+        <div>
+          <h6 className="my-4 md:my-6 text-[#414141] text-base md:text-lg font-bold">Available Balance</h6>
+          <h3 className="text-[#414141] text-2xl md:text-[35px] font-bold ">
+            {payments?.data?.balance?.available?.[0]?.amount / 100 || 0} $
+          </h3>
+        </div>
+      </div>
 
       {!user?.stripeAccountId && (
         <a
