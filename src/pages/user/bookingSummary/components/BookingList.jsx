@@ -1,5 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useState } from 'react';
+import { confirmAlert } from 'react-confirm-alert';
+import toast from 'react-hot-toast';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa6';
 import { GoDotFill } from 'react-icons/go';
 import ReactPaginate from 'react-paginate';
@@ -7,10 +9,8 @@ import { useNavigate } from 'react-router-dom';
 import Slider from 'react-slick';
 import { Calender, HouseIcon, RedDelete, Time, TotalParkingIcon } from '../../../../assets/svgs/Icon';
 import Loader from '../../../../components/shared/small/Loader';
-import { useCancelSingleBookingMutation, useGetAllBookingsQuery } from '../../../../redux/apis/bookingApis';
+import { useCancelSingleBookingMutation, useGetMyAllBookingsQuery } from '../../../../redux/apis/bookingApis';
 import { dateFormate } from '../../../../utils/features';
-import { confirmAlert } from 'react-confirm-alert';
-import toast from 'react-hot-toast';
 
 // Carousel settings for image slider
 const carouselSettings = {
@@ -26,7 +26,7 @@ const carouselSettings = {
 
 // Main component
 const BookingList = ({ listData }) => {
-  const { data, isLoading, refetch } = useGetAllBookingsQuery();
+  const { data, isLoading, refetch } = useGetMyAllBookingsQuery();
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 4;
 

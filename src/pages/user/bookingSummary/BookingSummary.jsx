@@ -1,7 +1,6 @@
-import React from "react";
-import BookingList from "./components/BookingList";
-import { buildingSummaryListData } from "./utils/booking";
-import { CiSearch } from "react-icons/ci";
+import { CiSearch } from 'react-icons/ci';
+import BookingList from './components/BookingList';
+import { buildingSummaryListData } from './utils/booking';
 
 const BookingSummary = () => {
   return (
@@ -18,9 +17,7 @@ const BookingSummary = () => {
             />
           </div>
           <div className="flex items-center gap-2 bg-[#F9FBFF] border border-[#e7e7e7] rounded-[10px] py-2 px-4">
-            <p className="text-xs md:text-base text-[#7E7E7E] text-nowrap">
-              Short by:
-            </p>
+            <p className="text-xs md:text-base text-[#7E7E7E] text-nowrap">Short by:</p>
             <select className="w-full bg-transparent border-none focus:outline-none text-xs md:text-base text-[#3D3C42]">
               <option value="">Newest</option>
               <option value="">Older</option>

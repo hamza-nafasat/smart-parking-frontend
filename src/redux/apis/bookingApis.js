@@ -23,6 +23,14 @@ const bookingApis = createApi({
       }),
       providesTags: [{ type: 'Booking', id: 'LIST' }],
     }),
+    // get my all bookings
+    getMyAllBookings: builder.query({
+      query: () => ({
+        url: '/my-all',
+        method: 'GET',
+      }),
+      providesTags: [{ type: 'Booking', id: 'LIST' }],
+    }),
     // get single booking
     getSingleBooking: builder.query({
       query: (id) => ({
@@ -60,6 +68,7 @@ const bookingApis = createApi({
 
 export const {
   useCreateBookingMutation,
+  useGetMyAllBookingsQuery,
   useGetAllBookingsQuery,
   useGetSingleBookingQuery,
   useUpdateSingleBookingMutation,
