@@ -63,6 +63,13 @@ const bookingApis = createApi({
       }),
       invalidatesTags: [{ type: 'Booking', id: 'LIST' }],
     }),
+    getCurrentBookings: builder.query({
+      query: () => ({
+        url: '/current-bookings',
+        method: 'GET',
+      }),
+      providesTags: [{ type: 'Booking', id: 'LIST' }],
+    }),
   }),
 });
 
@@ -74,5 +81,6 @@ export const {
   useUpdateSingleBookingMutation,
   useCancelSingleBookingMutation,
   useDeleteSingleBookingMutation,
+  useGetCurrentBookingsQuery,
 } = bookingApis;
 export default bookingApis;

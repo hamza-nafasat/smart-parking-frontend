@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { CiSearch } from 'react-icons/ci';
@@ -10,15 +11,23 @@ import Map from './components/Map';
 import ParkingLotCard from './components/ParkingLotCard';
 import VisitedParkingCard from './components/VisitedParkingCard';
 import Loader from '../../../components/shared/small/Loader';
+import { useGetCurrentBookingsQuery } from '../../../redux/apis/bookingApis';
 
 const UserDashboard = () => {
   const [bookingOpen, setBookingOpen] = useState(false);
   const [location, setLocation] = useState({ lat: 0, lng: 0 });
   const { data, refetch, isLoading: isLoadingBuildings } = useGetAllBuildingsForUserQuery(location);
+  const { data: currentBookings, refetch: refetchCurrent } = useGetCurrentBookingsQuery();
+
   const [city, setCity] = useState('');
   const [gettedBuildingCity, setGettedBuildingCity] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [search, setSearch] = useState('');
+
+  const openCurrentBookingHandler = async () => {
+    if (!bookingOpen) await refetchCurrent();
+    setBookingOpen(!bookingOpen);
+  };
 
   const handleSearch = async () => {
     try {
@@ -77,7 +86,7 @@ const UserDashboard = () => {
       <div className="grid grid-cols-12 gap-4 relative">
         <div className="fixed right-0 z-[999]">
           <div
-            onClick={() => setBookingOpen(!bookingOpen)}
+            onClick={openCurrentBookingHandler}
             className="bg-primary text-white cursor-pointer py-3 px-7 rounded-t-md text-sm font-bold flex gap-2 items-center"
           >
             <HiOutlineArrowLeft
@@ -91,7 +100,7 @@ const UserDashboard = () => {
               bookingOpen ? 'translate-x-0' : 'translate-x-full'
             }`}
           >
-            <CurrentBookingList />
+            <CurrentBookingList currentBookings={currentBookings?.data} />
           </div>
         </div>
         {/* Left Column (Fixed col-span-4) */}
@@ -140,7 +149,7 @@ const UserDashboard = () => {
 
 export default UserDashboard;
 
-const CurrentBookingList = () => {
+const CurrentBookingList = ({ currentBookings }) => {
   return (
     <div className="w-[230px] p-2 bg-white rounded-b-md border-[1px] border-primary shadow-md h-[500px] overflow-auto custom-scroll">
       <div className="flex items-center gap-2 bg-[#F9FBFF] border border-[#e7e7e7] rounded-[10px] py-1 px-2">
@@ -152,42 +161,39 @@ const CurrentBookingList = () => {
         />
       </div>
       <div>
-        <SingleBookingCard />
-        <SingleBookingCard />
-
-        <SingleBookingCard />
-        <SingleBookingCard />
-        <SingleBookingCard />
-        <SingleBookingCard />
+        {currentBookings?.map((item, i) => (
+          <SingleBookingCard key={i} item={item} />
+        ))}
       </div>
     </div>
   );
 };
 
-const SingleBookingCard = () => {
+const SingleBookingCard = ({ item }) => {
+  console.log('booking item', item);
   return (
     <div className="py-2 border-b-[2px] flex flex-col items-center gap-2">
-      <img src="https://placehold.co/240x43" alt="image" className="w-[204px] h-[43px] rounded-xl object-cover" />
+      <img src={item?.building?.twoDImage?.url} alt="image" className="w-[204px] h-[120px] rounded-xl object-cover" />
       <div className="w-full flex justify-between">
         <div className="flex flex-col">
-          <p className="text-xs font-[700]">The Portals Parking</p>
-          <p className="text-xs font-[500]">Basement Floor-B12</p>
+          <p className="text-xs font-[700]">{item?.building?.name}</p>
+          <p className="text-xs font-[500]">{item?.building?.address}</p>
         </div>
         <div className="flex flex-col items-end">
           <p className="text-xs font-[700]">Date</p>
-          <p className="text-xs font-[500]">10/07/2024</p>
+          <p className="text-xs font-[500]">{new Date(item?.startTime)?.toLocaleDateString()}</p>
         </div>
       </div>
       <div className="w-full flex justify-between items-center">
-        <p className="text-base font-bold">B-12</p>
+        <p className="text-base font-bold">{item?.slot?.id}</p>
         <div className="flex items-center gap-3">
           <div className="flex flex-col">
             <p className="text-xs font-[700]">Start Time</p>
-            <p className="text-xs font-[500]">11:30 am</p>
+            <p className="text-xs font-[500]">{new Date(item?.startTime)?.toLocaleTimeString()}</p>
           </div>
           <div className="flex flex-col">
             <p className="text-xs font-[700]">End Time</p>
-            <p className="text-xs font-[500]">06:30 am</p>
+            <p className="text-xs font-[500]">{new Date(item?.endTime)?.toLocaleTimeString()}</p>
           </div>
         </div>
       </div>
