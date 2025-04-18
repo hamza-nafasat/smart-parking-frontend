@@ -20,8 +20,7 @@ const BookingSlots = () => {
   const [polygons, setPolygons] = useState([]);
   const { data: building } = useGetSingleBuildingQuery(buildingId);
   const { data } = useGetAllFloorsQuery(buildingId);
-  const { data: slots, refetch,isLoading } = useGetAllSlotsQuery(selectedFloor?._id);
-console.log("polygons",polygons)
+  const { data: slots, refetch, isLoading } = useGetAllSlotsQuery(selectedFloor?._id);
 
   useEffect(() => {
     if (data?.data) {
@@ -37,7 +36,9 @@ console.log("polygons",polygons)
     }
   }, [slots?.data]);
   const navigate = useNavigate();
-  return (isLoading ? <Loader /> :
+  return isLoading ? (
+    <Loader />
+  ) : (
     <div className="flex flex-col items-center gap-4 relative">
       <div onClick={() => navigate(-1)} className="cursor-pointer self-start">
         <BackIcon />

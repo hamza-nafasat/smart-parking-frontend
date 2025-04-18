@@ -35,7 +35,7 @@ const ParkingSummary = () => {
   const { data } = useGetAllBookingsQuery();
   return (
     <div>
-      <GlobalTable heading="Parking Booking Summary" columns={parkingSummaryColumns()} data={data.data} />
+      <GlobalTable heading="Parking Booking Summary" columns={parkingSummaryColumns()} data={data?.data} />
     </div>
   );
 };
