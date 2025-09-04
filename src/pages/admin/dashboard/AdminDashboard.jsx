@@ -148,7 +148,7 @@ const AdminDashboard = () => {
           <div className="flex justify-between items-center mb-3">
             <h5 className="text-sm md:text-base">Watchlist</h5>
             {/* <button className="text-primary flex gap-1 items-center"> */}
-            {/* Daily AVG <BiChevronDown fontSize={22} />{" "} ----*/}
+            {/* Daily AVG <BiChevronDown fontSize={22} />{" "} --------*/}
             <select className="w-[90px] bg-transparent border-none focus:outline-none text-xs md:text-base text-primary">
               <option value="">Daily</option>
               <option value="">Weekly</option>
