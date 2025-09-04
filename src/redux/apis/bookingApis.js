@@ -70,6 +70,37 @@ const bookingApis = createApi({
       }),
       providesTags: [{ type: 'Booking', id: 'LIST' }],
     }),
+    // get booking summary of building for admin
+    getBookingSummaryOfBuildingForAdmin: builder.query({
+      query: (id) => ({
+        url: `single/admin/bookingSummary/${id}`,
+        method: 'GET',
+      }),
+    }),
+    // get single booking slip for admin
+
+    getSingleBookingSlipForAdmin: builder.query({
+      query: (id) => ({
+        url: `/single/admin/bookingSlip/${id}`,
+        method: 'GET',
+      }),
+    }),
+    // get all booking for admin
+    getAllBookingsForAdmin: builder.query({
+      query: () => ({
+        url: '/all/Bookings/admin',
+        method: 'GET',
+      }),
+      providesTags: [{ type: 'Booking', id: 'LIST' }],
+    }),
+    // get all bookings of today for admin
+    getAllBookingsOfTodayForAdmin: builder.query({
+      query: () => ({
+        url: '/today/Bookings/admin',
+        method: 'GET',
+      }),
+      providesTags: [{ type: 'Booking', id: 'LIST' }],
+    }),
   }),
 });
 
@@ -82,5 +113,9 @@ export const {
   useCancelSingleBookingMutation,
   useDeleteSingleBookingMutation,
   useGetCurrentBookingsQuery,
+  useGetBookingSummaryOfBuildingForAdminQuery,
+  useGetSingleBookingSlipForAdminQuery,
+  useGetAllBookingsForAdminQuery,
+  useGetAllBookingsOfTodayForAdminQuery,
 } = bookingApis;
 export default bookingApis;

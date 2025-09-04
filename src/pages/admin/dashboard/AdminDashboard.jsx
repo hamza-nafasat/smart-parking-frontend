@@ -1,128 +1,137 @@
-import React from "react";
-import Wallet from "./components/Wallet";
-import CustomAreaChart from "../../../components/charts/CustomAreaChart";
+import React from 'react';
+import Wallet from './components/Wallet';
+import CustomAreaChart from '../../../components/charts/CustomAreaChart';
 
-import Map from "./components/Map";
-import CustomBarChart from "../../../components/charts/CustomBarChart";
-import BookingTable from "./components/BookingTable";
-import MultiLineChart from "../../../components/charts/MultiLineChart";
-import Weather from "../../../components/shared/large/Weather";
-import weatherBg from "../../../assets/images/dashboard/WeatherBg.png";
-import Button from "../../../components/shared/small/Button";
-import Watchlist from "./components/Watchlist";
-import { revenueOverviewData, watchlistData } from "../../../data/data";
-import {
-  dashboardBookingData,
-  dashboradColumns,
-} from "./utils/DashboardColumn";
-import GlobalTable from "../../../components/shared/large/GlobalTable";
-import { useNavigate } from "react-router-dom";
+import Map from './components/Map';
+import CustomBarChart from '../../../components/charts/CustomBarChart';
+import BookingTable from './components/BookingTable';
+import MultiLineChart from '../../../components/charts/MultiLineChart';
+import Weather from '../../../components/shared/large/Weather';
+import weatherBg from '../../../assets/images/dashboard/WeatherBg.png';
+import Button from '../../../components/shared/small/Button';
+import Watchlist from './components/Watchlist';
+import { revenueOverviewData, watchlistData } from '../../../data/data';
+import { dashboardBookingData, dashboradColumns } from './utils/DashboardColumn';
+import GlobalTable from '../../../components/shared/large/GlobalTable';
+import { useNavigate } from 'react-router-dom';
+import { useGetAllBookingsOfTodayForAdminQuery } from '../../../redux/apis/bookingApis';
+import { useState, useEffect } from 'react';
 
 const data = [
   {
-    name: "Page A",
+    name: 'Page A',
     uv: 700,
-    color: "#8884d8",
-    startColor: "#0D5546",
-    endColor: "#1CBB9B",
+    color: '#8884d8',
+    startColor: '#0D5546',
+    endColor: '#1CBB9B',
   },
   {
-    name: "Page B",
+    name: 'Page B',
     uv: 700,
-    color: "#82ca9d",
-    startColor: "#0D5546",
-    endColor: "#1CBB9B",
+    color: '#82ca9d',
+    startColor: '#0D5546',
+    endColor: '#1CBB9B',
   },
   {
-    name: "Page C",
+    name: 'Page C',
     uv: 600,
-    color: "#ffc658",
-    startColor: "#0D5546",
-    endColor: "#1CBB9B",
+    color: '#ffc658',
+    startColor: '#0D5546',
+    endColor: '#1CBB9B',
   },
   {
-    name: "Page D",
+    name: 'Page D',
     uv: 500,
-    color: "#d84f91",
-    startColor: "#0D5546",
-    endColor: "#1CBB9B",
+    color: '#d84f91',
+    startColor: '#0D5546',
+    endColor: '#1CBB9B',
   },
   {
-    name: "Page E",
+    name: 'Page E',
     uv: 800,
-    color: "#f67280",
-    startColor: "#0D5546",
-    endColor: "#1CBB9B",
+    color: '#f67280',
+    startColor: '#0D5546',
+    endColor: '#1CBB9B',
   },
   {
-    name: "Page F",
+    name: 'Page F',
     uv: 800,
-    color: "#6a0572",
-    startColor: "#0D5546",
-    endColor: "#1CBB9B",
+    color: '#6a0572',
+    startColor: '#0D5546',
+    endColor: '#1CBB9B',
   },
   {
-    name: "Page G",
+    name: 'Page G',
     uv: 650,
-    color: "#355c7d",
-    startColor: "#0D5546",
-    endColor: "#1CBB9B",
+    color: '#355c7d',
+    startColor: '#0D5546',
+    endColor: '#1CBB9B',
   },
   {
-    name: "Page H",
+    name: 'Page H',
     uv: 950,
-    color: "#c06c84",
-    startColor: "#0D5546",
-    endColor: "#1CBB9B",
+    color: '#c06c84',
+    startColor: '#0D5546',
+    endColor: '#1CBB9B',
   },
 ];
 const gradients = [
-  { startColor: "#0D5546", endColor: "#1CBB9B" },
-  { startColor: "#90307B", endColor: "#F652D2" },
-  { startColor: "#232178", endColor: "#3F3CD8" },
-  { startColor: "#633639", endColor: "#C96E73" },
-  { startColor: "#0D5546", endColor: "#1CBB9B" },
-  { startColor: "#90307B", endColor: "#F652D2" },
-  { startColor: "#232178", endColor: "#3F3CD8" },
-  { startColor: "#633639", endColor: "#C96E73" },
+  { startColor: '#0D5546', endColor: '#1CBB9B' },
+  { startColor: '#90307B', endColor: '#F652D2' },
+  { startColor: '#232178', endColor: '#3F3CD8' },
+  { startColor: '#633639', endColor: '#C96E73' },
+  { startColor: '#0D5546', endColor: '#1CBB9B' },
+  { startColor: '#90307B', endColor: '#F652D2' },
+  { startColor: '#232178', endColor: '#3F3CD8' },
+  { startColor: '#633639', endColor: '#C96E73' },
 ];
 
 const multiLineData = [
-  { name: "Monday", space1: 400, space2: 400, space3: 400, space4: 100 },
-  { name: "Tuesday", space1: 500, space2: 398, space3: 210, space4: 600 },
-  { name: "Wednesday", space1: 100, space2: 800, space3: 690, space4: 300 },
-  { name: "Thursday", space1: 700, space2: 608, space3: 200, space4: 500 },
-  { name: "Friday", space1: 250, space2: 200, space3: 681, space4: 400 },
-  { name: "Saturday", space1: 400, space2: 50, space3: 381, space4: 200 },
+  { name: 'Monday', space1: 400, space2: 400, space3: 400, space4: 100 },
+  { name: 'Tuesday', space1: 500, space2: 398, space3: 210, space4: 600 },
+  { name: 'Wednesday', space1: 100, space2: 800, space3: 690, space4: 300 },
+  { name: 'Thursday', space1: 700, space2: 608, space3: 200, space4: 500 },
+  { name: 'Friday', space1: 250, space2: 200, space3: 681, space4: 400 },
+  { name: 'Saturday', space1: 400, space2: 50, space3: 381, space4: 200 },
 
-  { name: "Sunday", space1: 100, space2: 250, space3: 281, space4: 100 },
+  { name: 'Sunday', space1: 100, space2: 250, space3: 281, space4: 100 },
 ];
 const lineConfigs = [
-  { dataKey: "space1", stroke: "#FAA80E" },
-  { dataKey: "space2", stroke: "#18BC9C" },
-  { dataKey: "space3", stroke: "#1B7AA6" },
-  { dataKey: "space4", stroke: "#18BC9C" },
+  { dataKey: 'space1', stroke: '#FAA80E' },
+  { dataKey: 'space2', stroke: '#18BC9C' },
+  { dataKey: 'space3', stroke: '#1B7AA6' },
+  { dataKey: 'space4', stroke: '#18BC9C' },
 ];
 
 const reveniewData = [
-  { name: "Mon", uv: 1000 },
-  { name: "Tue", uv: 1200 },
-  { name: "Wed", uv: 1800 },
-  { name: "Thu", uv: 1200 },
-  { name: "Fri", uv: 1900 },
-  { name: "Sat", uv: 1000 },
-  { name: "Sun", uv: 1600 },
-  { name: "Mon", uv: 1000 },
-  { name: "Tue", uv: 1500 },
-  { name: "Wed", uv: 1100 },
-  { name: "Thu", uv: 800 },
-  { name: "Fri", uv: 1900 },
-  { name: "Sat", uv: 300 },
-  { name: "Sun", uv: 1500 },
+  { name: 'Mon', uv: 1000 },
+  { name: 'Tue', uv: 1200 },
+  { name: 'Wed', uv: 1800 },
+  { name: 'Thu', uv: 1200 },
+  { name: 'Fri', uv: 1900 },
+  { name: 'Sat', uv: 1000 },
+  { name: 'Sun', uv: 1600 },
+  { name: 'Mon', uv: 1000 },
+  { name: 'Tue', uv: 1500 },
+  { name: 'Wed', uv: 1100 },
+  { name: 'Thu', uv: 800 },
+  { name: 'Fri', uv: 1900 },
+  { name: 'Sat', uv: 300 },
+  { name: 'Sun', uv: 1500 },
 ];
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
+  const [dashboardBookingData, setDashboardBookingData] = useState([]);
+  const { data: bookingData } = useGetAllBookingsOfTodayForAdminQuery();
+
+  console.log('dashboardBookingData', dashboardBookingData);
+
+  useEffect(() => {
+    if (bookingData) {
+      setDashboardBookingData(bookingData?.data);
+    }
+  }, [bookingData]);
   return (
     <div className="grid grid-cols-12 gap-4">
       <div className="col-span-12 xl:col-span-4">
@@ -131,11 +140,7 @@ const AdminDashboard = () => {
       <div className="col-span-12 xl:col-span-8">
         <div className="bg-white rounded-lg border-[1px] shadow-lg h-full">
           <h3 className="font-bold text-base p-3">Revenue Overview</h3>
-          <CustomAreaChart
-            data={revenueOverviewData}
-            color="#00C49F"
-            showGradient
-          />
+          <CustomAreaChart data={revenueOverviewData} color="#00C49F" showGradient />
         </div>
       </div>
       <div className="col-span-12 xl:col-span-3">
@@ -185,9 +190,7 @@ const AdminDashboard = () => {
       </div>
       <div className="col-span-12 xl:col-span-7">
         <div className="bg-white rounded-lg border-[1px] shadow-lg h-full">
-          <h3 className="font-bold text-base p-3">
-            Top 4 Building Parking Space
-          </h3>
+          <h3 className="font-bold text-base p-3">Top 4 Building Parking Space</h3>
           <MultiLineChart
             data={multiLineData}
             lineConfigs={lineConfigs}
@@ -200,9 +203,7 @@ const AdminDashboard = () => {
       </div>
       <div className="col-span-12 xl:col-span-5">
         <div className="bg-white rounded-lg border-[1px] shadow-lg h-full">
-          <h3 className="font-bold text-base p-3">
-            Top 4 Building Parking Space
-          </h3>
+          <h3 className="font-bold text-base p-3">Top 4 Building Parking Space</h3>
           <CustomBarChart gradients={gradients} data={data} showGrid={false} />
         </div>
       </div>

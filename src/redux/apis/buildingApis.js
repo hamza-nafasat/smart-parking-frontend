@@ -61,6 +61,13 @@ const buildingApis = createApi({
         method: 'GET',
       }),
     }),
+    // get single building for admin
+    getSingleBuildingForAdmin: builder.query({
+      query: (id) => ({
+        url: `/single/admin/${id}`,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -72,5 +79,6 @@ export const {
   useUpdateSingleBuildingMutation,
   useDeleteSingleBuildingMutation,
   useGetMostVisitedBuildingsQuery,
+  useGetSingleBuildingForAdminQuery,
 } = buildingApis;
 export default buildingApis;

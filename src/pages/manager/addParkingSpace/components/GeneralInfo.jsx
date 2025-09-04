@@ -95,7 +95,7 @@ const GeneralInfo = ({ setCurrentStep }) => {
   useEffect(() => {
     if (polygons.length > 0) setBuilding({ ...building, buildingCoordinates: polygons });
     if (imageSrc) setBuilding({ ...building, buildingImage: imageSrc });
-  }, [building, imageSrc, polygons]);
+  }, [imageSrc, polygons]);
 
   return (
     <div className="mt-4">

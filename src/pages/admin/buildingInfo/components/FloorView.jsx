@@ -1,20 +1,24 @@
-import React from "react";
-import FloorDetail from "../../../../components/shared/large/FloorDetail";
-import SpacesCards from "../../../../components/shared/large/SpacesCards";
-import {
-  alertsData,
-  floorDetailsList,
-  spacesCardsData,
-} from "../utils/buildingData";
-import Alerts from "../../../../components/shared/large/Alerts";
-import d3parking from "../../../../assets/images/building/3dparking.png";
-import d2parking from "../../../../assets/images/building/2dparking.png";
-import {
-  PrimaryWidgetCard,
-  SecondaryWidgetCard,
-} from "../../../../components/shared/large/WidgetCard";
-
+import React from 'react';
+import FloorDetail from '../../../../components/shared/large/FloorDetail';
+import SpacesCards from '../../../../components/shared/large/SpacesCards';
+import { alertsData, floorDetailsList, spacesCardsData } from '../utils/buildingData';
+import Alerts from '../../../../components/shared/large/Alerts';
+import d3parking from '../../../../assets/images/building/3dparking.png';
+import d2parking from '../../../../assets/images/building/2dparking.png';
+import { PrimaryWidgetCard, SecondaryWidgetCard } from '../../../../components/shared/large/WidgetCard';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useGetBuildingFloorForAdminQuery } from '../../../../redux/apis/floorApis';
+import { useEffect } from 'react';
 const FloorView = () => {
+  const navigate = useNavigate();
+  const floorId = useParams().id;
+  const [floorDetailsList, setFloorDetailsList] = React.useState(null);
+  const { data } = useGetBuildingFloorForAdminQuery(floorId);
+  useEffect(() => {
+    if (data) {
+      setFloorDetailsList(data?.data);
+    }
+  });
   return (
     <div>
       <div className="grid grid-cols-12 gap-4 ">
@@ -36,11 +40,7 @@ const FloorView = () => {
             </div>
           </div>
           <div className="mt-4">
-            <img
-              src={d3parking}
-              alt="image"
-              className="rounded-lg object-cover"
-            />
+            <img src={d3parking} alt="image" className="rounded-lg object-cover" />
           </div>
         </div>
         <div className="col-span-12 lg:col-span-3">
@@ -50,11 +50,7 @@ const FloorView = () => {
       <div className="shadow-md rounded-lg bg-white border-[1px] p-4 mt-4">
         <h4 className="font-[600] mb-4">Ramps View</h4>
         <div className="">
-          <img
-            src={d2parking}
-            alt="image"
-            className=" rounded-lg object-cover"
-          />
+          <img src={d2parking} alt="image" className=" rounded-lg object-cover" />
         </div>
       </div>
     </div>
