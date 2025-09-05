@@ -68,6 +68,13 @@ const buildingApis = createApi({
         method: 'GET',
       }),
     }),
+    // get revenue overview for single building for admin
+    getRevenueOverviewForSingleBuildingForAdmin: builder.query({
+      query: ({ type, buildingId }) => ({
+        url: `/single/building/admin/revenue-overview?type=${type}&buildingId=${buildingId}`,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -80,5 +87,6 @@ export const {
   useDeleteSingleBuildingMutation,
   useGetMostVisitedBuildingsQuery,
   useGetSingleBuildingForAdminQuery,
+  useGetRevenueOverviewForSingleBuildingForAdminQuery,
 } = buildingApis;
 export default buildingApis;

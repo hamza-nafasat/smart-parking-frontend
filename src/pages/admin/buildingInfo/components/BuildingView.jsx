@@ -4,7 +4,7 @@ import Alerts from '../../../../components/shared/large/Alerts';
 import GlobalTable from '../../../../components/shared/large/GlobalTable';
 import ParkingFloor from '../../../../components/shared/large/ParkingFloor';
 import { PrimaryWidgetCard, SecondaryWidgetCard } from '../../../../components/shared/large/WidgetCard';
-import { parkingBookingData, bookingSummaryColumns } from '../../parkingSummary/components/ParkingSummaryColumns';
+import { bookingSummaryColumnsBuildingInfo } from '../../parkingSummary/components/ParkingSummaryColumns';
 import { alertsData, parkingFloorListData, spacesCardsData } from '../utils/buildingData';
 import BuildingData from './BuildingData';
 import RevenueOverview from './RevenueOverview';
@@ -47,20 +47,24 @@ const BuildingView = () => {
         <div className="flex flex-wrap gap-4">
           {spacesCardsData?.map((card, i) => {
             if (i < 3) {
-              return <PrimaryWidgetCard key={i} cardData={card} />;
+              return <PrimaryWidgetCard key={i} cardData={card} id={buildingId} cardType={card?.cardType} />;
             } else if (i == 3) {
               return <SecondaryWidgetCard key={i} cardData={card} />;
             }
           })}
         </div>
-        <RevenueOverview />
+        <RevenueOverview buildingId={buildingId} />
       </div>
       <div className="col-span-12 lg:col-span-3">
         <Alerts alertsData={alertsData} />
       </div>
 
       <div className="col-span-12 border border-[#6F6F6F1F] rounded-lg shadow-md bg-white p-2">
-        <GlobalTable heading="Booking Summary" columns={bookingSummaryColumns(navigate)} data={bookingSummary || []} />
+        <GlobalTable
+          heading="Booking Summary"
+          columns={bookingSummaryColumnsBuildingInfo(navigate)}
+          data={bookingSummary || []}
+        />
       </div>
       <div className="col-span-12">
         <div className="md:border md:border-[#E7E7E7] md:shadow-md md:rounded-[16px]">

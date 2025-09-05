@@ -77,7 +77,7 @@ export const dashboardBookingData = [
 
 export const dashboradColumns = (navigate) => [
   { name: 'Reservation ID', selector: (row) => row?._id },
-  { name: 'Floor Name', selector: (row) => row?.floor?.name },
+  { name: 'Building Name', selector: (row) => row?.building?.name },
   { name: 'Phone Number', selector: (row) => row?.contactNumber },
   { name: 'Vehicle Info', selector: (row) => row?.plateNumber },
   {

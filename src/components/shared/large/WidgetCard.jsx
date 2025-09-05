@@ -1,16 +1,23 @@
 /* eslint-disable react/prop-types */
-import React from "react";
-import BlankAreaChart from "../../charts/BlankAreaChart";
-import { ParkingSensorIcon } from "../../../assets/svgs/Icon";
+import React from 'react';
+import BlankAreaChart from '../../charts/BlankAreaChart';
+import { ParkingSensorIcon } from '../../../assets/svgs/Icon';
+import { useState, useEffect } from 'react';
 
-const PrimaryWidgetCard = ({ cardData }) => {
+const PrimaryWidgetCard = ({ cardData, id, cardType }) => {
+  const [type, setType] = useState('daily');
+  console.log('cards data', cardData, id, cardType);
   return (
     <div className="border border-[#6F6F6F1F] rounded-lg shadow-md bg-white px-6 py-4 w-[300px] grow">
       <div className="flex items-center justify-between gap-4">
-        <h6 className="text-sm font-semibold text-[#292D32]">
-          {cardData.title}
-        </h6>
-        <select className="border-[0.4px] border-[#5C5B5B80] rounded-[4px] text-[#5C5B5B80] text-[11px] outline-none">
+        <h6 className="text-sm font-semibold text-[#292D32]">{cardData.title}</h6>
+        <select
+          className="border-[0.4px] border-[#5C5B5B80] rounded-[4px] text-[#5C5B5B80] text-[11px] outline-none"
+          value={type}
+          onChange={(e) => {
+            setType(e.target.value);
+          }}
+        >
           <option value="daily" className="text-[11px] text-[#5C5B5B80]">
             Daily
           </option>
@@ -24,10 +31,7 @@ const PrimaryWidgetCard = ({ cardData }) => {
         <div>
           <div className="flex items-center gap-3">
             <BlankAreaChart data={cardData?.data} areaColor={cardData?.color} />
-            <h4
-              className="text-xl md:text-[27px] font-bold"
-              style={{ color: cardData?.color }}
-            >
+            <h4 className="text-xl md:text-[27px] font-bold" style={{ color: cardData?.color }}>
               {cardData?.value}%
             </h4>
           </div>
@@ -72,8 +76,7 @@ const SecondaryWidgetCard = ({ cardData }) => {
 const List = ({ single }) => {
   return (
     <h6 className="text-[10px] text-[#11111199]">
-      {single?.type}:{" "}
-      <span className="font-medium text-[#414141]">{single?.count}</span>
+      {single?.type}: <span className="font-medium text-[#414141]">{single?.count}</span>
     </h6>
   );
 };

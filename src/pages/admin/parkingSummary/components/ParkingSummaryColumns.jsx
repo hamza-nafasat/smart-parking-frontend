@@ -77,6 +77,26 @@ export const parkingBookingData = [
 
 export const bookingSummaryColumns = (navigate) => [
   { name: 'Reservation ID', selector: (row) => row?._id },
+  { name: 'Building Name', selector: (row) => row?.building?.name },
+  { name: 'Phone Number', selector: (row) => row?.contactNumber },
+  { name: 'Vehicle Info', selector: (row) => row?.plateNumber },
+  {
+    name: 'Reservation Date',
+    selector: (row) => (row?.createdAt ? new Date(row.createdAt).toISOString().split('T')[0] : ''),
+  },
+  { name: 'Payment Status', selector: (row) => row?.paymentStatus },
+  {
+    name: 'Slip',
+    selector: (row) => (
+      <div className="cursor-pointer" onClick={() => navigate(`/admin/view-slip/${row?._id}`)}>
+        <SlipIcon />
+      </div>
+    ),
+  },
+];
+
+export const bookingSummaryColumnsBuildingInfo = (navigate) => [
+  { name: 'Reservation ID', selector: (row) => row?._id },
   { name: 'Floor Name', selector: (row) => row?.floor?.name },
   { name: 'Phone Number', selector: (row) => row?.contactNumber },
   { name: 'Vehicle Info', selector: (row) => row?.plateNumber },
