@@ -68,6 +68,22 @@ const floorApis = createApi({
         method: 'GET',
       }),
     }),
+    // GET floor analytics for admin on floor view for performance, freespace, occupied space trends
+    getFloorAnalyticsForAdmin: builder.query({
+      query: ({ floorId, cardType, filter }) => ({
+        url: `/single/admin/floor-analytics-per-filter?floorId=${floorId}&cardType=${cardType}&filter=${filter}`,
+        method: 'GET',
+      }),
+      invalidatesTags: [{ type: 'Floor', id: 'LIST' }],
+    }),
+    // get floor overall analytics for admin
+    getFloorOverallAnalyticsForAdmin: builder.query({
+      query: ({ floorId }) => ({
+        url: `/single/admin/floor/overall-analytics/${floorId}`,
+        method: 'GET',
+      }),
+      invalidatesTags: [{ type: 'Floor', id: 'LIST' }],
+    }),
   }),
 });
 
@@ -80,5 +96,7 @@ export const {
   useDeleteSingleFloorMutation,
   useGetSingleBuildingFloorsForAdminQuery,
   useGetBuildingFloorForAdminQuery,
+  useGetFloorAnalyticsForAdminQuery,
+  useGetFloorOverallAnalyticsForAdminQuery,
 } = floorApis;
 export default floorApis;

@@ -31,7 +31,7 @@ const spacesCardsData = [
     value: '27',
     description: 'Sales up 27% from last month.',
     color: '#18BC9C',
-    data: [300, 23, 450, 220, 600, 230, 100, 50],
+    data: [300, 23, 450, 220, 600, 230, 100, 150],
     cardType: 'performance',
     icon: <PerformanceIcon />,
   },

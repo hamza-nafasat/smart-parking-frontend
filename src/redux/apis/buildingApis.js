@@ -74,6 +74,23 @@ const buildingApis = createApi({
         url: `/single/building/admin/revenue-overview?type=${type}&buildingId=${buildingId}`,
         method: 'GET',
       }),
+      invalidatesTags: [{ type: 'Building', id: 'LIST' }],
+    }),
+    // GET building analytics for admin on building view for performance, freespace, occupied space trends
+    getBuildingAnalyticsForAdmin: builder.query({
+      query: ({ buildingId, cardType, filter }) => ({
+        url: `/single/building/admin/analytics?buildingId=${buildingId}&cardType=${cardType}&filter=${filter}`,
+        method: 'GET',
+      }),
+      invalidatesTags: [{ type: 'Building', id: 'LIST' }],
+    }),
+    // get building overall analytics for admin
+    getBuildingOverallAnalyticsForAdmin: builder.query({
+      query: ({ buildingId }) => ({
+        url: `/single/building/admin/overall-analytics?buildingId=${buildingId}`,
+        method: 'GET',
+      }),
+      invalidatesTags: [{ type: 'Building', id: 'LIST' }],
     }),
   }),
 });
@@ -88,5 +105,7 @@ export const {
   useGetMostVisitedBuildingsQuery,
   useGetSingleBuildingForAdminQuery,
   useGetRevenueOverviewForSingleBuildingForAdminQuery,
+  useGetBuildingAnalyticsForAdminQuery,
+  useGetBuildingOverallAnalyticsForAdminQuery,
 } = buildingApis;
 export default buildingApis;

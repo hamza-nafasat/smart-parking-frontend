@@ -5,25 +5,75 @@ import GlobalTable from '../../../../components/shared/large/GlobalTable';
 import ParkingFloor from '../../../../components/shared/large/ParkingFloor';
 import { PrimaryWidgetCard, SecondaryWidgetCard } from '../../../../components/shared/large/WidgetCard';
 import { bookingSummaryColumnsBuildingInfo } from '../../parkingSummary/components/ParkingSummaryColumns';
-import { alertsData, parkingFloorListData, spacesCardsData } from '../utils/buildingData';
+import { alertsData, parkingFloorListData } from '../utils/buildingData';
 import BuildingData from './BuildingData';
 import RevenueOverview from './RevenueOverview';
 import { useGetSingleBuildingForAdminQuery } from '../../../../redux/apis/buildingApis';
 import { useGetAllFloorsQuery } from '../../../../redux/apis/floorApis';
 import { useGetBookingSummaryOfBuildingForAdminQuery } from '../../../../redux/apis/bookingApis';
 import { useGetSingleBuildingFloorsForAdminQuery } from '../../../../redux/apis/floorApis';
+import { useGetBuildingOverallAnalyticsForAdminQuery } from '../../../../redux/apis/buildingApis';
+import { useGetBuildingAnalyticsForAdminQuery } from '../../../../redux/apis/buildingApis';
 import { useEffect, useState } from 'react';
+import { skipToken } from '@reduxjs/toolkit/query';
 
 const BuildingView = () => {
   const navigate = useNavigate();
   const [buildingData, setBuildingData] = useState(null);
   const [bookingSummary, setBookingSummary] = useState(null);
   const [buildingFloorsData, setBuildingFloorsData] = useState(null);
+  const [spacesCardsData, setSpacesCardsData] = useState(null);
   const buildingId = useParams().id;
   const { data } = useGetSingleBuildingForAdminQuery(buildingId);
   const { data: floorsData } = useGetAllFloorsQuery(buildingId);
   const { data: bookingSummaryData } = useGetBookingSummaryOfBuildingForAdminQuery(buildingId);
   const { data: buildingFloors } = useGetSingleBuildingFloorsForAdminQuery(buildingId);
+
+  // new state for filter-based analytics
+  const [filterState, setFilterState] = useState({
+    cardType: null,
+    filter: 'daily',
+  });
+
+  const { data: buildingAnalytics } = useGetBuildingOverallAnalyticsForAdminQuery({ buildingId });
+
+  const { data: buildingAnalyticsPerFilter } = useGetBuildingAnalyticsForAdminQuery(
+    filterState.cardType && filterState.filter
+      ? { buildingId, cardType: filterState.cardType, filter: filterState.filter }
+      : skipToken
+  );
+
+  useEffect(() => {
+    if (buildingAnalytics) {
+      setSpacesCardsData([
+        ...buildingAnalytics?.data,
+        [
+          {
+            type: 'installed',
+            count: 34,
+          },
+          { type: 'active', count: 34 },
+
+          { type: 'offline', count: 55 },
+        ],
+      ]);
+    }
+  }, [buildingAnalytics]);
+
+  useEffect(() => {
+    if (buildingAnalyticsPerFilter) {
+      setSpacesCardsData((prev) =>
+        prev.map((card) =>
+          card.cardType === buildingAnalyticsPerFilter.data.cardType ? buildingAnalyticsPerFilter.data : card
+        )
+      );
+    }
+  }, [buildingAnalyticsPerFilter]);
+
+  // handle callback from child
+  const handleFilterChange = (cardType, filter) => {
+    setFilterState({ cardType, filter });
+  };
 
   useEffect(() => {
     if (data) {
@@ -36,6 +86,7 @@ const BuildingView = () => {
       setBuildingFloorsData(buildingFloors?.data);
     }
   }, [data, bookingSummaryData, buildingFloors]);
+
   // // // // // // // // //
   return (
     <div className="grid grid-cols-12 gap-4">
@@ -47,7 +98,15 @@ const BuildingView = () => {
         <div className="flex flex-wrap gap-4">
           {spacesCardsData?.map((card, i) => {
             if (i < 3) {
-              return <PrimaryWidgetCard key={i} cardData={card} id={buildingId} cardType={card?.cardType} />;
+              return (
+                <PrimaryWidgetCard
+                  key={i}
+                  cardData={card}
+                  buildingId={buildingId}
+                  cardType={card?.cardType}
+                  onFilterChange={handleFilterChange}
+                />
+              );
             } else if (i == 3) {
               return <SecondaryWidgetCard key={i} cardData={card} />;
             }
