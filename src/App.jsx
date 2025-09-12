@@ -48,6 +48,7 @@ const Sensors = lazy(() => import('./pages/manager/sensors/Sensors'));
 const EditBuildingInfo = lazy(() => import('./pages/manager/editBuildingInfo/EditBuildingInfo'));
 const EditFloorInfo = lazy(() => import('./pages/manager/editFloorInfo/EditFloorInfo'));
 const AddNewFloor = lazy(() => import('./pages/manager/addNewFloor/addNewFloor'));
+const ViewSlipManager = lazy(() => import('./pages/manager/dashboard/components/ViewSlip'));
 
 // User
 const User = lazy(() => import('./pages/user/index'));
@@ -139,6 +140,7 @@ function App() {
                 <Route path="profile" element={<ManagerProfile />} />
                 <Route path="add-parking-space" element={<AddParkingSpace />} />
                 <Route path="add-parking" element={<AddParking />} />
+                <Route path="view-slip/:id" element={<ViewSlipManager />} />
               </Route>
             </Route>
 

@@ -56,8 +56,8 @@ const floorApis = createApi({
     }),
     // get single building floors for admin
     getSingleBuildingFloorsForAdmin: builder.query({
-      query: (id) => ({
-        url: `/single/admin/floor/${id}`,
+      query: ({ buildingId, floorName }) => ({
+        url: `/single/admin/floor/${buildingId}?search=${floorName}`,
         method: 'GET',
       }),
     }),

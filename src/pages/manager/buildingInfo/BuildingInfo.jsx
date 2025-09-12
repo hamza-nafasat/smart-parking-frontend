@@ -1,10 +1,15 @@
-import { CiSearch } from "react-icons/ci";
-import BuildingList from "../../../components/shared/large/BuildingList";
-import Button from "../../../components/shared/small/Button";
-import { useNavigate } from "react-router-dom";
+import { CiSearch } from 'react-icons/ci';
+import BuildingList from '../../../components/shared/large/BuildingList';
+import Button from '../../../components/shared/small/Button';
+import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import useDebounce from '../../../components/hooks/useDebounce';
 
 const BuildingInfo = () => {
   const navigate = useNavigate();
+  const [inputValue, setInputValue] = useState('');
+  const debouncedValue = useDebounce(inputValue, 500);
+
   return (
     <div className="md:border md:border-[#E7E7E7] md:shadow-md md:rounded-[16px]">
       <div className="flex items-center justify-between gap-4 py-4 md:px-6">
@@ -16,14 +21,15 @@ const BuildingInfo = () => {
               type="text"
               placeholder="Search"
               className="w-full text-xs md:text-base bg-transparent border-none focus:outline-none text-[#7E7E7E]"
+              onChange={(e) => setInputValue(e.target.value)}
             />
           </div>
-          <Button text="Add Building" width="w-[150px]" onClick={() => navigate("/manager/add-parking-space")}></Button>
+          <Button text="Add Building" width="w-[150px]" onClick={() => navigate('/manager/add-parking-space')}></Button>
         </div>
       </div>
       <div className="border-t border-[#E7E7E7]"></div>
       <div className="pb-4 md:px-6">
-        <BuildingList redirect="manager" />
+        <BuildingList redirect="manager" search={debouncedValue} />
       </div>
     </div>
   );

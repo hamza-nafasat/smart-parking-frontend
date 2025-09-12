@@ -29,7 +29,7 @@ const ParkingFloor = ({ data, linkTo }) => {
   return (
     <div>
       {currentBuildings?.map((data, index) => (
-        <SingleFloor key={index} data={data} linkTo={linkTo(data._id)} />
+        <SingleFloor key={index} data={data} linkTo={linkTo(data?.floor?._id)} />
       ))}
 
       <ReactPaginate
@@ -73,13 +73,17 @@ const SingleFloor = ({ data, linkTo }) => {
         <div className="w-[249px] h-[150px] rounded-xl overflow-hidden">
           <Slider {...carouselSettings}>
             {/* {data?.buildingImages?.map((img, i) => ( */}
-            <img src={data?.twoDImage?.url} alt="image" className="w-[249px] h-[150px] rounded-xl object-cover" />
+            <img
+              src={data?.floor?.twoDImage?.url}
+              alt="image"
+              className="w-[249px] h-[150px] rounded-xl object-cover"
+            />
             {/* ))} */}
           </Slider>
         </div>
         {/* content */}
         <div>
-          <h4 className="text-base md:text-xl font-bold text-[#000]">{data?.name}</h4>
+          <h4 className="text-base md:text-xl font-bold text-[#000]">{data?.floor?.name}</h4>
           {/* <div className="flex items-center gap-2">
             <LocationIcon />
             <p className="text-[10px] font-semibold text-[#47484b]">{data?.address}</p>
@@ -92,21 +96,21 @@ const SingleFloor = ({ data, linkTo }) => {
             <ParkingList
               data={{
                 title: 'Total No. of Parking Space',
-                value: data?.totalParkingSpace,
+                value: data?.stats?.totalSlots,
                 icon: <TotalParkingIcon />,
               }}
             />
             <ParkingList
               data={{
                 title: 'Total Occupied Parking',
-                value: data?.totalOccupiedSpace,
+                value: data?.stats?.occupiedSlots,
                 icon: <OccupiedParkingIcon />,
               }}
             />
             <ParkingList
               data={{
                 title: 'Total Free Space',
-                value: data?.totalFreeSpace,
+                value: data?.stats?.freeSlots,
                 icon: <FreeSpaceIcon />,
               }}
             />

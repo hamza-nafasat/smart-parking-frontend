@@ -14,7 +14,7 @@ import { revenueOverviewData, watchlistData } from '../../../data/data';
 import { dashboardBookingData, dashboradColumns } from './utils/DashboardColumn';
 import GlobalTable from '../../../components/shared/large/GlobalTable';
 import { useNavigate } from 'react-router-dom';
-import { useGetAllBookingsOfTodayForAdminQuery } from '../../../redux/apis/bookingApis';
+import { useGetAllBookingsOfTodayForAdminAndManagerQuery } from '../../../redux/apis/bookingApis';
 import { useState, useEffect } from 'react';
 
 const data = [
@@ -123,7 +123,7 @@ const reveniewData = [
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const [dashboardBookingData, setDashboardBookingData] = useState([]);
-  const { data: bookingData } = useGetAllBookingsOfTodayForAdminQuery();
+  const { data: bookingData } = useGetAllBookingsOfTodayForAdminAndManagerQuery();
 
   console.log('dashboardBookingData', dashboardBookingData);
 

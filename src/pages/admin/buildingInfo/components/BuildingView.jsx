@@ -9,7 +9,6 @@ import { alertsData, parkingFloorListData } from '../utils/buildingData';
 import BuildingData from './BuildingData';
 import RevenueOverview from './RevenueOverview';
 import { useGetSingleBuildingForAdminQuery } from '../../../../redux/apis/buildingApis';
-import { useGetAllFloorsQuery } from '../../../../redux/apis/floorApis';
 import { useGetBookingSummaryOfBuildingForAdminQuery } from '../../../../redux/apis/bookingApis';
 import { useGetSingleBuildingFloorsForAdminQuery } from '../../../../redux/apis/floorApis';
 import { useGetBuildingOverallAnalyticsForAdminQuery } from '../../../../redux/apis/buildingApis';
@@ -25,7 +24,6 @@ const BuildingView = () => {
   const [spacesCardsData, setSpacesCardsData] = useState(null);
   const buildingId = useParams().id;
   const { data } = useGetSingleBuildingForAdminQuery(buildingId);
-  const { data: floorsData } = useGetAllFloorsQuery(buildingId);
   const { data: bookingSummaryData } = useGetBookingSummaryOfBuildingForAdminQuery(buildingId);
   const { data: buildingFloors } = useGetSingleBuildingFloorsForAdminQuery(buildingId);
 
@@ -87,7 +85,7 @@ const BuildingView = () => {
     }
   }, [data, bookingSummaryData, buildingFloors]);
 
-  // // // // // // // // //
+  // // // // // // // // // //
   return (
     <div className="grid grid-cols-12 gap-4">
       <div className="col-span-12 lg:col-span-3 bg-red-600 flex">

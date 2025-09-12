@@ -17,8 +17,8 @@ const bookingApis = createApi({
     }),
     // get all bookings
     getAllBookings: builder.query({
-      query: () => ({
-        url: '/all',
+      query: ({ search, order }) => ({
+        url: `/all?search=${search || ''}&order=${order || ''}`,
         method: 'GET',
       }),
       providesTags: [{ type: 'Booking', id: 'LIST' }],
@@ -77,11 +77,11 @@ const bookingApis = createApi({
         method: 'GET',
       }),
     }),
-    // get single booking slip for admin
+    // get single booking slip for admin and Manager
 
-    getSingleBookingSlipForAdmin: builder.query({
+    getSingleBookingSlipForAdminAndManager: builder.query({
       query: (id) => ({
-        url: `/single/admin/bookingSlip/${id}`,
+        url: `/single/adminAndmanager/bookingSlip/${id}`,
         method: 'GET',
       }),
     }),
@@ -94,9 +94,9 @@ const bookingApis = createApi({
       providesTags: [{ type: 'Booking', id: 'LIST' }],
     }),
     // get all bookings of today for admin
-    getAllBookingsOfTodayForAdmin: builder.query({
-      query: () => ({
-        url: '/today/Bookings/admin',
+    getAllBookingsOfTodayForAdminAndManager: builder.query({
+      query: ({ search, order }) => ({
+        url: `/today/Bookings/adminAndManager?search=${search || ''}&order=${order || ''}`,
         method: 'GET',
       }),
       providesTags: [{ type: 'Booking', id: 'LIST' }],
@@ -114,8 +114,8 @@ export const {
   useDeleteSingleBookingMutation,
   useGetCurrentBookingsQuery,
   useGetBookingSummaryOfBuildingForAdminQuery,
-  useGetSingleBookingSlipForAdminQuery,
+  useGetSingleBookingSlipForAdminAndManagerQuery,
   useGetAllBookingsForAdminQuery,
-  useGetAllBookingsOfTodayForAdminQuery,
+  useGetAllBookingsOfTodayForAdminAndManagerQuery,
 } = bookingApis;
 export default bookingApis;

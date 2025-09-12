@@ -1,76 +1,128 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useState } from "react";
-import { confirmAlert } from "react-confirm-alert";
-import toast from "react-hot-toast";
-import { CiSearch } from "react-icons/ci";
-import { FaPlus, FaTrash } from "react-icons/fa6";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { GreenEdit } from "../../../../assets/svgs/Icon";
-import Alerts from "../../../../components/shared/large/Alerts";
-import ParkingFloor from "../../../../components/shared/large/ParkingFloor";
-import {
-  PrimaryWidgetCard,
-  SecondaryWidgetCard,
-} from "../../../../components/shared/large/WidgetCard";
-import {
-  useDeleteSingleBuildingMutation,
-  useGetSingleBuildingQuery,
-} from "../../../../redux/apis/buildingApis";
-import { useGetAllFloorsQuery } from "../../../../redux/apis/floorApis";
-import {
-  alertsData,
-  spacesCardsData,
-} from "../../../admin/buildingInfo/utils/buildingData";
-import TwoDModelView from "../../addParkingSpace/components/TwoDModelView";
-import useFetchAndMakeSensorSlice from "../../../../components/hooks/useFetchAndMakeSensorSlice";
-import ShowCanvasData from "../../addParkingSpace/components/ShowCanvasData";
+import { useEffect, useState } from 'react';
+import { confirmAlert } from 'react-confirm-alert';
+import toast from 'react-hot-toast';
+import { CiSearch } from 'react-icons/ci';
+import { FaPlus, FaTrash } from 'react-icons/fa6';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { GreenEdit } from '../../../../assets/svgs/Icon';
+import Alerts from '../../../../components/shared/large/Alerts';
+import ParkingFloor from '../../../../components/shared/large/ParkingFloor';
+import { PrimaryWidgetCard, SecondaryWidgetCard } from '../../../../components/shared/large/WidgetCard';
+import { useDeleteSingleBuildingMutation, useGetSingleBuildingQuery } from '../../../../redux/apis/buildingApis';
+import { useGetAllFloorsQuery } from '../../../../redux/apis/floorApis';
+import { alertsData, spacesCardsData } from '../../../admin/buildingInfo/utils/buildingData';
+import TwoDModelView from '../../addParkingSpace/components/TwoDModelView';
+import useFetchAndMakeSensorSlice from '../../../../components/hooks/useFetchAndMakeSensorSlice';
+import ShowCanvasData from '../../addParkingSpace/components/ShowCanvasData';
+import { useGetSingleBuildingForAdminQuery } from '../../../../redux/apis/buildingApis';
+import { useGetSingleBuildingFloorsForAdminQuery } from '../../../../redux/apis/floorApis';
+import { useGetBuildingOverallAnalyticsForAdminQuery } from '../../../../redux/apis/buildingApis';
+import { useGetBuildingAnalyticsForAdminQuery } from '../../../../redux/apis/buildingApis';
+import { skipToken } from '@reduxjs/toolkit/query';
+import useDebounce from '../../../../components/hooks/useDebounce';
 
 const BuildingView = () => {
   const navigate = useNavigate();
-  const buildingId = useParams().id;
-  const [buildingData, setBuildingData] = useState(null);
   const [deleteBuilding] = useDeleteSingleBuildingMutation();
-  const { data } = useGetSingleBuildingQuery(buildingId);
-  const { data: floorsData } = useGetAllFloorsQuery(buildingId);
   const { refetchHook } = useFetchAndMakeSensorSlice();
+  const [searchInput, setSearchInput] = useState('');
+  const floorName = useDebounce(searchInput, 1000);
+  // apis for building data mixed admin manager
+
+  const [buildingData, setBuildingData] = useState(null);
+  const [buildingFloorsData, setBuildingFloorsData] = useState(null);
+  const [spacesCardsData, setSpacesCardsData] = useState(null);
+  const buildingId = useParams().id;
+  const { data } = useGetSingleBuildingForAdminQuery(buildingId);
+  // apply search on it
+  const { data: buildingFloors } = useGetSingleBuildingFloorsForAdminQuery({ buildingId, floorName });
+
+  const [filterState, setFilterState] = useState({
+    cardType: null,
+    filter: 'daily',
+  });
+
+  const { data: buildingAnalytics } = useGetBuildingOverallAnalyticsForAdminQuery({ buildingId });
+
+  const { data: buildingAnalyticsPerFilter } = useGetBuildingAnalyticsForAdminQuery(
+    filterState.cardType && filterState.filter
+      ? { buildingId, cardType: filterState.cardType, filter: filterState.filter }
+      : skipToken
+  );
+
+  useEffect(() => {
+    if (buildingAnalytics) {
+      setSpacesCardsData([
+        ...buildingAnalytics?.data,
+        [
+          {
+            type: 'installed',
+            count: 34,
+          },
+          { type: 'active', count: 34 },
+
+          { type: 'offline', count: 55 },
+        ],
+      ]);
+    }
+  }, [buildingAnalytics]);
+
+  useEffect(() => {
+    if (buildingAnalyticsPerFilter) {
+      setSpacesCardsData((prev) =>
+        prev.map((card) =>
+          card.cardType === buildingAnalyticsPerFilter.data.cardType ? buildingAnalyticsPerFilter.data : card
+        )
+      );
+    }
+  }, [buildingAnalyticsPerFilter]);
+
+  // handle callback from child
+  const handleFilterChange = (cardType, filter) => {
+    setFilterState({ cardType, filter });
+  };
+
+  useEffect(() => {
+    if (data) {
+      setBuildingData(data?.data);
+    }
+    if (buildingFloors) {
+      setBuildingFloorsData(buildingFloors?.data);
+    }
+  }, [data, buildingFloors]);
 
   // building delete handler
   const buildingDeleteHandler = (id) => {
     confirmAlert({
-      title: "Delete Building",
-      message: "Are you sure, you want to delete this building?",
+      title: 'Delete Building',
+      message: 'Are you sure, you want to delete this building?',
       buttons: [
         {
-          label: "Yes",
+          label: 'Yes',
           onClick: async () => {
-            if (!id) return toast.error("Please Provide Building Id");
+            if (!id) return toast.error('Please Provide Building Id');
             try {
               const res = await deleteBuilding(id).unwrap();
               if (res.success) {
-                toast.success(res?.message || "Building Deleted Successfully");
+                toast.success(res?.message || 'Building Deleted Successfully');
                 await refetchHook();
               }
-              console.log("building delete response", res);
-              return navigate("/manager/building-info");
+              console.log('building delete response', res);
+              return navigate('/manager/building-info');
             } catch (error) {
-              console.log("error in delete building", error);
-              toast.error(
-                error?.data?.message || "Error while deleting building"
-              );
+              console.log('error in delete building', error);
+              toast.error(error?.data?.message || 'Error while deleting building');
             }
           },
         },
         {
-          label: "No",
+          label: 'No',
         },
       ],
     });
   };
 
-  useEffect(() => {
-    if (data) setBuildingData(data?.data);
-  }, [data]);
-  console.log("buildingDataaaaa", buildingData);
   return (
     <div className="">
       <section>
@@ -108,11 +160,19 @@ const BuildingView = () => {
             </div>
             <div className="col-span-12 lg:col-span-8">
               <div className="flex flex-wrap gap-4">
-                {spacesCardsData.map((card, i) => {
+                {spacesCardsData?.map((card, i) => {
                   if (i < 3) {
-                    return <PrimaryWidgetCard cardData={card} key={i} />;
+                    return (
+                      <PrimaryWidgetCard
+                        key={i}
+                        cardData={card}
+                        buildingId={buildingId}
+                        cardType={card?.cardType}
+                        onFilterChange={handleFilterChange}
+                      />
+                    );
                   } else if (i == 3) {
-                    return <SecondaryWidgetCard cardData={card} key={i} />;
+                    return <SecondaryWidgetCard key={i} cardData={card} />;
                   }
                 })}
               </div>
@@ -121,9 +181,7 @@ const BuildingView = () => {
           <div className="mt-4">
             {/* <img src={buildingData?.twoDImage?.url} alt="image" className="rounded-lg object-cover" /> */}
             <ShowCanvasData
-              polygons={
-                buildingData?.polygonData ? buildingData?.polygonData : []
-              }
+              polygons={buildingData?.polygonData ? buildingData?.polygonData : []}
               image={buildingData?.twoDImage?.url}
               view="building-view"
             />
@@ -142,14 +200,12 @@ const BuildingView = () => {
               type="text"
               placeholder="Search"
               className="w-full text-xs md:text-base bg-transparent border-none focus:outline-none text-[#7E7E7E]"
+              onChange={(e) => setSearchInput(e.target.value)}
             />
           </div>
         </div>
         <div className="border-t border-[#E7E7E7]"></div>
-        <ParkingFloor
-          data={floorsData?.data}
-          linkTo={(id) => `/manager/floor-view/${buildingId}/${id}`}
-        />
+        <ParkingFloor data={buildingFloorsData} linkTo={(id) => `/manager/floor-view/${buildingId}/${id}`} />
       </div>
     </div>
   );
@@ -162,53 +218,37 @@ const BuildingDetails = ({ data }) => {
     <div className="bg-white p-4 border-[1px] shadow-md rounded-lg h-full">
       <h2 className="mb-2">Building Details</h2>
       <div className="flex gap-5 items-center flex-wrap">
-        <img
-          src={data?.twoDImage?.url}
-          alt="image"
-          className="size-[150] rounded-lg object-cover"
-        />
+        <img src={data?.twoDImage?.url} alt="image" className="size-[150] rounded-lg object-cover" />
         <div className="flex flex-col gap-2">
           <div>
             <div className="flex gap-1 items-center">
-              <p className="text-sm font-[700] text-[#20312EB2]">
-                Building Name
-              </p>
+              <p className="text-sm font-[700] text-[#20312EB2]">Building Name</p>
             </div>
             <p className="text-sm font-[700] text-[#414141]">{data?.name}</p>
           </div>
           <div>
             <div className="flex gap-1 items-center">
-              <p className="text-sm font-[700] text-[#20312EB2]">
-                Building Type
-              </p>
+              <p className="text-sm font-[700] text-[#20312EB2]">Building Type</p>
             </div>
             <p className="text-sm font-[700] text-[#414141]">{data?.type}</p>
           </div>
           <div>
             <div className="flex gap-1 items-center">
-              <p className="text-sm font-[700] text-[#20312EB2]">
-                Building Address
-              </p>
+              <p className="text-sm font-[700] text-[#20312EB2]">Building Address</p>
             </div>
             <p className="text-sm font-[700] text-[#414141]">{data?.address}</p>
           </div>
           <div>
             <div className="flex gap-1 items-center">
-              <p className="text-sm font-[700] text-[#20312EB2]">
-                Building Area
-              </p>
+              <p className="text-sm font-[700] text-[#20312EB2]">Building Area</p>
             </div>
             <p className="text-sm font-[700] text-[#414141]">{data?.area}</p>
           </div>
           <div>
             <div className="flex gap-1 items-center">
-              <p className="text-sm font-[700] text-[#20312EB2]">
-                Building Description
-              </p>
+              <p className="text-sm font-[700] text-[#20312EB2]">Building Description</p>
             </div>
-            <p className="text-sm font-[700] text-[#414141]">
-              {data?.description}
-            </p>
+            <p className="text-sm font-[700] text-[#414141]">{data?.description}</p>
           </div>
         </div>
       </div>

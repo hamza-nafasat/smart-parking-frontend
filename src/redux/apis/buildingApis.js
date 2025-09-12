@@ -16,8 +16,8 @@ const buildingApis = createApi({
     }),
     // get all buildings
     getAllBuildings: builder.query({
-      query: () => ({
-        url: `/all`,
+      query: ({ search }) => ({
+        url: `/all?search=${search || ''}`,
         method: 'GET',
       }),
       providesTags: [{ type: 'Building', id: 'LIST' }],

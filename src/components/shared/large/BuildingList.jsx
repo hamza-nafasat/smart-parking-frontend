@@ -1,17 +1,17 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useState } from "react";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
-import ReactPaginate from "react-paginate";
-import { useNavigate } from "react-router-dom";
-import Slider from "react-slick";
+import { useEffect, useState } from 'react';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa6';
+import ReactPaginate from 'react-paginate';
+import { useNavigate } from 'react-router-dom';
+import Slider from 'react-slick';
 import {
   FreeSpaceIcon,
   LocationIcon,
   OccupiedParkingIcon,
   SensorIssueIcon,
   TotalParkingIcon,
-} from "../../../assets/svgs/Icon";
-import { useGetAllBuildingsQuery } from "../../../redux/apis/buildingApis";
+} from '../../../assets/svgs/Icon';
+import { useGetAllBuildingsQuery } from '../../../redux/apis/buildingApis';
 
 // Carousel settings for image slider
 const carouselSettings = {
@@ -26,9 +26,11 @@ const carouselSettings = {
 };
 
 // Main component
-const BuildingList = ({ redirect = "admin" }) => {
+const BuildingList = ({ redirect = 'admin', search = '' }) => {
   const [buildingsData, setBuildingsData] = useState([]);
-  const { data } = useGetAllBuildingsQuery();
+  const { data } = useGetAllBuildingsQuery({ search });
+
+  console.log('search', search);
 
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 4;
@@ -61,20 +63,20 @@ const BuildingList = ({ redirect = "admin" }) => {
             <FaChevronRight fontSize={12} />
           </button>
         }
-        breakLabel={"..."}
+        breakLabel={'...'}
         pageCount={Math.ceil(buildingsData?.length / itemsPerPage)}
         marginPagesDisplayed={2}
         pageRangeDisplayed={3}
         onPageChange={handlePageClick}
-        containerClassName={"flex justify-end px-0 md:px-10 mt-4 space-x-4"}
-        pageClassName={"inline-block"}
+        containerClassName={'flex justify-end px-0 md:px-10 mt-4 space-x-4'}
+        pageClassName={'inline-block'}
         pageLinkClassName={
-          "flex justify-center items-center h-[30px] w-[30px]  border border-gray-300 text-[#404B52] rounded hover:bg-gray-100 transition"
+          'flex justify-center items-center h-[30px] w-[30px]  border border-gray-300 text-[#404B52] rounded hover:bg-gray-100 transition'
         }
-        activeClassName={"bg-primary rounded  text-white"}
-        previousClassName={"inline-block"}
-        nextClassName={"inline-block"}
-        disabledClassName={"opacity-50 cursor-not-allowed"}
+        activeClassName={'bg-primary rounded  text-white'}
+        previousClassName={'inline-block'}
+        nextClassName={'inline-block'}
+        disabledClassName={'opacity-50 cursor-not-allowed'}
       />
     </div>
   );
@@ -92,17 +94,21 @@ const SingleBuilding = ({ building, redirect }) => {
         <div className="w-[249px] h-[150px] rounded-xl overflow-hidden">
           <Slider {...carouselSettings}>
             {/* {building?.buildingImages?.map((img, i) => ( */}
-            <img src={building?.twoDImage?.url} alt="image" className="w-[249px] h-[150px] rounded-xl object-cover" />
+            <img
+              src={building?.building?.twoDImage?.url}
+              alt="image"
+              className="w-[249px] h-[150px] rounded-xl object-cover"
+            />
             {/* ))} */}
           </Slider>
         </div>
 
         {/* Content */}
         <div>
-          <h4 className="text-base md:text-xl font-bold text-[#000]">{building?.name}</h4>
+          <h4 className="text-base md:text-xl font-bold text-[#000]">{building?.building?.name}</h4>
           <div className="flex items-center gap-2">
             <LocationIcon />
-            <p className="text-[10px] font-semibold text-[#47484b]">{building?.address}</p>
+            <p className="text-[10px] font-semibold text-[#47484b]">{building?.building?.address}</p>
           </div>
           {/* <div className="flex items-center gap-2 mt-1">
             <TwentyFourSevenIcon />
@@ -111,28 +117,28 @@ const SingleBuilding = ({ building, redirect }) => {
           <div className="flex flex-wrap gap-4 xl:gap-5 mt-6">
             <ParkingList
               data={{
-                title: "Total No. of Parking Space",
-                value: building?.totalParkingSpace,
+                title: 'Total No. of Parking Space',
+                value: building?.stats?.totalSlots,
                 icon: <TotalParkingIcon />,
               }}
             />
             <ParkingList
               data={{
-                title: "Total Occupied Parking",
-                value: building?.totalOccupiedSpace,
+                title: 'Total Occupied Parking',
+                value: building?.stats?.occupiedSpace,
                 icon: <OccupiedParkingIcon />,
               }}
             />
             <ParkingList
               data={{
-                title: "Total Free Space",
-                value: building?.totalFreeSpace,
+                title: 'Total Free Space',
+                value: building?.stats?.freeSpace,
                 icon: <FreeSpaceIcon />,
               }}
             />
             <ParkingList
               data={{
-                title: "Sensor Issue",
+                title: 'Sensor Issue',
                 value: building?.sensorIssue,
                 icon: <SensorIssueIcon />,
               }}
@@ -143,7 +149,7 @@ const SingleBuilding = ({ building, redirect }) => {
       <div className="flex">
         <button
           className="text-primary text-sm md:text-base font-bold underline h-fit"
-          onClick={() => navigate(`/${redirect}/building-view/${building?._id}`)}
+          onClick={() => navigate(`/${redirect}/building-view/${building?.building?._id}`)}
         >
           View Details
         </button>
@@ -160,7 +166,7 @@ const ParkingList = ({ data }) => {
       <div>
         <h4 className="text-sm md:text-base font-bold text-[#292D32]">{data?.title}</h4>
         <h6 className="text-sm md:text-base font-medium text-[#000000CC]">
-          {data?.value} {data?.title === "Sensor Issue" ? "" : "Space"}
+          {data?.value} {data?.title === 'Sensor Issue' ? '' : 'Space'}
         </h6>
       </div>
     </div>
