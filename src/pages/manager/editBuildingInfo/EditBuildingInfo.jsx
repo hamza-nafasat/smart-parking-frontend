@@ -6,13 +6,12 @@ import Dropdown from '../../../components/shared/small/Dropdown';
 import Input from '../../../components/shared/small/Input';
 import { useGetSingleBuildingQuery, useUpdateSingleBuildingMutation } from '../../../redux/apis/buildingApis';
 import UploadModel from '../addParkingSpace/components/UploadModel';
-import { useGetSingleBuildingForAdminQuery } from '../../../redux/apis/buildingApis';
 
 function EditBuildingInfo() {
   const navigate = useNavigate();
   const buildingId = useParams().id;
   const [updateBuilding, { isLoading }] = useUpdateSingleBuildingMutation();
-  const { data, refetch } = useGetSingleBuildingForAdminQuery(buildingId);
+  const { data, refetch } = useGetSingleBuildingQuery(buildingId);
   const [polygons, setPolygons] = useState([]);
   const [oldImageSrc, setOldImageSrc] = useState(null);
   const [imageSrc, setImageSrc] = useState(null);
@@ -97,7 +96,7 @@ function EditBuildingInfo() {
   useEffect(() => {
     if (oldImageSrc) setImageSrc(oldImageSrc);
     if (polygons?.length) setBuilding({ ...building, buildingCoordinates: polygons });
-  }, [building, oldImageSrc, polygons]);
+  }, [oldImageSrc, polygons]);
 
   return (
     <div className="mt-4">

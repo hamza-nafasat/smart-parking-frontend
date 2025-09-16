@@ -8,14 +8,11 @@ import useFetchAndMakeSensorSlice from '../../../../components/hooks/useFetchAnd
 import Alerts from '../../../../components/shared/large/Alerts';
 import FloorDetail from '../../../../components/shared/large/FloorDetail';
 import { PrimaryWidgetCard, SecondaryWidgetCard } from '../../../../components/shared/large/WidgetCard';
-import { useDeleteSingleFloorMutation, useGetSingleFloorQuery } from '../../../../redux/apis/floorApis';
+import { useDeleteSingleFloorMutation, useGetSingleBuildingFloorQuery } from '../../../../redux/apis/floorApis';
 import { useGetAllSlotsQuery } from '../../../../redux/apis/slotApis';
 import { alertsData, spacesCardsData } from '../../../admin/buildingInfo/utils/buildingData';
 import ShowCanvasData from '../../addParkingSpace/components/ShowCanvasData';
-import {
-  useGetFloorAnalyticsForAdminQuery,
-  useGetFloorOverallAnalyticsForAdminQuery,
-} from '../../../../redux/apis/floorApis';
+import { useGetFloorAnalyticsQuery, useGetFloorOverallAnalyticsQuery } from '../../../../redux/apis/floorApis';
 import { skipToken } from '@reduxjs/toolkit/query';
 
 const FloorView = () => {
@@ -25,7 +22,7 @@ const FloorView = () => {
   const navigate = useNavigate();
   const [deleteFloor] = useDeleteSingleFloorMutation();
   const [floorData, setFloorData] = useState(null);
-  const { data } = useGetSingleFloorQuery(floorId);
+  const { data } = useGetSingleBuildingFloorQuery(floorId);
   const [polygons, setPolygons] = useState([]);
   const { data: slots } = useGetAllSlotsQuery(floorId);
   const { refetchHook } = useFetchAndMakeSensorSlice();
@@ -35,9 +32,9 @@ const FloorView = () => {
     cardType: null,
     filter: 'daily',
   });
-  const { data: floorAnalytics } = useGetFloorOverallAnalyticsForAdminQuery({ floorId });
+  const { data: floorAnalytics } = useGetFloorOverallAnalyticsQuery({ floorId });
 
-  const { data: floorAnalyticsPerFilter } = useGetFloorAnalyticsForAdminQuery(
+  const { data: floorAnalyticsPerFilter } = useGetFloorAnalyticsQuery(
     filterState.cardType && filterState.filter
       ? { floorId, cardType: filterState.cardType, filter: filterState.filter }
       : skipToken

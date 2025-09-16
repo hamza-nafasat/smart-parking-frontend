@@ -1,17 +1,17 @@
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
-import { useNavigate, useParams } from "react-router-dom";
-import { AccordionEditIcon } from "../../../assets/svgs/Icon";
-import Button from "../../../components/shared/small/Button";
-import Input from "../../../components/shared/small/Input";
-import { useGetSingleFloorQuery, useUpdateSingleFloorMutation } from "../../../redux/apis/floorApis";
-import UpdateModel from "../addParkingSpace/components/UpdateModel";
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import { useNavigate, useParams } from 'react-router-dom';
+import { AccordionEditIcon } from '../../../assets/svgs/Icon';
+import Button from '../../../components/shared/small/Button';
+import Input from '../../../components/shared/small/Input';
+import { useGetSingleBuildingFloorQuery, useUpdateSingleFloorMutation } from '../../../redux/apis/floorApis';
+import UpdateModel from '../addParkingSpace/components/UpdateModel';
 import {
   useCreateSlotsInBulkMutation,
   useDeleteMultipleSlotsMutation,
   useGetAllSlotsQuery,
-} from "../../../redux/apis/slotApis";
-import useFetchAndMakeSensorSlice from "../../../components/hooks/useFetchAndMakeSensorSlice";
+} from '../../../redux/apis/slotApis';
+import useFetchAndMakeSensorSlice from '../../../components/hooks/useFetchAndMakeSensorSlice';
 
 function EditFloorInfo() {
   const navigate = useNavigate();
@@ -21,13 +21,13 @@ function EditFloorInfo() {
 
   const { refetchHook } = useFetchAndMakeSensorSlice();
 
-  const { data, refetch: refetchFloor } = useGetSingleFloorQuery(floorId);
+  const { data, refetch: refetchFloor } = useGetSingleBuildingFloorQuery(floorId);
   const { data: slots } = useGetAllSlotsQuery(floorId);
   const [updateFloor, { isLoading }] = useUpdateSingleFloorMutation();
   const [addMultiSlots] = useCreateSlotsInBulkMutation();
   const [deleteMultiSlots] = useDeleteMultipleSlotsMutation();
 
-  const [name, setName] = useState("");
+  const [name, setName] = useState('');
   const [noOfParkingSpace, setNumberOfParkingSpace] = useState();
   const [originalImage, setOriginalImage] = useState(null);
   const [polygons, setPolygons] = useState([]);
@@ -36,12 +36,12 @@ function EditFloorInfo() {
   const [polygonsForCreate, setPolygonsForCreate] = useState([]);
   const [polygonsForDelete, setPolygonsForDelete] = useState([]);
 
-  console.log("polygons for create", polygonsForCreate);
+  console.log('polygons for create', polygonsForCreate);
 
   const saveClickHandler = async () => {
     try {
       // make data for update
-      let message = "";
+      let message = '';
       let dataForUpdate = {};
       if (name) dataForUpdate.name = name;
       if (originalImage) dataForUpdate.file = originalImage;
@@ -56,7 +56,7 @@ function EditFloorInfo() {
       // remove polygons first and then add new polygons
       // -----------------------------------------------
       if (dataForUpdate?.polygonsForDelete?.length) {
-        const slotsIds = dataForUpdate.polygonsForDelete?.join(",");
+        const slotsIds = dataForUpdate.polygonsForDelete?.join(',');
         const res = await deleteMultiSlots(slotsIds).unwrap();
         if (res?.success) message += `${dataForUpdate.polygonsForDelete?.length} slots deleted`;
       }
@@ -72,17 +72,17 @@ function EditFloorInfo() {
       // update floor
       // -------------
       const formData = new FormData();
-      if (dataForUpdate?.name) formData.append("name", dataForUpdate?.name);
-      if (dataForUpdate?.noOfParkingSpace) formData.append("noOfParkingSpace", dataForUpdate?.noOfParkingSpace);
-      if (originalImage) formData.append("file", originalImage);
+      if (dataForUpdate?.name) formData.append('name', dataForUpdate?.name);
+      if (dataForUpdate?.noOfParkingSpace) formData.append('noOfParkingSpace', dataForUpdate?.noOfParkingSpace);
+      if (originalImage) formData.append('file', originalImage);
 
       const res = await updateFloor({ id: floorId, data: formData }).unwrap();
       if (res?.success) toast.success(`${message} and Floor updated successfully`);
       await Promise.all([refetchFloor(), refetchHook()]);
       return navigate(`/manager/floor-view/${buildingId}/${floorId}`);
     } catch (error) {
-      console.log("Error in update floor", error);
-      toast.error(error?.data?.message || "Something went wrong");
+      console.log('Error in update floor', error);
+      toast.error(error?.data?.message || 'Something went wrong');
     }
   };
 
@@ -148,7 +148,7 @@ function EditFloorInfo() {
         <div className="min-w-full flex justify-end pr-6 m-2">
           <Button
             disabled={isLoading}
-            className={`${isLoading ? "cursor-not-allowed opacity-30" : ""}`}
+            className={`${isLoading ? 'cursor-not-allowed opacity-30' : ''}`}
             width="w-[200px]"
             type="button"
             text="Save Floor Data"

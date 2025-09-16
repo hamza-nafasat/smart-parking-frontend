@@ -30,13 +30,6 @@ const buildingApis = createApi({
       }),
       providesTags: [{ type: 'Building', id: 'LIST' }],
     }),
-    // get single building
-    getSingleBuilding: builder.query({
-      query: (id) => ({
-        url: `/single/${id}`,
-        method: 'GET',
-      }),
-    }),
     // update single building
     updateSingleBuilding: builder.mutation({
       query: ({ id, data }) => ({
@@ -61,33 +54,33 @@ const buildingApis = createApi({
         method: 'GET',
       }),
     }),
-    // get single building for admin
-    getSingleBuildingForAdmin: builder.query({
+    // get single building
+    getSingleBuilding: builder.query({
       query: (id) => ({
-        url: `/single/admin/${id}`,
+        url: `/single/building/${id}`,
         method: 'GET',
       }),
     }),
-    // get revenue overview for single building for admin
-    getRevenueOverviewForSingleBuildingForAdmin: builder.query({
+    // get revenue overview for single building
+    getRevenueOverviewForSingleBuilding: builder.query({
       query: ({ type, buildingId }) => ({
-        url: `/single/building/admin/revenue-overview?type=${type}&buildingId=${buildingId}`,
+        url: `/single-building/revenue-overview?type=${type}&buildingId=${buildingId}`,
         method: 'GET',
       }),
       invalidatesTags: [{ type: 'Building', id: 'LIST' }],
     }),
-    // GET building analytics for admin on building view for performance, freespace, occupied space trends
-    getBuildingAnalyticsForAdmin: builder.query({
+    // GET building analytics on building view for performance, freespace, occupied space trends
+    getBuildingAnalytics: builder.query({
       query: ({ buildingId, cardType, filter }) => ({
-        url: `/single/building/admin/analytics?buildingId=${buildingId}&cardType=${cardType}&filter=${filter}`,
+        url: `/single-building/analytics?buildingId=${buildingId}&cardType=${cardType}&filter=${filter}`,
         method: 'GET',
       }),
       invalidatesTags: [{ type: 'Building', id: 'LIST' }],
     }),
-    // get building overall analytics for admin
-    getBuildingOverallAnalyticsForAdmin: builder.query({
+    // get building overall analytics
+    getBuildingOverallAnalytics: builder.query({
       query: ({ buildingId }) => ({
-        url: `/single/building/admin/overall-analytics?buildingId=${buildingId}`,
+        url: `/single-building/overall-analytics?buildingId=${buildingId}`,
         method: 'GET',
       }),
       invalidatesTags: [{ type: 'Building', id: 'LIST' }],
@@ -99,13 +92,12 @@ export const {
   useCreateBuildingMutation,
   useGetAllBuildingsQuery,
   useGetAllBuildingsForUserQuery,
-  useGetSingleBuildingQuery,
   useUpdateSingleBuildingMutation,
   useDeleteSingleBuildingMutation,
   useGetMostVisitedBuildingsQuery,
-  useGetSingleBuildingForAdminQuery,
-  useGetRevenueOverviewForSingleBuildingForAdminQuery,
-  useGetBuildingAnalyticsForAdminQuery,
-  useGetBuildingOverallAnalyticsForAdminQuery,
+  useGetSingleBuildingQuery,
+  useGetRevenueOverviewForSingleBuildingQuery,
+  useGetBuildingAnalyticsQuery,
+  useGetBuildingOverallAnalyticsQuery,
 } = buildingApis;
 export default buildingApis;

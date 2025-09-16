@@ -56,9 +56,11 @@ const UserViewSlip = () => {
           />
           <List list={{ title: 'Spot', value: booking?.slot?.id }} />
           <Heading heading="Payment Transaction details" />
-          <List list={{ title: 'From', value: '0232392449343022' }} />
-          <List list={{ title: 'To', value: 'company account' }} />
-          <List list={{ title: 'Amount', value: '30.00 USD' }} />
+          <List list={{ title: 'From', value: booking?.firstName + ' ' + booking?.lastName || 'John Doe' }} />
+          <List
+            list={{ title: 'To', value: booking?.owner?.firstName + ' ' + booking?.owner?.lastName || 'John Doe' }}
+          />
+          <List list={{ title: 'Amount', value: booking?.paymentDetails?.amount || '30.00 USD' }} />
           <div className="mt-4 md:mt-6">
             <Button text="Get QR Code" width="w-full" onClick={() => setModal(true)} />
           </div>

@@ -14,8 +14,9 @@ import { revenueOverviewData, watchlistData } from '../../../data/data';
 import { dashboardBookingData, dashboradColumns } from './utils/DashboardColumn';
 import GlobalTable from '../../../components/shared/large/GlobalTable';
 import { useNavigate } from 'react-router-dom';
-import { useGetAllBookingsOfTodayForAdminAndManagerQuery } from '../../../redux/apis/bookingApis';
+import { useGetAllBookingsOfTodayQuery } from '../../../redux/apis/bookingApis';
 import { useState, useEffect } from 'react';
+import useDebounce from '../../../components/hooks/useDebounce';
 
 const data = [
   {
@@ -122,10 +123,22 @@ const reveniewData = [
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
+  const [bookingName, setBookingName] = useState('');
+  const [bookingOrder, setBookingOrder] = useState('newest');
+  const debouncedBookingName = useDebounce(bookingName, 500);
   const [dashboardBookingData, setDashboardBookingData] = useState([]);
-  const { data: bookingData } = useGetAllBookingsOfTodayForAdminAndManagerQuery();
+  const { data: bookingData } = useGetAllBookingsOfTodayQuery({
+    search: debouncedBookingName,
+    order: bookingOrder,
+  });
 
-  console.log('dashboardBookingData', dashboardBookingData);
+  const handleBookingSearchData = (data) => {
+    setBookingName(data);
+  };
+
+  const handleBookingOrderData = (data) => {
+    setBookingOrder(data.target.value);
+  };
 
   useEffect(() => {
     if (bookingData) {
@@ -214,6 +227,8 @@ const AdminDashboard = () => {
             columns={dashboradColumns(navigate)}
             data={dashboardBookingData}
             heading="Today Parking Booking Summary"
+            searchData={handleBookingSearchData}
+            orderData={handleBookingOrderData}
           />
         </div>
       </div>

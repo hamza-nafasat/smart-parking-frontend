@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
 import CustomAreaChart from '../../../../components/charts/CustomAreaChart';
-import { useGetRevenueOverviewForSingleBuildingForAdminQuery } from '../../../../redux/apis/buildingApis';
+import { useGetRevenueOverviewForSingleBuildingQuery } from '../../../../redux/apis/buildingApis';
 
 const revenueData = [
   { name: '02 july', uv: 2455.0 },
@@ -23,7 +23,7 @@ const revenueData = [
 const RevenueOverview = ({ buildingId }) => {
   const [type, setType] = useState('Weekly');
   const [revenueData, setRevenueData] = useState([]);
-  const { data } = useGetRevenueOverviewForSingleBuildingForAdminQuery({ type, buildingId });
+  const { data } = useGetRevenueOverviewForSingleBuildingQuery({ type, buildingId });
 
   useEffect(() => {
     if (data) {

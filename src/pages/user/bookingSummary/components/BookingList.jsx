@@ -25,8 +25,8 @@ const carouselSettings = {
 };
 
 // Main component
-const BookingList = ({ listData }) => {
-  const { data, isLoading, refetch } = useGetMyAllBookingsQuery();
+const BookingList = ({ listData, search, order }) => {
+  const { data, isLoading, refetch } = useGetMyAllBookingsQuery({ search, order });
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 4;
 

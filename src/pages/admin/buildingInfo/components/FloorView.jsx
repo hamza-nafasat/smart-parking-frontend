@@ -8,9 +8,9 @@ import d2parking from '../../../../assets/images/building/2dparking.png';
 import { PrimaryWidgetCard, SecondaryWidgetCard } from '../../../../components/shared/large/WidgetCard';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
-  useGetBuildingFloorForAdminQuery,
-  useGetFloorAnalyticsForAdminQuery,
-  useGetFloorOverallAnalyticsForAdminQuery,
+  useGetSingleBuildingFloorQuery,
+  useGetFloorAnalyticsQuery,
+  useGetFloorOverallAnalyticsQuery,
 } from '../../../../redux/apis/floorApis';
 import { useEffect } from 'react';
 import { skipToken } from '@reduxjs/toolkit/query';
@@ -20,15 +20,15 @@ const FloorView = () => {
   const navigate = useNavigate();
   const floorId = useParams().id;
   const [floorDetailsList, setFloorDetailsList] = React.useState(null);
-  const { data } = useGetBuildingFloorForAdminQuery(floorId);
+  const { data } = useGetSingleBuildingFloorQuery(floorId);
   const [spacesCardsData, setSpacesCardsData] = useState(null);
   const [filterState, setFilterState] = useState({
     cardType: null,
     filter: 'daily',
   });
-  const { data: floorAnalytics } = useGetFloorOverallAnalyticsForAdminQuery({ floorId });
+  const { data: floorAnalytics } = useGetFloorOverallAnalyticsQuery({ floorId });
 
-  const { data: floorAnalyticsPerFilter } = useGetFloorAnalyticsForAdminQuery(
+  const { data: floorAnalyticsPerFilter } = useGetFloorAnalyticsQuery(
     filterState.cardType && filterState.filter
       ? { floorId, cardType: filterState.cardType, filter: filterState.filter }
       : skipToken

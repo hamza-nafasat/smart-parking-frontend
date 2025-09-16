@@ -8,13 +8,14 @@ import { bookingSummaryColumnsBuildingInfo } from '../../parkingSummary/componen
 import { alertsData, parkingFloorListData } from '../utils/buildingData';
 import BuildingData from './BuildingData';
 import RevenueOverview from './RevenueOverview';
-import { useGetSingleBuildingForAdminQuery } from '../../../../redux/apis/buildingApis';
+import { useGetSingleBuildingQuery } from '../../../../redux/apis/buildingApis';
 import { useGetBookingSummaryOfBuildingForAdminQuery } from '../../../../redux/apis/bookingApis';
-import { useGetSingleBuildingFloorsForAdminQuery } from '../../../../redux/apis/floorApis';
-import { useGetBuildingOverallAnalyticsForAdminQuery } from '../../../../redux/apis/buildingApis';
-import { useGetBuildingAnalyticsForAdminQuery } from '../../../../redux/apis/buildingApis';
+import { useGetFloorsOfSingleBuildingQuery } from '../../../../redux/apis/floorApis';
+import { useGetBuildingOverallAnalyticsQuery } from '../../../../redux/apis/buildingApis';
+import { useGetBuildingAnalyticsQuery } from '../../../../redux/apis/buildingApis';
 import { useEffect, useState } from 'react';
 import { skipToken } from '@reduxjs/toolkit/query';
+import useDebounce from '../../../../components/hooks/useDebounce';
 
 const BuildingView = () => {
   const navigate = useNavigate();
@@ -23,9 +24,12 @@ const BuildingView = () => {
   const [buildingFloorsData, setBuildingFloorsData] = useState(null);
   const [spacesCardsData, setSpacesCardsData] = useState(null);
   const buildingId = useParams().id;
-  const { data } = useGetSingleBuildingForAdminQuery(buildingId);
+  const { data } = useGetSingleBuildingQuery(buildingId);
   const { data: bookingSummaryData } = useGetBookingSummaryOfBuildingForAdminQuery(buildingId);
-  const { data: buildingFloors } = useGetSingleBuildingFloorsForAdminQuery(buildingId);
+
+  const [searchInput, setSearchInput] = useState('');
+  const floorName = useDebounce(searchInput, 1000);
+  const { data: buildingFloors } = useGetFloorsOfSingleBuildingQuery({ buildingId, floorName });
 
   // new state for filter-based analytics
   const [filterState, setFilterState] = useState({
@@ -33,9 +37,9 @@ const BuildingView = () => {
     filter: 'daily',
   });
 
-  const { data: buildingAnalytics } = useGetBuildingOverallAnalyticsForAdminQuery({ buildingId });
+  const { data: buildingAnalytics } = useGetBuildingOverallAnalyticsQuery({ buildingId });
 
-  const { data: buildingAnalyticsPerFilter } = useGetBuildingAnalyticsForAdminQuery(
+  const { data: buildingAnalyticsPerFilter } = useGetBuildingAnalyticsQuery(
     filterState.cardType && filterState.filter
       ? { buildingId, cardType: filterState.cardType, filter: filterState.filter }
       : skipToken
@@ -133,6 +137,7 @@ const BuildingView = () => {
                 type="text"
                 placeholder="Search"
                 className="w-full text-xs md:text-base bg-transparent border-none focus:outline-none text-[#7E7E7E]"
+                onChange={(e) => setSearchInput(e.target.value)}
               />
             </div>
           </div>

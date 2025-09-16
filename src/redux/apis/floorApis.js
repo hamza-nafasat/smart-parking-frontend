@@ -30,13 +30,6 @@ const floorApis = createApi({
       }),
       providesTags: [{ type: 'Floor', id: 'LIST' }],
     }),
-    // get single floor
-    getSingleFloor: builder.query({
-      query: (id) => ({
-        url: `/single/${id}`,
-        method: 'GET',
-      }),
-    }),
     // update single floor
     updateSingleFloor: builder.mutation({
       query: ({ id, data }) => ({
@@ -54,32 +47,34 @@ const floorApis = createApi({
       }),
       invalidatesTags: [{ type: 'Floor', id: 'LIST' }],
     }),
-    // get single building floors for admin
-    getSingleBuildingFloorsForAdmin: builder.query({
+    // get single building floors
+    getFloorsOfSingleBuilding: builder.query({
       query: ({ buildingId, floorName }) => ({
-        url: `/single/admin/floor/${buildingId}?search=${floorName}`,
-        method: 'GET',
-      }),
-    }),
-    // get building Floor for Admin
-    getBuildingFloorForAdmin: builder.query({
-      query: (id) => ({
-        url: `/single/admin/floor/single/${id}`,
-        method: 'GET',
-      }),
-    }),
-    // GET floor analytics for admin on floor view for performance, freespace, occupied space trends
-    getFloorAnalyticsForAdmin: builder.query({
-      query: ({ floorId, cardType, filter }) => ({
-        url: `/single/admin/floor-analytics-per-filter?floorId=${floorId}&cardType=${cardType}&filter=${filter}`,
+        url: `/single-building/floors/${buildingId}?search=${floorName}`,
         method: 'GET',
       }),
       invalidatesTags: [{ type: 'Floor', id: 'LIST' }],
     }),
-    // get floor overall analytics for admin
-    getFloorOverallAnalyticsForAdmin: builder.query({
+    // get building Floor
+    getSingleBuildingFloor: builder.query({
+      query: (id) => ({
+        url: `/single-building/floor/single/${id}`,
+        method: 'GET',
+      }),
+      invalidatesTags: [{ type: 'Floor', id: 'LIST' }],
+    }),
+    // GET floor analytics on floor view for performance, freespace, occupied space trends
+    getFloorAnalytics: builder.query({
+      query: ({ floorId, cardType, filter }) => ({
+        url: `/single-floor/floor-analytics-per-filter?floorId=${floorId}&cardType=${cardType}&filter=${filter}`,
+        method: 'GET',
+      }),
+      invalidatesTags: [{ type: 'Floor', id: 'LIST' }],
+    }),
+    // get floor overall analytics
+    getFloorOverallAnalytics: builder.query({
       query: ({ floorId }) => ({
-        url: `/single/admin/floor/overall-analytics/${floorId}`,
+        url: `/single/floor/overall-analytics/${floorId}`,
         method: 'GET',
       }),
       invalidatesTags: [{ type: 'Floor', id: 'LIST' }],
@@ -91,12 +86,11 @@ export const {
   useCreateFloorMutation,
   useCreateFloorsInBulkMutation,
   useGetAllFloorsQuery,
-  useGetSingleFloorQuery,
   useUpdateSingleFloorMutation,
   useDeleteSingleFloorMutation,
-  useGetSingleBuildingFloorsForAdminQuery,
-  useGetBuildingFloorForAdminQuery,
-  useGetFloorAnalyticsForAdminQuery,
-  useGetFloorOverallAnalyticsForAdminQuery,
+  useGetFloorsOfSingleBuildingQuery,
+  useGetSingleBuildingFloorQuery,
+  useGetFloorAnalyticsQuery,
+  useGetFloorOverallAnalyticsQuery,
 } = floorApis;
 export default floorApis;

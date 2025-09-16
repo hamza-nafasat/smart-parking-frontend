@@ -25,8 +25,8 @@ const bookingApis = createApi({
     }),
     // get my all bookings
     getMyAllBookings: builder.query({
-      query: () => ({
-        url: '/my-all',
+      query: ({ search, order }) => ({
+        url: `/my-all?search=${search || ''}&order=${order || ''}`,
         method: 'GET',
       }),
       providesTags: [{ type: 'Booking', id: 'LIST' }],
@@ -63,9 +63,10 @@ const bookingApis = createApi({
       }),
       invalidatesTags: [{ type: 'Booking', id: 'LIST' }],
     }),
+    // get current bookings
     getCurrentBookings: builder.query({
-      query: () => ({
-        url: '/current-bookings',
+      query: ({ search }) => ({
+        url: `/current-bookings?search=${search || ''}`,
         method: 'GET',
       }),
       providesTags: [{ type: 'Booking', id: 'LIST' }],
@@ -85,18 +86,10 @@ const bookingApis = createApi({
         method: 'GET',
       }),
     }),
-    // get all booking for admin
-    getAllBookingsForAdmin: builder.query({
-      query: () => ({
-        url: '/all/Bookings/admin',
-        method: 'GET',
-      }),
-      providesTags: [{ type: 'Booking', id: 'LIST' }],
-    }),
-    // get all bookings of today for admin
-    getAllBookingsOfTodayForAdminAndManager: builder.query({
+    // get all bookings of today
+    getAllBookingsOfToday: builder.query({
       query: ({ search, order }) => ({
-        url: `/today/Bookings/adminAndManager?search=${search || ''}&order=${order || ''}`,
+        url: `/today?search=${search || ''}&order=${order || ''}`,
         method: 'GET',
       }),
       providesTags: [{ type: 'Booking', id: 'LIST' }],
@@ -115,7 +108,6 @@ export const {
   useGetCurrentBookingsQuery,
   useGetBookingSummaryOfBuildingForAdminQuery,
   useGetSingleBookingSlipForAdminAndManagerQuery,
-  useGetAllBookingsForAdminQuery,
-  useGetAllBookingsOfTodayForAdminAndManagerQuery,
+  useGetAllBookingsOfTodayQuery,
 } = bookingApis;
 export default bookingApis;

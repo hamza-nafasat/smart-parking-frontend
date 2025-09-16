@@ -1,14 +1,14 @@
-import { useState } from "react";
-import toast from "react-hot-toast";
-import { useNavigate, useParams } from "react-router-dom";
-import { AccordionEditIcon } from "../../../assets/svgs/Icon";
-import useFetchAndMakeSensorSlice from "../../../components/hooks/useFetchAndMakeSensorSlice";
-import Button from "../../../components/shared/small/Button";
-import Input from "../../../components/shared/small/Input";
-import { useCreateFloorMutation } from "../../../redux/apis/floorApis";
-import { useCreateSlotsInBulkMutation } from "../../../redux/apis/slotApis";
-import { customObjectId } from "../../../utils/features";
-import UploadModel from "../addParkingSpace/components/UploadModel";
+import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { useNavigate, useParams } from 'react-router-dom';
+import { AccordionEditIcon } from '../../../assets/svgs/Icon';
+import useFetchAndMakeSensorSlice from '../../../components/hooks/useFetchAndMakeSensorSlice';
+import Button from '../../../components/shared/small/Button';
+import Input from '../../../components/shared/small/Input';
+import { useCreateFloorMutation, useGetFloorsOfSingleBuildingQuery } from '../../../redux/apis/floorApis';
+import { useCreateSlotsInBulkMutation } from '../../../redux/apis/slotApis';
+import { customObjectId } from '../../../utils/features';
+import UploadModel from '../addParkingSpace/components/UploadModel';
 
 function AddNewFloor() {
   const navigate = useNavigate();
@@ -17,30 +17,30 @@ function AddNewFloor() {
   const [addFloor, { isLoading }] = useCreateFloorMutation();
   const { refetchHook } = useFetchAndMakeSensorSlice();
   const [addSlotInBulk, { isLoading: isLoadingForSlot }] = useCreateSlotsInBulkMutation();
-  const [name, setName] = useState("");
+  const [name, setName] = useState('');
   const [noOfParkingSpace, setNumberOfParkingSpace] = useState(0);
   const [originalImage, setOriginalImage] = useState(null);
   const [polygons, setPolygons] = useState([]);
   const [imageSrc, setImageSrc] = useState(null);
 
   const saveClickHandler = async () => {
-    if (!name || !noOfParkingSpace || !polygons || !originalImage) return toast.error("Fill all fields first");
+    if (!name || !noOfParkingSpace || !polygons || !originalImage) return toast.error('Fill all fields first');
     const floorId = customObjectId();
     const formData = new FormData();
     const slotData = { slots: [] };
     // create data for floor
-    formData.append("_id", floorId);
-    formData.append("name", name);
-    formData.append("buildingId", buildingId);
-    formData.append("noOfParkingSpace", String(noOfParkingSpace));
-    formData.append("polygonData", JSON.stringify(polygons));
-    if (originalImage) formData.append("file", originalImage);
+    formData.append('_id', floorId);
+    formData.append('name', name);
+    formData.append('buildingId', buildingId);
+    formData.append('noOfParkingSpace', String(noOfParkingSpace));
+    formData.append('polygonData', JSON.stringify(polygons));
+    if (originalImage) formData.append('file', originalImage);
     // create slots data
     slotData.floorId = floorId;
     slotData.buildingId = buildingId;
     polygons?.forEach((polygon) => {
       if (!polygon.id || !polygon.points || !polygon.sensorId)
-        return toast.error("Please Fill all required fields each Slot");
+        return toast.error('Please Fill all required fields each Slot');
       const singleSlot = {
         id: polygon.id,
         color: polygon?.color,
@@ -60,8 +60,8 @@ function AddNewFloor() {
         return navigate(`/manager/building-view/${buildingId}`);
       }
     } catch (error) {
-      console.log("Error in update floor", error);
-      toast.error(error?.data?.message || "Something went wrong");
+      console.log('Error in update floor', error);
+      toast.error(error?.data?.message || 'Something went wrong');
     }
   };
 
@@ -99,7 +99,7 @@ function AddNewFloor() {
         <div className="min-w-full flex justify-end pr-6 m-2">
           <Button
             disabled={isLoading || isLoadingForSlot}
-            className={`${isLoading ? "cursor-not-allowed opacity-30" : ""}`}
+            className={`${isLoading ? 'cursor-not-allowed opacity-30' : ''}`}
             width="w-[200px]"
             type="button"
             text="Add Floor"

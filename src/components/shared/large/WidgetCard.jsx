@@ -3,7 +3,7 @@ import React from 'react';
 import BlankAreaChart from '../../charts/BlankAreaChart';
 import { ParkingSensorIcon } from '../../../assets/svgs/Icon';
 import { useState, useEffect } from 'react';
-import { useGetBuildingAnalyticsForAdminQuery } from '../../../redux/apis/buildingApis';
+import { useGetBuildingAnalyticsQuery } from '../../../redux/apis/buildingApis';
 import { PerformanceIcon, FreeSpaceIcon, OccupiedParkingIcon } from '../../../assets/svgs/Icon';
 
 const PrimaryWidgetCard = ({ cardData, cardType, onFilterChange }) => {

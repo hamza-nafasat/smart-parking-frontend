@@ -12,17 +12,23 @@ import ParkingLotCard from './components/ParkingLotCard';
 import VisitedParkingCard from './components/VisitedParkingCard';
 import Loader from '../../../components/shared/small/Loader';
 import { useGetCurrentBookingsQuery } from '../../../redux/apis/bookingApis';
+import useDebounce from '../../../components/hooks/useDebounce';
 
 const UserDashboard = () => {
   const [bookingOpen, setBookingOpen] = useState(false);
   const [location, setLocation] = useState({ lat: 0, lng: 0 });
   const { data, refetch, isLoading: isLoadingBuildings } = useGetAllBuildingsForUserQuery(location);
-  const { data: currentBookings, refetch: refetchCurrent } = useGetCurrentBookingsQuery();
 
   const [city, setCity] = useState('');
   const [gettedBuildingCity, setGettedBuildingCity] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [search, setSearch] = useState('');
+
+  const [currentBookingSearch, setCurrentBookingSearch] = useState('');
+
+  const debounceSearch = useDebounce(currentBookingSearch, 500);
+
+  const { data: currentBookings, refetch: refetchCurrent } = useGetCurrentBookingsQuery({ search: debounceSearch });
 
   const openCurrentBookingHandler = async () => {
     if (!bookingOpen) await refetchCurrent();
@@ -57,6 +63,8 @@ const UserDashboard = () => {
   const handleEnterClick = (e) => {
     if (e.key === 'Enter') handleSearch();
   };
+
+  const handleGetSearchValue = (value) => setCurrentBookingSearch(value);
 
   return isLoadingBuildings ? (
     <Loader />
@@ -100,7 +108,7 @@ const UserDashboard = () => {
               bookingOpen ? 'translate-x-0' : 'translate-x-full'
             }`}
           >
-            <CurrentBookingList currentBookings={currentBookings?.data} />
+            <CurrentBookingList currentBookings={currentBookings?.data} searchCurrentBooking={handleGetSearchValue} />
           </div>
         </div>
         {/* Left Column (Fixed col-span-4) */}
@@ -149,7 +157,11 @@ const UserDashboard = () => {
 
 export default UserDashboard;
 
-const CurrentBookingList = ({ currentBookings }) => {
+const CurrentBookingList = ({ currentBookings, searchCurrentBooking }) => {
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    searchCurrentBooking(value);
+  };
   return (
     <div className="w-[230px] p-2 bg-white rounded-b-md border-[1px] border-primary shadow-md h-[500px] overflow-auto custom-scroll">
       <div className="flex items-center gap-2 bg-[#F9FBFF] border border-[#e7e7e7] rounded-[10px] py-1 px-2">
@@ -158,6 +170,7 @@ const CurrentBookingList = ({ currentBookings }) => {
           type="text"
           placeholder="Search"
           className="placeholder:text-primary w-full text-xs md:text-sm bg-transparent border-none focus:outline-none text-[#7E7E7E]"
+          onChange={handleSearch}
         />
       </div>
       <div>
@@ -170,7 +183,6 @@ const CurrentBookingList = ({ currentBookings }) => {
 };
 
 const SingleBookingCard = ({ item }) => {
-  console.log('booking item', item);
   return (
     <div className="py-2 border-b-[2px] flex flex-col items-center gap-2">
       <img src={item?.building?.twoDImage?.url} alt="image" className="w-[204px] h-[120px] rounded-xl object-cover" />

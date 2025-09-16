@@ -11,7 +11,7 @@ import SpacesCard from './components/SpacesCard';
 import SensorStatus from './components/SensorStatus';
 import LineBarChart from '../../../components/charts/LineBarChart';
 import Button from '../../../components/shared/small/Button';
-import { useGetAllBookingsOfTodayForAdminAndManagerQuery } from '../../../redux/apis/bookingApis';
+import { useGetAllBookingsOfTodayQuery } from '../../../redux/apis/bookingApis';
 import { useState, useEffect } from 'react';
 import useDebounce from '../../../components/hooks/useDebounce';
 
@@ -21,7 +21,7 @@ const ManagerDashboard = () => {
   const [bookingOrder, setBookingOrder] = useState('newest');
   const debouncedBookingName = useDebounce(bookingName, 500);
   const [dashboardBookingData, setDashboardBookingData] = useState([]);
-  const { data: bookingData } = useGetAllBookingsOfTodayForAdminAndManagerQuery({
+  const { data: bookingData } = useGetAllBookingsOfTodayQuery({
     search: debouncedBookingName,
     order: bookingOrder,
   });

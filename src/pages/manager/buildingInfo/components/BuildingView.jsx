@@ -15,10 +15,9 @@ import { alertsData, spacesCardsData } from '../../../admin/buildingInfo/utils/b
 import TwoDModelView from '../../addParkingSpace/components/TwoDModelView';
 import useFetchAndMakeSensorSlice from '../../../../components/hooks/useFetchAndMakeSensorSlice';
 import ShowCanvasData from '../../addParkingSpace/components/ShowCanvasData';
-import { useGetSingleBuildingForAdminQuery } from '../../../../redux/apis/buildingApis';
-import { useGetSingleBuildingFloorsForAdminQuery } from '../../../../redux/apis/floorApis';
-import { useGetBuildingOverallAnalyticsForAdminQuery } from '../../../../redux/apis/buildingApis';
-import { useGetBuildingAnalyticsForAdminQuery } from '../../../../redux/apis/buildingApis';
+import { useGetFloorsOfSingleBuildingQuery } from '../../../../redux/apis/floorApis';
+import { useGetBuildingOverallAnalyticsQuery } from '../../../../redux/apis/buildingApis';
+import { useGetBuildingAnalyticsQuery } from '../../../../redux/apis/buildingApis';
 import { skipToken } from '@reduxjs/toolkit/query';
 import useDebounce from '../../../../components/hooks/useDebounce';
 
@@ -27,25 +26,28 @@ const BuildingView = () => {
   const [deleteBuilding] = useDeleteSingleBuildingMutation();
   const { refetchHook } = useFetchAndMakeSensorSlice();
   const [searchInput, setSearchInput] = useState('');
-  const floorName = useDebounce(searchInput, 1000);
+  const floorName = useDebounce(searchInput, 500);
   // apis for building data mixed admin manager
 
   const [buildingData, setBuildingData] = useState(null);
   const [buildingFloorsData, setBuildingFloorsData] = useState(null);
   const [spacesCardsData, setSpacesCardsData] = useState(null);
   const buildingId = useParams().id;
-  const { data } = useGetSingleBuildingForAdminQuery(buildingId);
+  const { data } = useGetSingleBuildingQuery(buildingId);
   // apply search on it
-  const { data: buildingFloors } = useGetSingleBuildingFloorsForAdminQuery({ buildingId, floorName });
+  const { data: buildingFloors } = useGetFloorsOfSingleBuildingQuery(
+    { buildingId, floorName },
+    { refetchOnMountOrArgChange: true }
+  );
 
   const [filterState, setFilterState] = useState({
     cardType: null,
     filter: 'daily',
   });
 
-  const { data: buildingAnalytics } = useGetBuildingOverallAnalyticsForAdminQuery({ buildingId });
+  const { data: buildingAnalytics } = useGetBuildingOverallAnalyticsQuery({ buildingId });
 
-  const { data: buildingAnalyticsPerFilter } = useGetBuildingAnalyticsForAdminQuery(
+  const { data: buildingAnalyticsPerFilter } = useGetBuildingAnalyticsQuery(
     filterState.cardType && filterState.filter
       ? { buildingId, cardType: filterState.cardType, filter: filterState.filter }
       : skipToken
