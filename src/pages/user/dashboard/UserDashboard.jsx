@@ -24,6 +24,8 @@ const UserDashboard = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [search, setSearch] = useState('');
 
+  const debounceSearchForMostVisitedBuildings = useDebounce(search, 500);
+
   const [currentBookingSearch, setCurrentBookingSearch] = useState('');
 
   const debounceSearch = useDebounce(currentBookingSearch, 500);
@@ -85,7 +87,7 @@ const UserDashboard = () => {
           </div>
         </div>
         <Button
-          disable={isLoading || !city}
+          disabled={isLoading || !city}
           className={`${(isLoading || !city) && 'opacity-25 cursor-not-allowed'}`}
           text={'Search'}
           onClick={handleSearch}
@@ -146,7 +148,7 @@ const UserDashboard = () => {
               </div>
             </div>
             <div>
-              <VisitedParkingCard search={search} />
+              <VisitedParkingCard search={debounceSearchForMostVisitedBuildings} />
             </div>
           </div>
         </div>

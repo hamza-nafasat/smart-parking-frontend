@@ -49,8 +49,8 @@ const buildingApis = createApi({
     }),
     // get most visited buildings
     getMostVisitedBuildings: builder.query({
-      query: () => ({
-        url: '/most-visited-buildings',
+      query: ({ search }) => ({
+        url: `/most-visited-buildings?search=${search || ''}`,
         method: 'GET',
       }),
     }),

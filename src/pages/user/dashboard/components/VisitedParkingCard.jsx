@@ -8,7 +8,7 @@ import { useGetMostVisitedBuildingsQuery } from '../../../../redux/apis/building
 
 const VisitedParkingCard = ({ search }) => {
   const [buildings, setBuildings] = useState([]);
-  const { data } = useGetMostVisitedBuildingsQuery();
+  const { data } = useGetMostVisitedBuildingsQuery({ search });
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 4;
   const offset = currentPage * itemsPerPage;
@@ -16,20 +16,17 @@ const VisitedParkingCard = ({ search }) => {
 
   useEffect(() => {
     if (data?.data) {
-      if (search) {
-        const filteredBuildings = data?.data?.filter((building) =>
-          building?.name?.toLowerCase().includes(search?.toLowerCase())
-        );
-        setBuildings(filteredBuildings);
-      } else setBuildings(data?.data);
+      setBuildings(data?.data);
     }
-  }, [data?.data, search]);
+  }, [data?.data]);
 
   return (
     <div>
-      {parkingList?.map((building, index) => (
-        <SingleVisitingWidget key={index} building={building} />
-      ))}
+      {parkingList?.length === 0 ? (
+        <p className="text-center text-gray-500 my-4">No Record Found</p>
+      ) : (
+        parkingList.map((building, index) => <SingleVisitingWidget key={building._id || index} building={building} />)
+      )}
 
       <ReactPaginate
         previousLabel={
