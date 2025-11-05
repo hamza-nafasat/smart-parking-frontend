@@ -83,5 +83,3 @@ const AddSensor = ({ refetch, onClose }) => {
 };
 
 export default AddSensor;
-
-//-----------------
