@@ -38,7 +38,7 @@ const ConfirmBooking = () => {
         let bookingId = res?.data?._id;
         try {
           const data = await createPaymentIntent({
-            amount: 1000,
+            amount: 3000, // $30.00
             currency: 'usd',
             bookingId: res?.data?._id,
           }).unwrap();
@@ -131,8 +131,8 @@ const ConfirmBooking = () => {
             />
             <List list={{ title: 'Spot', value: booking?.slotName }} />
             <div className="border-y-[2px] border-[#00000070] py-2 my-2">
-              <List list={{ title: 'Sub total', value: '25.00 USD' }} />
-              <List list={{ title: 'Service fee', value: '5.00 USD' }} />
+              <List list={{ title: 'Sub total', value: '27.00 USD' }} />
+              <List list={{ title: 'Service fee (10%)', value: '3.00 USD' }} />
             </div>
           </div>
         </div>
