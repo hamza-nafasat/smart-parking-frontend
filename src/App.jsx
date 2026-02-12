@@ -14,6 +14,7 @@ import { userExist, userNotExist } from './redux/slices/authSlice';
 import Loader from './components/shared/small/Loader';
 import useFetchAndMakeSensorSlice from './components/hooks/useFetchAndMakeSensorSlice';
 import useDisableNumberInputScroll from './components/hooks/useDisableNumberInputScroll';
+import Settings from './pages/manager/settings/Settings';
 
 // Lazy-loaded Components
 const LandingPage = lazy(() => import('./pages/landing/LandingPage'));
@@ -141,6 +142,7 @@ function App() {
                 <Route path="add-parking-space" element={<AddParkingSpace />} />
                 <Route path="add-parking" element={<AddParking />} />
                 <Route path="view-slip/:id" element={<ViewSlipManager />} />
+                <Route path="setting" element={<Settings />} />
               </Route>
             </Route>
 

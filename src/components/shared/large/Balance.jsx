@@ -1,15 +1,33 @@
 /* eslint-disable react/prop-types */
+import { useState } from 'react';
 import { FaChevronDown } from 'react-icons/fa';
 import { HiOutlineDownload } from 'react-icons/hi';
 import { useSelector } from 'react-redux';
 import getEnv from '../../../configs/config';
+import axios from 'axios';
 
 const Balance = ({ payments }) => {
   const { user } = useSelector((state) => state.auth);
-  const redirectUri = encodeURIComponent(`${getEnv('SERVER_URL')}/api/payment/stripe/oauth/callback`);
-  const stripeConnectUrl = `https://connect.stripe.com/oauth/authorize?response_type=code&client_id=${getEnv(
-    'STRIPE_CONNECT_CLIENT_ID'
-  )}&scope=read_write&redirect_uri=${redirectUri}&state=${user?._id}`;
+  const [loading, setLoading] = useState(false);
+
+  const handleConnectAccount = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`${getEnv('SERVER_URL')}/api/payment/stripe/connect-url`, {
+        withCredentials: true,
+      });
+
+      if (response.data?.success && response.data?.url) {
+        window.location.href = response.data.url;
+      }
+    } catch (error) {
+      console.error('Error fetching Stripe Connect URL:', error);
+      alert('Failed to connect account. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="bg-white border border-[#2B2B2B33] rounded-[18px] p-4 shadow-md flex flex-col items-center">
       <div className="border-2 border-primary rounded-3xl py-4 px-6 flex items-center justify-between w-full">
@@ -43,13 +61,14 @@ const Balance = ({ payments }) => {
       </div>
 
       {!user?.stripeAccountId && (
-        <a
-          href={stripeConnectUrl}
-          className="mt-4 flex items-center justify-center gap-3 bg-primary rounded-[16px] p-4 w-[200px] text-sm font-bold text-white"
+        <button
+          onClick={handleConnectAccount}
+          disabled={loading}
+          className="mt-4 flex items-center justify-center gap-3 bg-primary rounded-[16px] p-4 w-[200px] text-sm font-bold text-white disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Connect Account
+          {loading ? 'Loading...' : 'Connect Account'}
           <HiOutlineDownload fontSize={20} color="#fff" />
-        </a>
+        </button>
       )}
     </div>
   );

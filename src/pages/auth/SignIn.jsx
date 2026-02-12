@@ -1,42 +1,43 @@
-import { useState } from "react";
-import toast from "react-hot-toast";
-import { VscEye, VscEyeClosed } from "react-icons/vsc";
-import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
-import { GoogleIcon } from "../../assets/svgs/Icon";
-import Button from "../../components/shared/small/Button";
-import Input from "../../components/shared/small/Input";
-import getEnv from "../../configs/config";
-import { useLoginMutation } from "../../redux/apis/authApis";
-import { userExist } from "../../redux/slices/authSlice";
-import AuthLayout from "./AuthLayout";
+import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { VscEye, VscEyeClosed } from 'react-icons/vsc';
+import { useDispatch } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { GoogleIcon } from '../../assets/svgs/Icon';
+import Button from '../../components/shared/small/Button';
+import Input from '../../components/shared/small/Input';
+import getEnv from '../../configs/config';
+import { useLoginMutation } from '../../redux/apis/authApis';
+import { userExist } from '../../redux/slices/authSlice';
+import AuthLayout from './AuthLayout';
 
 const SignIn = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [googleLoading, setGoogleLoading] = useState(false);
-  const [form, setForm] = useState({ email: "", password: "" });
+  const [form, setForm] = useState({ email: '', password: '' });
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [loginUser, { isLoading }] = useLoginMutation();
   const passwordVisibilityHandler = () => setIsPasswordVisible(!isPasswordVisible);
 
   const loginHandler = async (e) => {
     e.preventDefault();
-    if (!form.email || !form.password) return toast.error("Please Select Email and Password");
+    if (!form.email || !form.password) return toast.error('Please Select Email and Password');
     try {
       const response = await loginUser(form).unwrap();
       toast.success(response?.message);
-      setForm({ email: "", password: "" });
+      setForm({ email: '', password: '' });
+      console.log('response', response);
       await dispatch(userExist(response?.data));
       return navigate(`/${response?.data?.role?.toLowerCase()}`);
     } catch (error) {
-      toast.error(error?.data?.message || "Something went wrong");
-      console.log("Error in loginHandler:", error);
+      toast.error(error?.data?.message || 'Something went wrong');
+      console.log('Error in loginHandler:', error);
     }
   };
   const loginWithGoogle = () => {
     setGoogleLoading(true);
-    window.location.href = `${getEnv("SERVER_URL")}/api/auth/google`;
+    window.location.href = `${getEnv('SERVER_URL')}/api/auth/google`;
   };
   return (
     <AuthLayout>
@@ -63,7 +64,7 @@ const SignIn = () => {
             />
             <div className="relative my-4">
               <Input
-                type={isPasswordVisible ? "text" : "password"}
+                type={isPasswordVisible ? 'text' : 'password'}
                 placeholder="Enter Password"
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
@@ -87,7 +88,7 @@ const SignIn = () => {
               width="w-full"
               height="h-[45px] sm:h-[57px]"
               disabled={isLoading}
-              className={`${isLoading ? " opacity-30 !cursor-not-allowed" : ""}`}
+              className={`${isLoading ? ' opacity-30 !cursor-not-allowed' : ''}`}
             />
           </form>
         </div>
@@ -97,9 +98,9 @@ const SignIn = () => {
             onClick={loginWithGoogle}
             disabled={googleLoading}
             className={`border border-[#E0E0E9] p-3 md:p-5 rounded-[15px] cursor-pointer ${
-              googleLoading ? "opacity-30 !cursor-not-allowed" : ""
+              googleLoading ? 'opacity-30 !cursor-not-allowed' : ''
             }`}
-            style={{ boxShadow: "0px 4px 12px 0px #18BC9C0F" }}
+            style={{ boxShadow: '0px 4px 12px 0px #18BC9C0F' }}
           >
             <GoogleIcon />
           </button>

@@ -1,154 +1,171 @@
-import React, { useState } from "react";
-import Button from "../../../components/shared/small/Button";
-import Input from "../../../components/shared/small/Input";
-import Dropdown from "../../../components/shared/small/Dropdown";
+'use client';
+import { useState, useEffect } from 'react';
+// import Button from '@/components/global/small/Button';
+// import Input from '@/components/global/small/Input';
+// import { useGetProfileQuery, useUpdateProfileMutation } from '@/features/auth/authApi';
+import toast from 'react-hot-toast';
+// import Loader from '@/components/global/Loader';
+import { useSelector } from 'react-redux';
+import Button from '../../../components/shared/small/Button';
+import Input from '../../../components/shared/small/Input';
+import { useGetMyProfileQuery, useUpdateMyProfileMutation } from '../../../redux/apis/authApis';
 
 const Profile = () => {
-  const [isFormEdit, setIsFormEdit] = useState(false);
-  const [firstName, setFirstName] = useState("MKS");
-  const [lastName, setLastName] = useState("MKS");
-  const [address, setAddress] = useState("New York City");
-  const [contact, setContact] = useState("02342392323");
-  const [email, setEmail] = useState("alexarawles@gmail.com");
-  const [imgSrc, setImgSrc] = useState("https://placehold.co/113x113");
+  const { user } = useSelector((state) => state.auth);
+  const userId = user?.user?._id;
 
-  const imgSrcHandler = (e) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (reader.readyState === 2) {
-        setImgSrc(reader.result);
+  const { data, isLoading } = useGetMyProfileQuery();
+  const [updateProfile, { isLoading: isUpdating }] = useUpdateMyProfileMutation();
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [profile, setProfile] = useState(null);
+  const [formData, setFormData] = useState({});
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
+  console.log('ghghghghhg', selectedImage);
+
+  useEffect(() => {
+    if (data?.data) {
+      setProfile(data.data);
+
+      setFormData({
+        fullName: data.data.fullName || '',
+        email: data.data.email || '',
+        phoneNumber: data.data.phoneNumber || '',
+        dob: data.data.dob?.substring(0, 10) || '',
+        nationality: data.data.nationality || '',
+      });
+    }
+  }, [data]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleImageSelect = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedImage(file);
+      setPreviewImage(URL.createObjectURL(file));
+    }
+  };
+
+  const handleToggleEdit = async () => {
+    if (isEditing) {
+      try {
+        const form = new FormData();
+
+        // append text fields
+        Object.entries(formData).forEach(([key, value]) => {
+          form.append(key, value);
+        });
+
+        // append image if selected
+        if (selectedImage) {
+          form.append('images', selectedImage);
+        }
+        // IMPORTANT FIX — use correct keys: { userId, formData: form }
+        const response = await updateProfile(form).unwrap();
+
+        toast.success(response.message || 'Profile updated successfully');
+
+        // Update UI
+        setProfile(response.user);
+        setPreviewImage(null);
+        setSelectedImage(null);
+      } catch (err) {
+        toast.error(err?.data?.message || 'Failed to update profile');
       }
-    };
-    reader.readAsDataURL(e.target.files[0]);
+    }
+
+    setIsEditing((prev) => !prev);
   };
 
-  const formEditHandler = () => {
-    setIsFormEdit(!isFormEdit);
-  };
+  const ProfileField = ({ label, value }) => (
+    <div className="mb-4">
+      <label className="mb-1 block font-medium text-gray-600">{label}</label>
+      <div className="rounded-md bg-gray-200 p-2 text-gray-800">{value || '—'}</div>
+    </div>
+  );
+
+  if (isLoading || !profile)
+    return (
+      <div class="flex items-center justify-center h-screen">
+        <div class="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  const imageUrl = profile.image?.url?.startsWith('http')
+    ? profile.image.url
+    : `${process?.env?.NEXT_PUBLIC_BASE_URL}${profile?.image?.url}`;
+  console.log('imageUrlimageUrlimageUrl', imageUrl);
+
   return (
-    <div className="flex justify-between gap-4 px-0 md:px-[40px] py-2 md:py-[30px]">
-      <form className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 grow">
-        <div className="md:col-span-2 flex items-center gap-4">
-          <div className="size-[70px] sm:size-[113px] rounded-full relative">
-            <img
-              src={imgSrc}
-              alt="profile img"
-              className="size-[70px] sm:size-[113px] rounded-full object-cover"
-            />
-            <input
-              type="file"
-              className="absolute inset-0 opacity-0 rounded-full"
-              disabled={!isFormEdit}
-              onChange={imgSrcHandler}
-            />
-          </div>
-          <div>
-            <h4 className="text-base md:text-lg text-[#000]">MKS</h4>
-            <p className="text-[10px] sm:text-xs text-[#00000060]">alexarawles@gmail.com</p>
-          </div>
+    <div className="flex justify-center">
+      <div className="w-full rounded-xl bg-white p-6 shadow">
+        <div className="flex flex-col items-center">
+          <img
+            src={previewImage || profile?.image?.url || '/images/default/profile.png'}
+            alt={formData.fullName}
+            className="mb-4 size-32 rounded-full object-cover shadow md:size-52"
+          />
+
+          {isEditing && (
+            <div className="mb-4">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageSelect}
+                className="border-primary text-primary cursor-pointer rounded-lg border p-2"
+              />
+            </div>
+          )}
+
+          <h2 className="mb-2 text-2xl font-bold">{formData.fullName}</h2>
         </div>
-        <div>
-          <Input
-            label="First Name"
-            type="text"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-            readOnly={!isFormEdit}
-            style={{cursor: isFormEdit ? "auto" : "auto"}}
+
+        <div className="mt-6">
+          {isEditing ? (
+            <form className="space-y-4">
+              <Input label="Full Name" name="fullName" value={formData.fullName} onChange={handleChange} />
+
+              <Input label="Email" name="email" type="email" value={formData.email} onChange={handleChange} />
+
+              <Input
+                label="Phone Number"
+                name="phoneNumber"
+                type="tel"
+                value={formData.phoneNumber}
+                onChange={handleChange}
+              />
+
+              <Input label="Date of Birth" name="dob" type="date" value={formData.dob} onChange={handleChange} />
+
+              <Input label="Nationality" name="nationality" value={formData.nationality} onChange={handleChange} />
+            </form>
+          ) : (
+            <div className="space-y-4">
+              <ProfileField label="Email" value={profile.email} />
+              <ProfileField label="Phone Number" value={profile.phoneNumber} />
+              <ProfileField label="Date of Birth" value={profile.dob} />
+              <ProfileField label="Nationality" value={profile.nationality} />
+            </div>
+          )}
+        </div>
+
+        <div className="mt-6 flex justify-end">
+          <Button
+            onClick={handleToggleEdit}
+            width="max-w-[130px]"
+            text={isEditing ? (isUpdating ? 'Saving...' : 'Save') : 'Edit Profile'}
           />
         </div>
-        <div>
-          <Input
-            label="Last Name"
-            type="text"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-            readOnly={!isFormEdit}
-            style={{cursor: isFormEdit ? "auto" : "auto"}}
-          />
-        </div>
-        <div>
-          <Input
-            label="Address"
-            type="text"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            readOnly={!isFormEdit}
-            style={{cursor: isFormEdit ? "auto" : "auto"}}
-          />
-        </div>
-        <div>
-          <Input
-            label="Contact"
-            type="tel"
-            value={contact}
-            onChange={(e) => setContact(e.target.value)}
-            readOnly={!isFormEdit}
-            style={{cursor: isFormEdit ? "auto" : "auto"}}
-          />
-        </div>
-        <div>
-          <Label label="Country" />
-          <Dropdown
-            defaultText="Country Name"
-            options={[
-              { option: "USA", value: "USA" },
-              { option: "UK", value: "UK" },
-            ]}
-            disabled={!isFormEdit}
-            style={{cursor: isFormEdit ? "auto" : "auto"}}
-          />
-        </div>
-        <div>
-          <Label label="State" />
-          <Dropdown
-            defaultText="Your State"
-            options={[
-              { option: "USA", value: "USA" },
-              { option: "UK", value: "UK" },
-            ]}
-            disabled={!isFormEdit}
-            style={{cursor: isFormEdit ? "auto" : "auto"}}
-          />
-        </div>
-        <div>
-          <Input
-            label="My email address"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            readOnly={!isFormEdit}
-            style={{cursor: isFormEdit ? "auto" : "auto"}}
-          />
-        </div>
-        {isFormEdit && (
-          <div className="md:col-span-2 flex justify-end gap-4 mt-0 md:mt-4">
-            <Button
-              text="Cancel"
-              width="w-[90px]"
-              bg="bg-transparent hover:bg-primary hover:text-white"
-              color="text-primary"
-              onClick={formEditHandler}
-            />
-            <Button type="submit" text="Save" width="w-[90px]" />
-          </div>
-        )}
-      </form>
-      <div>
-        <Button
-          text="Edit"
-          width="w-[60px] md:w-[90px]"
-          onClick={formEditHandler}
-        />
       </div>
     </div>
   );
 };
 
 export default Profile;
-
-const Label = ({ label }) => {
-  return (
-    <label className="text-xs md:text-sm text-[#000] mb-2 block">{label}</label>
-  );
-};
