@@ -8,17 +8,17 @@ import { useCreateSensorMutation } from '../../../../redux/apis/sensorApis';
 
 const AddSensor = ({ refetch, onClose }) => {
   const [createSensor, { isLoading }] = useCreateSensorMutation();
-  const [formData, setFormData] = useState({ name: '', uniqueId: '', type: '' });
+  const [formData, setFormData] = useState({ name: '', uniqueId: '', sensorType: '' });
   const formValuesHandler = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const formSubmitHandler = async (e) => {
     e.preventDefault();
     try {
-      if (!formData.name || !formData.uniqueId || !formData.type) return toast.error('Please Select All Fields');
+      if (!formData.name || !formData.uniqueId || !formData.sensorType) return toast.error('Please Select All Fields');
       const res = await createSensor({
         name: formData.name,
         uniqueId: formData.uniqueId,
-        type: formData.type,
+        sensorType: formData.sensorType,
       }).unwrap();
       await refetch();
       if (res.success) toast.success(res?.message);
@@ -54,10 +54,11 @@ const AddSensor = ({ refetch, onClose }) => {
           defaultText="Select Type"
           options={[
             { option: 'Select Type', value: '' },
-            { option: 'Parking', value: 'parking' },
+            { option: 'ULTRASONIC', value: 'ULTRASONIC' },
+            { option: 'CAMERA', value: 'CAMERA' },
           ]}
-          onSelect={(value) => setFormData({ ...formData, type: value })}
-          name="type"
+          onSelect={(value) => setFormData({ ...formData, sensorType: value })}
+          name="sensorType"
         />
       </div>
       <div className="lg:col-span-12 flex justify-end">

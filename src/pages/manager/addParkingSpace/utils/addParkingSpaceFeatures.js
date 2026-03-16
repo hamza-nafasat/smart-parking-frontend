@@ -1,5 +1,5 @@
-import toast from "react-hot-toast";
-import { addInAvailableSensors } from "../../../../redux/slices/sensorSlice";
+import toast from 'react-hot-toast';
+import { addInAvailableSensors } from '../../../../redux/slices/sensorSlice';
 
 // getCroppedImg.js
 // const getCroppedImg = (imageSrc, crop) => {
@@ -27,22 +27,22 @@ const getCroppedImg = (imageSrc, crop) => {
     const image = new Image();
     image.src = imageSrc;
     image.onload = () => {
-      const canvas = document.createElement("canvas");
+      const canvas = document.createElement('canvas');
       // You can adjust canvas dimensions as needed, e.g., using crop.width/height
       canvas.width = 800;
       canvas.height = 500;
-      const ctx = canvas.getContext("2d");
+      const ctx = canvas.getContext('2d');
       ctx.drawImage(image, crop.x, crop.y, crop.width, crop.height, 0, 0, canvas.width, canvas.height);
       canvas.toBlob(
         (blob) => {
-          if (!blob) return reject(new Error("Canvas is empty"));
+          if (!blob) return reject(new Error('Canvas is empty'));
           // Create a URL for preview
           const croppedSrc = URL.createObjectURL(blob);
           // Create a File object (if needed for backend upload)
-          const croppedFile = new File([blob], "croppedImage.jpg", { type: "image/jpeg" });
+          const croppedFile = new File([blob], 'croppedImage.jpg', { type: 'image/jpeg' });
           resolve({ croppedFile, croppedSrc });
         },
-        "image/jpeg",
+        'image/jpeg',
         1
       );
     };
@@ -51,33 +51,33 @@ const getCroppedImg = (imageSrc, crop) => {
 };
 
 const sensors = [
-  { option: "Sensor-01", value: "sensor-01" },
-  { option: "Sensor-02", value: "sensor-02" },
-  { option: "Sensor-03", value: "sensor-03" },
-  { option: "Sensor-04", value: "sensor-04" },
-  { option: "Sensor-05", value: "sensor-05" },
+  { option: 'Sensor-01', value: 'sensor-01' },
+  { option: 'Sensor-02', value: 'sensor-02' },
+  { option: 'Sensor-03', value: 'sensor-03' },
+  { option: 'Sensor-04', value: 'sensor-04' },
+  { option: 'Sensor-05', value: 'sensor-05' },
 ];
 
 const floors = [
   {
-    parking: "Floor 1-ParkingSpace-1",
-    sensor: "Sensor name-01",
+    parking: 'Floor 1-ParkingSpace-1',
+    sensor: 'Sensor name-01',
   },
   {
-    parking: "Floor 1-ParkingSpace-2",
-    sensor: "Sensor name-02",
+    parking: 'Floor 1-ParkingSpace-2',
+    sensor: 'Sensor name-02',
   },
   {
-    parking: "Floor 2-ParkingSpace-1",
-    sensor: "Sensor name-03",
+    parking: 'Floor 2-ParkingSpace-1',
+    sensor: 'Sensor name-03',
   },
   {
-    parking: "Floor 2-ParkingSpace-2",
-    sensor: "Sensor name-04",
+    parking: 'Floor 2-ParkingSpace-2',
+    sensor: 'Sensor name-04',
   },
   {
-    parking: "Floor 3-ParkingSpace-1",
-    sensor: "Sensor name-05",
+    parking: 'Floor 3-ParkingSpace-1',
+    sensor: 'Sensor name-05',
   },
 ];
 
@@ -85,7 +85,7 @@ const floors = [
 const drawCanvas = (canvasRef, isDrawingEnabled, image, polygons, currentPolygon) => {
   const canvas = canvasRef.current;
   if (!canvas && !isDrawingEnabled) return;
-  const context = canvas.getContext("2d");
+  const context = canvas.getContext('2d');
   context.clearRect(0, 0, canvas.width, canvas.height);
 
   if (image) {
@@ -103,7 +103,7 @@ const drawCanvas = (canvasRef, isDrawingEnabled, image, polygons, currentPolygon
       // context.filter = "blur(3px)";
       // context.globalAlpha = 0.5;
       context.setLineDash([5, 5]);
-      context.strokeStyle = "red";
+      context.strokeStyle = 'red';
     } else {
       // context.filter = "none";
       context.globalAlpha = 1;
@@ -111,14 +111,14 @@ const drawCanvas = (canvasRef, isDrawingEnabled, image, polygons, currentPolygon
     }
 
     //  Fill the polygon with the color
-    const fillColor = polygon?.color ? `${polygon.color}90` : "#18BC9C60";
-    const strokeColor = polygon?.fillColor || polygon?.color || "#18BC9C";
+    const fillColor = polygon?.color ? `${polygon.color}90` : '#18BC9C60';
+    const strokeColor = polygon?.fillColor || polygon?.color || '#18BC9C';
     context.fillStyle = fillColor;
     context.strokeStyle = strokeColor;
     context.fill();
 
     // Draw the border with the specified color
-    context.strokeStyle = polygon?.fillColor || polygon.color || "#18BC9C60";
+    context.strokeStyle = polygon?.fillColor || polygon.color || '#18BC9C60';
     context.lineWidth = 2;
     context.stroke();
 
@@ -128,7 +128,7 @@ const drawCanvas = (canvasRef, isDrawingEnabled, image, polygons, currentPolygon
     const padding = 4;
     const text = polygon.id;
 
-    context.font = "12px Arial";
+    context.font = '12px Arial';
     const textWidth = context.measureText(text).width;
     const textHeight = 14;
     const boxWidth = textWidth + padding * 2;
@@ -136,7 +136,7 @@ const drawCanvas = (canvasRef, isDrawingEnabled, image, polygons, currentPolygon
     const boxX = idX - padding;
     const boxY = idY - textHeight - padding;
 
-    context.fillStyle = "#fff";
+    context.fillStyle = '#fff';
     context.beginPath();
     context.moveTo(boxX + 4, boxY);
     context.arcTo(boxX + boxWidth, boxY, boxX + boxWidth, boxY + boxHeight, 4);
@@ -146,7 +146,7 @@ const drawCanvas = (canvasRef, isDrawingEnabled, image, polygons, currentPolygon
     context.closePath();
     context.fill();
 
-    context.fillStyle = "#000";
+    context.fillStyle = '#000';
     context.fillText(text, boxX + padding, boxY + padding + textHeight - 4);
   });
 
@@ -154,7 +154,7 @@ const drawCanvas = (canvasRef, isDrawingEnabled, image, polygons, currentPolygon
     context.beginPath();
     context.moveTo(currentPolygon[0].x, currentPolygon[0].y);
     currentPolygon.forEach((point) => context.lineTo(point.x, point.y));
-    context.strokeStyle = "#18BC9C66";
+    context.strokeStyle = '#18BC9C66';
     context.lineWidth = 2;
     context.stroke();
   }
@@ -309,7 +309,7 @@ const handlePolygonCopy = (event, isCopyMode, canvasRef, polygons, setDraggedPol
     polygon.points.forEach((point) => path.lineTo(point.x, point.y));
     path.closePath();
 
-    return canvas.getContext("2d").isPointInPath(path, x, y);
+    return canvas.getContext('2d').isPointInPath(path, x, y);
   });
 
   if (selectedPolygon) {
@@ -332,7 +332,7 @@ const handleCanvasMouseDown = (event, isMoveMode, canvasRef, polygons, setDraggi
     polygon.points.forEach((point) => path.lineTo(point.x, point.y));
     path.closePath();
 
-    return canvas.getContext("2d").isPointInPath(path, x, y);
+    return canvas.getContext('2d').isPointInPath(path, x, y);
   });
 
   if (selectedPolygon) {
@@ -400,7 +400,7 @@ const handleDeletePolygon = (
 ) => {
   let sensorIds = [];
   const canvas = canvasRef.current;
-  const ctx = canvas.getContext("2d");
+  const ctx = canvas.getContext('2d');
   const isInsidePolygon = (polygon) => {
     const path = new Path2D();
     path.moveTo(polygon.points[0].x, polygon.points[0].y);
@@ -413,7 +413,7 @@ const handleDeletePolygon = (
   const deletedPolygonsIds = deletePolygons.filter((polygon) => polygon._id);
   if (deletePolygons) {
     sensorIds = deletePolygons?.map((polygon) => polygon?.sensorId);
-    console.log("aaaaaaaaaaaaaaaaaaaaaaaaa", sensorIds?.[0]);
+    console.log('aaaaaaaaaaaaaaaaaaaaaaaaa', sensorIds?.[0]);
   }
 
   if (setDeletedPolygonsIds) setDeletedPolygonsIds((prevIds) => [...prevIds, ...deletedPolygonsIds]);
@@ -461,7 +461,7 @@ const sensorInfoSubmitHandler = (
   name,
   polygons,
   selectedPolygon,
-  selectedSensor,
+  sensorsPayload,
   color,
   setPolygons,
   setSensorPopup,
@@ -470,17 +470,19 @@ const sensorInfoSubmitHandler = (
   newPolygons,
   setNewPolygons
 ) => {
-  if (!name) return toast.error("Please select sensor name");
-  if (!isBuilding && !selectedSensor) return toast.error("Please select sensor");
+  if (!name) return toast.error('Please select sensor name');
+  if (!isBuilding && !sensorsPayload) return toast.error('Please select sensor');
+  console.log('selectedPolygon', selectedPolygon);
+  console.log('selectedPolygon', name);
   const updatedPolygons = polygons?.map((polygon) => {
     return polygon?.id == selectedPolygon?.id
       ? {
           ...polygon,
           id: name,
-          sensorId: selectedSensor || "",
+          sensorId: sensorsPayload || '',
           color: color,
           fillColor: color,
-          labelPoint: polygon?.labelPoint || "first",
+          labelPoint: polygon?.labelPoint || 'first',
         }
       : polygon;
   });
@@ -489,17 +491,17 @@ const sensorInfoSubmitHandler = (
       ? {
           ...polygon,
           id: name,
-          sensorId: selectedSensor || "",
+          sensorId: sensorsPayload || '',
           color: color,
           fillColor: color,
-          labelPoint: polygon?.labelPoint || "first",
+          labelPoint: polygon?.labelPoint || 'first',
         }
       : polygon;
   });
   if (updatedNewPolygons && setNewPolygons) setNewPolygons(updatedNewPolygons);
   setPolygons(updatedPolygons);
   setSensorPopup(false);
-  setSelectedSensor("");
+  setSelectedSensor('');
 };
 
 const handleCancelPolygon = (
@@ -519,7 +521,7 @@ const handleCancelPolygon = (
 };
 
 const dataURLtoFile = (dataurl, filename) => {
-  const arr = dataurl.split(",");
+  const arr = dataurl.split(',');
   const mime = arr[0].match(/:(.*?);/)?.[1];
   const bstr = atob(arr[1]);
   let n = bstr.length;

@@ -1,16 +1,16 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useRef, useState } from "react";
-import Cropper from "react-easy-crop";
-import { AiOutlineDelete } from "react-icons/ai";
-import { CiEdit } from "react-icons/ci";
-import { SlCursorMove } from "react-icons/sl";
-import { VscCopy } from "react-icons/vsc";
-import { useDispatch, useSelector } from "react-redux";
-import Button from "../../../../components/shared/small/Button";
-import Dropdown from "../../../../components/shared/small/Dropdown";
-import Input from "../../../../components/shared/small/Input";
-import Modal from "../../../../components/shared/small/Modal";
-import { removeFromAvailableSensors } from "../../../../redux/slices/sensorSlice";
+import { useEffect, useRef, useState } from 'react';
+import Cropper from 'react-easy-crop';
+import { AiOutlineDelete } from 'react-icons/ai';
+import { CiEdit } from 'react-icons/ci';
+import { SlCursorMove } from 'react-icons/sl';
+import { VscCopy } from 'react-icons/vsc';
+import { useDispatch, useSelector } from 'react-redux';
+import Button from '../../../../components/shared/small/Button';
+import Dropdown from '../../../../components/shared/small/Dropdown';
+import Input from '../../../../components/shared/small/Input';
+import Modal from '../../../../components/shared/small/Modal';
+import { removeFromAvailableSensors } from '../../../../redux/slices/sensorSlice';
 import {
   drawCanvas,
   getCroppedImg,
@@ -24,7 +24,7 @@ import {
   handleDeletePolygon,
   handleMoveMode,
   sensorInfoSubmitHandler,
-} from "../utils/addParkingSpaceFeatures";
+} from '../utils/addParkingSpaceFeatures';
 
 const TwoDModel = ({ polygons, setPolygons, imageSrc, setImageSrc, setOriginalImage, isBuilding = false }) => {
   const dispatch = useDispatch();
@@ -47,14 +47,25 @@ const TwoDModel = ({ polygons, setPolygons, imageSrc, setImageSrc, setOriginalIm
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [sensorPopup, setSensorPopup] = useState(false);
   const [selectedPolygon, setSelectedPolygon] = useState(null);
-  const [polygonName, setPolygonName] = useState("");
-  const [selectedSensor, setSelectedSensor] = useState("");
-  const [color, setColor] = useState("#18bc9c");
+  const [polygonName, setPolygonName] = useState('');
+  const [selectedSensor, setSelectedSensor] = useState({
+    ultrasonic: '', // ULTRASONIC sensor ID
+    camera: '', // CAMERA sensor ID
+  });
+  const [color, setColor] = useState('#18bc9c');
+
+  const ultrasonicSensors = availableSensors?.filter((s) => s.sensorType === 'ULTRASONIC');
+  const cameraSensors = availableSensors?.filter((s) => s.sensorType === 'CAMERA');
 
   const openSensorPopup = (polygon) => {
     setSelectedPolygon(polygon);
     setSensorPopup(true);
-    setPolygonName("");
+    setPolygonName('');
+    // Reset sensor selection when opening popup
+    setSelectedSensor({
+      ultrasonic: '',
+      camera: '',
+    });
   };
 
   const handleImageUpload = (event) => {
@@ -81,13 +92,60 @@ const TwoDModel = ({ polygons, setPolygons, imageSrc, setImageSrc, setOriginalIm
       setImageSrc(croppedSrc);
       setOriginalImage(croppedFile);
     } catch (error) {
-      console.error("Crop failed:", error);
+      console.error('Crop failed:', error);
     }
   };
 
   const modelCloseHandler = () => {
     handleCancelPolygon(setSensorPopup, setPolygons, selectedPolygon, setCurrentPolygon, setSelectedPolygon);
     setSensorPopup(false);
+    // Reset sensor selection
+    setSelectedSensor({
+      ultrasonic: '',
+      camera: '',
+    });
+  };
+
+  const handleSavePolygon = () => {
+    if (isBuilding) {
+      // For floors, we don't need sensors
+      sensorInfoSubmitHandler(
+        polygonName,
+        polygons,
+        selectedPolygon,
+        [], // empty array for floors
+        color,
+        setPolygons,
+        setSensorPopup,
+        isBuilding,
+        setSelectedSensor
+      );
+    } else {
+      // For slots, validate sensors
+      if (!selectedSensor.ultrasonic || !selectedSensor.camera) {
+        toast.error('Please select both Ultrasonic and Camera sensors');
+        return;
+      }
+
+      // Prepare payload with both IDs
+      const sensorsPayload = [selectedSensor.ultrasonic, selectedSensor.camera];
+
+      // Call submit handler for slots
+      sensorInfoSubmitHandler(
+        polygonName,
+        polygons,
+        selectedPolygon,
+        sensorsPayload,
+        color,
+        setPolygons,
+        setSensorPopup,
+        isBuilding,
+        setSelectedSensor
+      );
+
+      // Remove from available sensors (only for slots)
+      sensorsPayload.forEach((id) => dispatch(removeFromAvailableSensors(id)));
+    }
   };
 
   useEffect(() => {
@@ -101,7 +159,7 @@ const TwoDModel = ({ polygons, setPolygons, imageSrc, setImageSrc, setOriginalIm
         setImage(img);
         setIsDrawingEnabled(true);
       };
-      img.onerror = (err) => console.log("Image failed to load", err);
+      img.onerror = (err) => console.log('Image failed to load', err);
       img.src = imageSrc;
     }
   }, [imageSrc]);
@@ -188,9 +246,9 @@ const TwoDModel = ({ polygons, setPolygons, imageSrc, setImageSrc, setOriginalIm
                 setIsMoveMode(false);
                 setIsDeleteMode(false);
               }}
-              className={`p-2 border rounded-md text-white ${isEditMode ? "border-primary" : "border-[#565656]"}`}
+              className={`p-2 border rounded-md text-white ${isEditMode ? 'border-primary' : 'border-[#565656]'}`}
             >
-              <CiEdit fontSize={20} color={isEditMode ? "#18bc9c" : "#565656"} />
+              <CiEdit fontSize={20} color={isEditMode ? '#18bc9c' : '#565656'} />
             </button>
             <button
               type="button"
@@ -210,9 +268,9 @@ const TwoDModel = ({ polygons, setPolygons, imageSrc, setImageSrc, setOriginalIm
                   setPolygonCount
                 )
               }
-              className={`p-2 border rounded-md text-white ${isCopyMode ? "border-primary" : "border-[#565656]"}`}
+              className={`p-2 border rounded-md text-white ${isCopyMode ? 'border-primary' : 'border-[#565656]'}`}
             >
-              <VscCopy fontSize={20} color={isCopyMode ? "#18bc9c" : "#565656"} />
+              <VscCopy fontSize={20} color={isCopyMode ? '#18bc9c' : '#565656'} />
             </button>
             <button
               type="button"
@@ -226,40 +284,57 @@ const TwoDModel = ({ polygons, setPolygons, imageSrc, setImageSrc, setOriginalIm
                   isMoveMode
                 )
               }
-              className={`p-2 border rounded-md text-white ${isMoveMode ? "border-primary" : "border-[#565656]"}`}
+              className={`p-2 border rounded-md text-white ${isMoveMode ? 'border-primary' : 'border-[#565656]'}`}
             >
-              <SlCursorMove fontSize={20} color={isMoveMode ? "#18bc9c" : "#565656"} />
+              <SlCursorMove fontSize={20} color={isMoveMode ? '#18bc9c' : '#565656'} />
             </button>
             <button
               type="button"
               onClick={() =>
                 handleDeleteMode(setIsDeleteMode, setIsEditMode, setIsCopyMode, setIsMoveMode, isDeleteMode)
               }
-              className={`p-2 border rounded-md text-white ${isDeleteMode ? "border-primary" : "border-[#565656]"}`}
+              className={`p-2 border rounded-md text-white ${isDeleteMode ? 'border-primary' : 'border-[#565656]'}`}
             >
-              <AiOutlineDelete fontSize={20} color={isDeleteMode ? "#18bc9c" : "#565656"} />
+              <AiOutlineDelete fontSize={20} color={isDeleteMode ? '#18bc9c' : '#565656'} />
             </button>
           </div>
         </>
       )}
       {sensorPopup && selectedPolygon && (
-        <Modal width="w-[290px] sm:w-[400px]" border="border-2 border-primary" title="Add Sensor" onClose={modelCloseHandler} notClose>
+        <Modal
+          width="w-[290px] sm:w-[400px]"
+          border="border-2 border-primary"
+          title={isBuilding ? 'Add Floor' : 'Add Slot'}
+          onClose={modelCloseHandler}
+          notClose
+        >
           <div className="flex flex-col gap-2">
             <Input
               type="text"
-              placeholder="name"
+              placeholder={isBuilding ? 'Floor name' : 'Slot name'}
               label="Name"
               value={polygonName}
               onChange={(e) => setPolygonName(e.target.value)}
             />
 
             {!isBuilding && (
-              <Dropdown
-                defaultText={"Select Sensor"}
-                options={availableSensors?.map((sensor) => ({ option: sensor?.name, value: sensor?._id }))}
-                label="Sensor Name"
-                onSelect={(selectedOption) => setSelectedSensor(selectedOption)}
-              />
+              <>
+                {/* ULTRASONIC */}
+                <Dropdown
+                  defaultText="Select Ultrasonic Sensor"
+                  label="Ultrasonic Sensor"
+                  options={ultrasonicSensors?.map((s) => ({ option: s.name, value: s._id }))}
+                  onSelect={(id) => setSelectedSensor((prev) => ({ ...prev, ultrasonic: id }))}
+                />
+
+                {/* CAMERA */}
+                <Dropdown
+                  defaultText="Select Camera Sensor"
+                  label="Camera Sensor"
+                  options={cameraSensors?.map((s) => ({ option: s.name, value: s._id }))}
+                  onSelect={(id) => setSelectedSensor((prev) => ({ ...prev, camera: id }))}
+                />
+              </>
             )}
 
             <div className="flex items-center gap-4">
@@ -282,24 +357,7 @@ const TwoDModel = ({ polygons, setPolygons, imageSrc, setImageSrc, setOriginalIm
                   )
                 }
               />
-              <Button
-                text="Save"
-                width="w-[120px]"
-                onClick={() => {
-                  sensorInfoSubmitHandler(
-                    polygonName,
-                    polygons,
-                    selectedPolygon,
-                    selectedSensor,
-                    color,
-                    setPolygons,
-                    setSensorPopup,
-                    isBuilding,
-                    setSelectedSensor
-                  );
-                  dispatch(removeFromAvailableSensors(selectedSensor));
-                }}
-              />
+              <Button text="Save" width="w-[120px]" onClick={handleSavePolygon} />
             </div>
           </div>
         </Modal>

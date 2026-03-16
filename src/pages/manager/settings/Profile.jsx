@@ -100,7 +100,7 @@ const Profile = () => {
     );
   const imageUrl = profile.image?.url?.startsWith('http')
     ? profile.image.url
-    : `${process?.env?.NEXT_PUBLIC_BASE_URL}${profile?.image?.url}`;
+    : `${import.meta.env.VITE_SERVER_URL}${profile?.image?.url}`;
   console.log('imageUrlimageUrlimageUrl', imageUrl);
 
   return (

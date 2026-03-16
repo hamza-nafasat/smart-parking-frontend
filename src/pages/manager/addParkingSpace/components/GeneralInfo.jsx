@@ -15,6 +15,8 @@ const GeneralInfo = ({ setCurrentStep }) => {
   const dispatch = useDispatch();
   const { buildingGeneralInfo } = useSelector((state) => state.building);
   const [originalImage, setOriginalImage] = useState(null);
+  console.log('buildingGeneralInfo', buildingGeneralInfo);
+
   const [building, setBuilding] = useState({
     name: '',
     address: '',
@@ -28,8 +30,10 @@ const GeneralInfo = ({ setCurrentStep }) => {
     buildingCoordinates: [],
     description: '',
   });
+  console.log('building', building);
   const formDataHandler = (e) => setBuilding({ ...building, [e.target.name]: e.target.value });
   const buildingTypeHandler = (name, value) => setBuilding({ ...building, [name]: value });
+
   // function call on next which validate data store in redux and go to next step
   const validationHandler = () => {
     if (
@@ -47,13 +51,49 @@ const GeneralInfo = ({ setCurrentStep }) => {
     ) {
       return toast.error('Please fill all the fields');
     }
-    console.log('building', building);
-    dispatch(addBuildingGeneralInfo({ ...building, file: originalImage }));
+
+    // Validate that polygons/coordinates exist
+    if (!polygons || polygons.length === 0) {
+      return toast.error('Please draw building polygons');
+    }
+
+    // Create a copy of building with updated coordinates
+    const buildingData = {
+      ...building,
+      buildingCoordinates: polygons, // Ensure polygons are included
+      file: originalImage,
+    };
+
+    console.log('Saving building data to Redux:', buildingData);
+
+    // Dispatch to Redux
+    dispatch(addBuildingGeneralInfo(buildingData));
     dispatch(addFloorsSample(Number(building?.noOfFloors || 0)));
+
     setCurrentStep(1);
   };
 
-  // use effect which get data form redux and set if data not exist he just reset the data
+  // Update building coordinates whenever polygons change
+  useEffect(() => {
+    if (polygons && polygons.length > 0) {
+      setBuilding((prev) => ({
+        ...prev,
+        buildingCoordinates: polygons,
+      }));
+    }
+  }, [polygons]);
+
+  // Update building image whenever imageSrc changes
+  useEffect(() => {
+    if (imageSrc) {
+      setBuilding((prev) => ({
+        ...prev,
+        buildingImage: imageSrc,
+      }));
+    }
+  }, [imageSrc]);
+
+  // Load data from Redux when component mounts
   useEffect(() => {
     if (buildingGeneralInfo) {
       setBuilding({
@@ -73,6 +113,7 @@ const GeneralInfo = ({ setCurrentStep }) => {
       setImageSrc(buildingGeneralInfo.buildingImage || null);
       setPolygons(buildingGeneralInfo.buildingCoordinates || []);
     } else {
+      // Reset form when no data in Redux
       setBuilding({
         name: '',
         address: '',
@@ -91,11 +132,6 @@ const GeneralInfo = ({ setCurrentStep }) => {
       setPolygons([]);
     }
   }, [buildingGeneralInfo]);
-
-  useEffect(() => {
-    if (polygons.length > 0) setBuilding({ ...building, buildingCoordinates: polygons });
-    if (imageSrc) setBuilding({ ...building, buildingImage: imageSrc });
-  }, [imageSrc, polygons]);
 
   return (
     <div className="mt-4">

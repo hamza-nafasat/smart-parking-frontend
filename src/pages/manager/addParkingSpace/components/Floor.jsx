@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
-import { AccordionEditIcon } from "../../../../assets/svgs/Icon";
-import Button from "../../../../components/shared/small/Button";
-import Input from "../../../../components/shared/small/Input";
-import { addFloor, setActiveAccordionIndex } from "../../../../redux/slices/floorSlice";
-import UploadModel from "./UploadModel";
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import { useDispatch, useSelector } from 'react-redux';
+import { AccordionEditIcon } from '../../../../assets/svgs/Icon';
+import Button from '../../../../components/shared/small/Button';
+import Input from '../../../../components/shared/small/Input';
+import { addFloor, setActiveAccordionIndex } from '../../../../redux/slices/floorSlice';
+import UploadModel from './UploadModel';
 
 const FloorAccordion = ({ polygons, setPolygons, imageSrc, setImageSrc }) => {
   const dispatch = useDispatch();
@@ -14,7 +14,7 @@ const FloorAccordion = ({ polygons, setPolygons, imageSrc, setImageSrc }) => {
   const handleAccordionToggle = (index) =>
     dispatch(setActiveAccordionIndex(activeAccordionIndex === index ? null : index));
 
-  // console.log("floors",floors);
+  console.log('floors', floors);
   return (
     <div className="flex flex-col gap-4">
       {Array?.from({ length: floors?.length || 0 }).map((_, index) => (
@@ -36,18 +36,18 @@ const FloorAccordion = ({ polygons, setPolygons, imageSrc, setImageSrc }) => {
 const Floor = ({ isOpen, onToggle, floorNumber }) => {
   const { floors, activeAccordionIndex } = useSelector((state) => state.floor);
   const dispatch = useDispatch();
-  const [name, setName] = useState("");
+  const [name, setName] = useState('');
   const [noOfParkingSpace, setNumberOfParkingSpace] = useState();
   const [originalImage, setOriginalImage] = useState(null);
   const [polygons, setPolygons] = useState([]);
   const [imageSrc, setImageSrc] = useState(null);
 
   const saveClickHandler = () => {
-    if (!name || !noOfParkingSpace || !imageSrc || !originalImage) return toast.error("Fill all fields first");
+    if (!name || !noOfParkingSpace || !imageSrc || !originalImage) return toast.error('Fill all fields first');
     // if (!polygons.length) return toast.error("Create at least one slot with polygons");
 
-    console.log("polygons", polygons);
-    console.log("jelo");
+    console.log('polygons', polygons);
+    console.log('jelo');
     dispatch(
       addFloor({
         floorNumber,
@@ -66,15 +66,15 @@ const Floor = ({ isOpen, onToggle, floorNumber }) => {
     if (floors?.length) {
       const floor = floors.find((floor) => floor?.floorNumber == floorNumber);
       if (floor) {
-        setName(floor?.name || "");
-        setNumberOfParkingSpace(floor?.noOfParkingSpace || "");
+        setName(floor?.name || '');
+        setNumberOfParkingSpace(floor?.noOfParkingSpace || '');
         setPolygons(floor?.polygonData || []);
         setImageSrc(floor?.floorImage || null);
         setOriginalImage(floor?.file || null);
       }
     } else {
-      setName("");
-      setNumberOfParkingSpace("");
+      setName('');
+      setNumberOfParkingSpace('');
       setPolygons([]);
       setImageSrc(null);
       setOriginalImage(null);
