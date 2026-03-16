@@ -1,18 +1,18 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
-import StepArrowIcon from "../../../assets/svgs/building/StepArrowIcon";
-import Confirmation from "./components/Confirmation";
-import FloorInfo from "./components/FloorInfo";
-import GeneralInfo from "./components/GeneralInfo";
-import Button from "../../../components/shared/small/Button";
-import { useDispatch } from "react-redux";
-import { resetBuildings } from "../../../redux/slices/buildingSlice";
-import { resetFloors } from "../../../redux/slices/floorSlice";
+import { useState } from 'react';
+import StepArrowIcon from '../../../assets/svgs/building/StepArrowIcon';
+import Confirmation from './components/Confirmation';
+import FloorInfo from './components/FloorInfo';
+import GeneralInfo from './components/GeneralInfo';
+import Button from '../../../components/shared/small/Button';
+import { useDispatch } from 'react-redux';
+import { resetBuildings } from '../../../redux/slices/buildingSlice';
+import { resetFloors } from '../../../redux/slices/floorSlice';
 
 const AddParkingSpace = () => {
   const dispatch = useDispatch();
   const [currentStep, setCurrentStep] = useState(0);
-  const steps = ["General Info", "Floor/Sensor Information", "Confirmation"];
+  const steps = ['General Info', 'Floor/Sensor Information', 'Confirmation'];
   const renderStepContent = (step) => {
     switch (step) {
       case 0:
@@ -64,7 +64,7 @@ const Step = ({ step, index, currentStep, setCurrentStep, stepsLength }) => {
   return (
     <div
       className={`flex items-center gap-1 ${
-        currentStep >= index ? "opacity-100 cursor-pointer" : "opacity-50 grayscale pointer-events-none"
+        currentStep >= index ? 'opacity-100 cursor-pointer' : 'opacity-50 grayscale pointer-events-none'
       }`}
       onClick={() => setCurrentStep(index)}
     >

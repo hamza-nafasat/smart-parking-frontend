@@ -1,21 +1,21 @@
 /* eslint-disable react/prop-types */
-import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
-import { AccordionEditIcon } from "../../../../assets/svgs/Icon";
-import useFetchAndMakeSensorSlice from "../../../../components/hooks/useFetchAndMakeSensorSlice";
-import Button from "../../../../components/shared/small/Button";
-import { useCreateBuildingMutation } from "../../../../redux/apis/buildingApis";
-import { useCreateFloorsInBulkMutation } from "../../../../redux/apis/floorApis";
-import { useCreateSlotsInBulkMutation } from "../../../../redux/apis/slotApis";
-import { resetBuildings } from "../../../../redux/slices/buildingSlice";
-import { resetFloors, setActiveAccordionIndex } from "../../../../redux/slices/floorSlice";
-import { customObjectId } from "../../../../utils/features";
-import { floors as sensors } from "../utils/addParkingSpaceFeatures";
+import toast from 'react-hot-toast';
+import { useDispatch, useSelector } from 'react-redux';
+import { AccordionEditIcon } from '../../../../assets/svgs/Icon';
+import useFetchAndMakeSensorSlice from '../../../../components/hooks/useFetchAndMakeSensorSlice';
+import Button from '../../../../components/shared/small/Button';
+import { useCreateBuildingMutation } from '../../../../redux/apis/buildingApis';
+import { useCreateFloorsInBulkMutation } from '../../../../redux/apis/floorApis';
+import { useCreateSlotsInBulkMutation } from '../../../../redux/apis/slotApis';
+import { resetBuildings } from '../../../../redux/slices/buildingSlice';
+import { resetFloors, setActiveAccordionIndex } from '../../../../redux/slices/floorSlice';
+import { customObjectId } from '../../../../utils/features';
+import { floors as sensors } from '../utils/addParkingSpaceFeatures';
 
 const Confirmation = ({ setCurrentStep }) => {
   const dispatch = useDispatch();
   const { buildingGeneralInfo } = useSelector((state) => state.building);
-
+  console.log('buildingGeneralInfo', buildingGeneralInfo);
   const { refetchHook } = useFetchAndMakeSensorSlice();
 
   const { floors } = useSelector((state) => state.floor);
@@ -30,17 +30,17 @@ const Confirmation = ({ setCurrentStep }) => {
     try {
       // create building in database
       let data = {
-        name: buildingGeneralInfo?.name || "",
-        address: buildingGeneralInfo?.address || "",
-        area: buildingGeneralInfo?.area || "",
-        noOfFloors: buildingGeneralInfo?.noOfFloors || "",
-        email: buildingGeneralInfo?.email || "",
-        description: buildingGeneralInfo?.description || "",
-        type: buildingGeneralInfo?.type || "",
-        file: buildingGeneralInfo?.file || "",
-        longitude: buildingGeneralInfo?.longitude || "",
-        latitude: buildingGeneralInfo?.latitude || "",
-        polygonData: buildingGeneralInfo?.buildingCoordinates || "",
+        name: buildingGeneralInfo?.name || '',
+        address: buildingGeneralInfo?.address || '',
+        area: buildingGeneralInfo?.area || '',
+        noOfFloors: buildingGeneralInfo?.noOfFloors || '',
+        email: buildingGeneralInfo?.email || '',
+        description: buildingGeneralInfo?.description || '',
+        type: buildingGeneralInfo?.type || '',
+        file: buildingGeneralInfo?.file || '',
+        longitude: buildingGeneralInfo?.longitude || '',
+        latitude: buildingGeneralInfo?.latitude || '',
+        polygonData: buildingGeneralInfo?.buildingCoordinates || '',
       };
       const { name, address, area, email, description, type, file, polygonData, noOfFloors, longitude, latitude } =
         data;
@@ -57,24 +57,24 @@ const Confirmation = ({ setCurrentStep }) => {
         !longitude ||
         !latitude
       )
-        return toast.error("Please Fill all required fields for building");
+        return toast.error('Please Fill all required fields for building');
       const formDataForBuilding = new FormData();
       const formDataForFloor = new FormData();
       const allSlotsFormData = [];
       // create form data for building ===>
-      formDataForBuilding.append("_id", gettedBuildingId);
-      formDataForBuilding.append("name", name);
-      formDataForBuilding.append("address", address);
-      formDataForBuilding.append("area", area);
-      formDataForBuilding.append("email", email);
-      formDataForBuilding.append("description", description);
-      formDataForBuilding.append("type", type);
-      formDataForBuilding.append("longitude", longitude);
-      formDataForBuilding.append("latitude", latitude);
-      formDataForBuilding.append("noOfFloors", noOfFloors);
-      formDataForBuilding.append("file", file);
-      formDataForBuilding.append("polygonData", JSON.stringify(polygonData));
-      console.log("buildingData", {
+      formDataForBuilding.append('_id', gettedBuildingId);
+      formDataForBuilding.append('name', name);
+      formDataForBuilding.append('address', address);
+      formDataForBuilding.append('area', area);
+      formDataForBuilding.append('email', email);
+      formDataForBuilding.append('description', description);
+      formDataForBuilding.append('type', type);
+      formDataForBuilding.append('longitude', longitude);
+      formDataForBuilding.append('latitude', latitude);
+      formDataForBuilding.append('noOfFloors', noOfFloors);
+      formDataForBuilding.append('file', file);
+      formDataForBuilding.append('polygonData', JSON.stringify(polygonData));
+      console.log('buildingData', {
         gettedBuildingId,
         name,
         address,
@@ -88,12 +88,12 @@ const Confirmation = ({ setCurrentStep }) => {
       });
 
       // create form data for floor ===>
-      formDataForFloor.append("buildingId", gettedBuildingId);
+      formDataForFloor.append('buildingId', gettedBuildingId);
       floors?.forEach((floor, i) => {
         if (!floor?.name || !floor.noOfParkingSpace || !floor.file)
-          return toast.error("Please Fill all required fields each floor");
+          return toast.error('Please Fill all required fields each floor');
         const floorId = customObjectId();
-        console.log("floorData", {
+        console.log('floorData', {
           gettedBuildingId,
           floorId,
           name: floor?.name,
@@ -111,8 +111,8 @@ const Confirmation = ({ setCurrentStep }) => {
         slotData.floorId = floorId;
         slotData.buildingId = gettedBuildingId;
         floor?.polygonData?.forEach((polygon) => {
-          if (!polygon.id || !polygon.points) return toast.error("Please Fill all required fields each Slot");
-          console.log("slots data", slotData);
+          if (!polygon.id || !polygon.points) return toast.error('Please Fill all required fields each Slot');
+          console.log('slots data', slotData);
           const singleSlot = {
             id: polygon.id,
             color: polygon?.color,
@@ -125,7 +125,7 @@ const Confirmation = ({ setCurrentStep }) => {
         allSlotsFormData.push(slotData);
       });
 
-      let message = "";
+      let message = '';
       ////////////////////////////////////////////////////////////
       // CREATE BUILDING IN DATABASE
       const resForBuilding = await createBuilding(formDataForBuilding).unwrap();
@@ -156,8 +156,8 @@ const Confirmation = ({ setCurrentStep }) => {
       dispatch(setActiveAccordionIndex(null));
       setCurrentStep(0);
     } catch (error) {
-      console.log("Error in stepperSubmitHandler:", error);
-      toast.error(error?.data?.message || "Something went wrong");
+      console.log('Error in stepperSubmitHandler:', error);
+      toast.error(error?.data?.message || 'Something went wrong');
     }
   };
 
@@ -182,7 +182,7 @@ const Confirmation = ({ setCurrentStep }) => {
             onClick={() => setCurrentStep((prevStep) => prevStep - 1)}
           />
           <Button
-            className={`${isLoading || isLoadingForFloor || isLoadingForSlots ? "cursor-not-allowed opacity-30" : ""}`}
+            className={`${isLoading || isLoadingForFloor || isLoadingForSlots ? 'cursor-not-allowed opacity-30' : ''}`}
             width="w-[120px]"
             type="button"
             text="Save"
@@ -209,7 +209,7 @@ const GeneralInfoSec = ({ setCurrentStep }) => {
       </div>
       <div className="mt-1 grid grid-cols-3 gap-4 md:gap-6">
         <img
-          src={buildingGeneralInfo?.buildingImage || "https://placehold.co/400x300"}
+          src={buildingGeneralInfo?.buildingImage || 'https://placehold.co/400x300'}
           alt="image"
           className="w-full h-[160px] object-cover rounded-xl border-[4px] border-primary"
         />
@@ -249,7 +249,7 @@ const FloorSensorInfoSec = ({ setCurrentStep, floor }) => {
       <h6 className="text-sm md:text-base font-medium text-primary">Floors/Sensor info</h6>
       <div className="mt-1 grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6">
         <img
-          src={floor?.floorImage || "https://placehold.co/400x300"}
+          src={floor?.floorImage || 'https://placehold.co/400x300'}
           alt="image"
           className="lg:col-span-4 w-full h-[160px] object-cover rounded-xl border-[4px] border-primary"
         />
