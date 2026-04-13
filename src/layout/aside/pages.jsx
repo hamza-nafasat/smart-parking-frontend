@@ -5,6 +5,7 @@ import {
   DashboardIcon,
   ParkingAsideIcon,
   ParkingFilledIcon,
+  RingIcon,
   WalletFilledIcon,
   WalletIcon,
 } from '../../assets/svgs/Icon';
@@ -19,6 +20,13 @@ export const pages = [
   },
   {
     id: 2,
+    title: 'Notifications',
+    link: ['/user/notifications'],
+    icon: <RingIcon />,
+    filledIcon: <RingIcon />,
+  },
+  {
+    id: 3,
     title: 'Buildings',
     link: [
       '/admin/building-info',

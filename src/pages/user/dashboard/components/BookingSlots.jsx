@@ -44,7 +44,7 @@ const BookingSlots = () => {
         <BackIcon />
       </div>
       {/* ====================================== */}
-      <div className="fixed top-80 right-0 z-[999]">
+      {/* <div className="fixed top-80 right-0 z-[999]">
         <div
           onClick={() => setBookingOpen(!bookingOpen)}
           className="bg-primary text-white cursor-pointer py-3 px-20 rounded-t-md text-sm font-bold flex gap-2 items-center"
@@ -62,9 +62,9 @@ const BookingSlots = () => {
         >
           <CurrentFloorPlaceList floors={floors} setSelectedFloor={setSelectedFloor} refetch={refetch} />
         </div>
-      </div>
+      </div> */}
       {/* ====================================== */}
-      <div className="w-full flex items-start gap-5">
+      <div className="w-full flex items-start flex-col md:flex-row gap-5">
         <div className="flex flex-col md:flex-row gap-2 items-center mb-5">
           <div className={`flex flex-col gap-1"}`}>
             <h3 className="text-base md:text-lg font-bold">{selectedFloor?.name}</h3>

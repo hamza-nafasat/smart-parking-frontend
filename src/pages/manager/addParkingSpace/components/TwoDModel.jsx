@@ -25,6 +25,7 @@ import {
   handleMoveMode,
   sensorInfoSubmitHandler,
 } from '../utils/addParkingSpaceFeatures';
+import toast from 'react-hot-toast';
 
 const TwoDModel = ({ polygons, setPolygons, imageSrc, setImageSrc, setOriginalImage, isBuilding = false }) => {
   const dispatch = useDispatch();
@@ -54,8 +55,10 @@ const TwoDModel = ({ polygons, setPolygons, imageSrc, setImageSrc, setOriginalIm
   });
   const [color, setColor] = useState('#18bc9c');
 
-  const ultrasonicSensors = availableSensors?.filter((s) => s.sensorType === 'ULTRASONIC');
-  const cameraSensors = availableSensors?.filter((s) => s.sensorType === 'CAMERA');
+  const ultrasonicSensors = availableSensors?.filter((s) => s?.sensorType === 'ULTRASONIC');
+  const cameraSensors = availableSensors?.filter((s) => s?.sensorType === 'CAMERA');
+  console.log('availableSensors', availableSensors);
+  console.log('first time ');
 
   const openSensorPopup = (polygon) => {
     setSelectedPolygon(polygon);
@@ -113,7 +116,7 @@ const TwoDModel = ({ polygons, setPolygons, imageSrc, setImageSrc, setOriginalIm
         polygonName,
         polygons,
         selectedPolygon,
-        [], // empty array for floors
+        [],
         color,
         setPolygons,
         setSensorPopup,
@@ -121,16 +124,14 @@ const TwoDModel = ({ polygons, setPolygons, imageSrc, setImageSrc, setOriginalIm
         setSelectedSensor
       );
     } else {
-      // For slots, validate sensors
+      // Validate sensors
       if (!selectedSensor.ultrasonic || !selectedSensor.camera) {
         toast.error('Please select both Ultrasonic and Camera sensors');
         return;
       }
 
-      // Prepare payload with both IDs
       const sensorsPayload = [selectedSensor.ultrasonic, selectedSensor.camera];
 
-      // Call submit handler for slots
       sensorInfoSubmitHandler(
         polygonName,
         polygons,
@@ -143,8 +144,19 @@ const TwoDModel = ({ polygons, setPolygons, imageSrc, setImageSrc, setOriginalIm
         setSelectedSensor
       );
 
-      // Remove from available sensors (only for slots)
-      sensorsPayload.forEach((id) => dispatch(removeFromAvailableSensors(id)));
+      // Remove sensors globally from available sensors
+      sensorsPayload.forEach((sensorId) => {
+        console.log('before Removed sensor with ID:', sensorId);
+
+        dispatch(removeFromAvailableSensors(sensorId));
+        console.log('after Removed sensor with ID:', sensorId);
+      });
+
+      // Reset selection
+      setSelectedSensor({
+        ultrasonic: null,
+        camera: null,
+      });
     }
   };
 

@@ -1,10 +1,11 @@
 import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import toast, { Toaster } from 'react-hot-toast';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
+import { io } from 'socket.io-client';
 import ProtectedRoutes from './components/ProtectedRoutes';
 import getEnv from './configs/config';
 import { useCheckLoginMutation } from './redux/apis/authApis';
@@ -65,6 +66,7 @@ const PaymentFail = lazy(() => import('./pages/user/dashboard/components/Payment
 const UserViewSlip = lazy(() => import('./pages/user/bookingSummary/components/ViewSlip'));
 const UserProfile = lazy(() => import('./pages/user/setting/Profile'));
 const BookingSlots = lazy(() => import('./pages/user/dashboard/components/BookingSlots'));
+const Notifications = lazy(() => import('./pages/user/notifications/Notifications'));
 
 function App() {
   const dispatch = useDispatch();
@@ -98,6 +100,37 @@ function App() {
       )};`;
     }
   }, []);
+
+  const { user } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (user && user._id) {
+      const socket = io(getEnv('SERVER_URL'));
+
+      socket.on('connect', () => {
+        console.log('Connected to socket server');
+        socket.emit('join', user._id);
+      });
+
+      socket.on('newNotification', (data) => {
+        console.log('New notification received:', data);
+        toast(data.message, {
+          icon: '🔔',
+          duration: 10000,
+          style: {
+            borderRadius: '10px',
+            background: '#333',
+            color: '#fff',
+          },
+        });
+      });
+
+      return () => {
+        socket.disconnect();
+      };
+    }
+  }, [user]);
+
   return (
     <BrowserRouter>
       <Suspense fallback={<Loader />}>
@@ -158,6 +191,7 @@ function App() {
                 <Route path="payment-failed" element={<PaymentFail />} />
                 <Route path="booking-slot/:buildingId" element={<BookingSlots />} />
                 <Route path="profile" element={<UserProfile />} />
+                <Route path="notifications" element={<Notifications />} />
               </Route>
             </Route>
           </Routes>

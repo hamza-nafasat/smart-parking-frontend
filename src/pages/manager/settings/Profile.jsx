@@ -66,7 +66,7 @@ const Profile = () => {
 
         // append image if selected
         if (selectedImage) {
-          form.append('images', selectedImage);
+          form.append('file', selectedImage);
         }
         // IMPORTANT FIX — use correct keys: { userId, formData: form }
         const response = await updateProfile(form).unwrap();

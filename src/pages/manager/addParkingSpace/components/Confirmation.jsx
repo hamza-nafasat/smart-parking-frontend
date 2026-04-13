@@ -11,17 +11,22 @@ import { resetBuildings } from '../../../../redux/slices/buildingSlice';
 import { resetFloors, setActiveAccordionIndex } from '../../../../redux/slices/floorSlice';
 import { customObjectId } from '../../../../utils/features';
 import { floors as sensors } from '../utils/addParkingSpaceFeatures';
+import { useGetAllSensorsQuery } from '../../../../redux/apis/sensorApis';
 
 const Confirmation = ({ setCurrentStep }) => {
   const dispatch = useDispatch();
   const { buildingGeneralInfo } = useSelector((state) => state.building);
   console.log('buildingGeneralInfo', buildingGeneralInfo);
   const { refetchHook } = useFetchAndMakeSensorSlice();
+  const { availableSensors } = useSelector((state) => state.sensor);
+  console.log('availableSensorsavailableSensorsavailableSensors', availableSensors);
 
   const { floors } = useSelector((state) => state.floor);
+
   const [createBuilding, { isLoading }] = useCreateBuildingMutation();
   const [createFloorInBulk, { isLoading: isLoadingForFloor }] = useCreateFloorsInBulkMutation();
   const [createSlotsInBulk, { isLoading: isLoadingForSlots }] = useCreateSlotsInBulkMutation();
+  console.log('floors', floors);
 
   // final submit handler which create building and floors in database
   // -----------------------------------------------------------------
@@ -270,7 +275,7 @@ const FloorSensorInfoSec = ({ setCurrentStep, floor }) => {
               <List name="Floor Name" value={floor?.name} />
               <List name="No of Parking Spaces" value={floor?.noOfParkingSpace} />
             </div>
-            {sensors?.map((floor, i) => (
+            {floor?.polygonData?.map((floor, i) => (
               <SingleFloor key={i} floor={floor} />
             ))}
           </div>
@@ -281,10 +286,26 @@ const FloorSensorInfoSec = ({ setCurrentStep, floor }) => {
 };
 
 const SingleFloor = ({ floor }) => {
+  const { data: sensorsData, isLoading: isLoadingForSensors } = useGetAllSensorsQuery();
+  console.log('floosssssssr', floor);
+
+  const getSensorsByIds = (sensorIds = [], sensors = []) => {
+    return sensors
+      .filter((sensor) => sensorIds?.includes(sensor._id))
+      .map((sensor) => ({
+        id: sensor._id,
+        name: sensor.name,
+      }));
+  };
+
+  const sensorList = getSensorsByIds(floor?.sensorId, sensorsData?.data || []);
+  console.log('sensorList', sensorList);
+
   return (
     <div className="flex items-center justify-between py-[6px] px-[14px] border-b border-[#B0B0B080]">
-      <h6 className="text-[10px] text-[#313131] font-medium">{floor?.parking}</h6>
-      <p className="text-[10px] text-[#313131] font-medium">{floor?.sensor}</p>
+      <h6 className="text-[10px] text-[#313131] font-medium">{floor?.id}</h6>
+
+      <p className="text-[10px] text-[#313131] font-medium">{sensorList.map((s) => s.name).join(', ')}</p>
     </div>
   );
 };

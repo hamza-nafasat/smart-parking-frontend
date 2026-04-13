@@ -1,14 +1,14 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useRef, useState } from "react";
-import Cropper from "react-easy-crop";
-import { AiOutlineDelete } from "react-icons/ai";
-import { CiEdit } from "react-icons/ci";
-import { SlCursorMove } from "react-icons/sl";
-import { VscCopy } from "react-icons/vsc";
-import Button from "../../../../components/shared/small/Button";
-import Dropdown from "../../../../components/shared/small/Dropdown";
-import Input from "../../../../components/shared/small/Input";
-import Modal from "../../../../components/shared/small/Modal";
+import { useEffect, useRef, useState } from 'react';
+import Cropper from 'react-easy-crop';
+import { AiOutlineDelete } from 'react-icons/ai';
+import { CiEdit } from 'react-icons/ci';
+import { SlCursorMove } from 'react-icons/sl';
+import { VscCopy } from 'react-icons/vsc';
+import Button from '../../../../components/shared/small/Button';
+import Dropdown from '../../../../components/shared/small/Dropdown';
+import Input from '../../../../components/shared/small/Input';
+import Modal from '../../../../components/shared/small/Modal';
 import {
   drawCanvas,
   getCroppedImg,
@@ -22,10 +22,11 @@ import {
   handleDeletePolygon,
   handleMoveMode,
   sensorInfoSubmitHandler,
-} from "../utils/addParkingSpaceFeatures";
-import { useDispatch, useSelector } from "react-redux";
-import { useGetAllSensorsQuery } from "../../../../redux/apis/sensorApis";
-import { addAllSensors, addAvailableSensors, removeFromAvailableSensors } from "../../../../redux/slices/sensorSlice";
+} from '../utils/addParkingSpaceFeatures';
+import { useDispatch, useSelector } from 'react-redux';
+import { useGetAllSensorsQuery } from '../../../../redux/apis/sensorApis';
+import { addAllSensors, addAvailableSensors, removeFromAvailableSensors } from '../../../../redux/slices/sensorSlice';
+import toast from 'react-hot-toast';
 
 const UpdateFloorModel = ({
   polygons,
@@ -60,14 +61,68 @@ const UpdateFloorModel = ({
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [sensorPopup, setSensorPopup] = useState(false);
   const [selectedPolygon, setSelectedPolygon] = useState(null);
-  const [polygonName, setPolygonName] = useState("");
-  const [selectedSensor, setSelectedSensor] = useState("No sensor");
-  const [color, setColor] = useState("#18bc9c");
+  const [polygonName, setPolygonName] = useState('');
+  const [selectedSensor, setSelectedSensor] = useState({
+    ultrasonic: '', // ULTRASONIC sensor ID
+    camera: '', // CAMERA sensor ID
+  });
+  const [color, setColor] = useState('#18bc9c');
+  const ultrasonicSensors = availableSensors?.filter((s) => s?.sensorType === 'ULTRASONIC');
+  const cameraSensors = availableSensors?.filter((s) => s?.sensorType === 'CAMERA');
+  console.log('availableSensors', availableSensors);
+  console.log('edit time ');
+  const handleSavePolygon = () => {
+    if (!selectedSensor.ultrasonic || !selectedSensor.camera) {
+      toast.error('Please select both Ultrasonic and Camera sensors');
+      return;
+    }
+    const sensorsPayload = [selectedSensor.ultrasonic, selectedSensor.camera];
+    sensorInfoSubmitHandler(
+      polygonName,
+      polygons,
+      selectedPolygon,
+      sensorsPayload,
+      color,
+      setPolygons,
+      setSensorPopup,
+      isBuilding,
+      setSelectedSensor,
+      newPolygons,
+      setNewPolygons,
+      dispatch
+    );
+    sensorsPayload.forEach((sensorId) => {
+      console.log('before Removed sensor with ID:', sensorId);
+
+      dispatch(removeFromAvailableSensors(sensorId));
+      console.log('after Removed sensor with ID:', sensorId);
+    });
+    setSelectedSensor({
+      ultrasonic: null,
+      camera: null,
+    });
+
+    // sensorInfoSubmitHandler(
+    //   polygonName,
+    //   polygons,
+    //   selectedPolygon,
+    //   selectedSensor,
+    //   color,
+    //   setPolygons,
+    //   setSensorPopup,
+    //   isBuilding,
+    //   setSelectedSensor,
+    //   newPolygons,
+    //   setNewPolygons,
+    //   dispatch
+    // );
+    dispatch(removeFromAvailableSensors(selectedSensor));
+  };
 
   const openSensorPopup = (polygon) => {
     setSelectedPolygon(polygon);
     setSensorPopup(true);
-    setPolygonName("");
+    setPolygonName('');
   };
 
   const handleImageUpload = (event) => {
@@ -106,7 +161,7 @@ const UpdateFloorModel = ({
       setImageSrc(croppedSrc);
       setOriginalImage(croppedFile);
     } catch (error) {
-      console.error("Crop failed:", error);
+      console.error('Crop failed:', error);
     }
   };
 
@@ -123,7 +178,7 @@ const UpdateFloorModel = ({
         setImage(img);
         setIsDrawingEnabled(true);
       };
-      img.onerror = (err) => console.log("Image failed to load", err);
+      img.onerror = (err) => console.log('Image failed to load', err);
       img.src = imageSrc;
     }
   }, [imageSrc]);
@@ -219,9 +274,9 @@ const UpdateFloorModel = ({
                 setIsMoveMode(false);
                 setIsDeleteMode(false);
               }}
-              className={`p-2 border rounded-md text-white ${isEditMode ? "border-primary" : "border-[#565656]"}`}
+              className={`p-2 border rounded-md text-white ${isEditMode ? 'border-primary' : 'border-[#565656]'}`}
             >
-              <CiEdit fontSize={20} color={isEditMode ? "#18bc9c" : "#565656"} />
+              <CiEdit fontSize={20} color={isEditMode ? '#18bc9c' : '#565656'} />
             </button>
             <button
               type="button"
@@ -241,9 +296,9 @@ const UpdateFloorModel = ({
                   setPolygonCount
                 )
               }
-              className={`p-2 border rounded-md text-white ${isCopyMode ? "border-primary" : "border-[#565656]"}`}
+              className={`p-2 border rounded-md text-white ${isCopyMode ? 'border-primary' : 'border-[#565656]'}`}
             >
-              <VscCopy fontSize={20} color={isCopyMode ? "#18bc9c" : "#565656"} />
+              <VscCopy fontSize={20} color={isCopyMode ? '#18bc9c' : '#565656'} />
             </button>
             <button
               type="button"
@@ -257,18 +312,18 @@ const UpdateFloorModel = ({
                   isMoveMode
                 )
               }
-              className={`p-2 border rounded-md text-white ${isMoveMode ? "border-primary" : "border-[#565656]"}`}
+              className={`p-2 border rounded-md text-white ${isMoveMode ? 'border-primary' : 'border-[#565656]'}`}
             >
-              <SlCursorMove fontSize={20} color={isMoveMode ? "#18bc9c" : "#565656"} />
+              <SlCursorMove fontSize={20} color={isMoveMode ? '#18bc9c' : '#565656'} />
             </button>
             <button
               type="button"
               onClick={() =>
                 handleDeleteMode(setIsDeleteMode, setIsEditMode, setIsCopyMode, setIsMoveMode, isDeleteMode)
               }
-              className={`p-2 border rounded-md text-white ${isDeleteMode ? "border-primary" : "border-[#565656]"}`}
+              className={`p-2 border rounded-md text-white ${isDeleteMode ? 'border-primary' : 'border-[#565656]'}`}
             >
-              <AiOutlineDelete fontSize={20} color={isDeleteMode ? "#18bc9c" : "#565656"} />
+              <AiOutlineDelete fontSize={20} color={isDeleteMode ? '#18bc9c' : '#565656'} />
             </button>
           </div>
         </>
@@ -291,12 +346,23 @@ const UpdateFloorModel = ({
             />
 
             {!isBuilding && (
-              <Dropdown
-                defaultText={"Select Sensor"}
-                options={availableSensors?.map((sensor) => ({ option: sensor?.name, value: sensor?._id }))}
-                label="Sensor Name"
-                onSelect={(selectedOption) => setSelectedSensor(selectedOption)}
-              />
+              <>
+                {/* ULTRASONIC */}
+                <Dropdown
+                  defaultText="Select Ultrasonic Sensor"
+                  label="Ultrasonic Sensor"
+                  options={ultrasonicSensors?.map((s) => ({ option: s.name, value: s._id }))}
+                  onSelect={(id) => setSelectedSensor((prev) => ({ ...prev, ultrasonic: id }))}
+                />
+
+                {/* CAMERA */}
+                <Dropdown
+                  defaultText="Select Camera Sensor"
+                  label="Camera Sensor"
+                  options={cameraSensors?.map((s) => ({ option: s.name, value: s._id }))}
+                  onSelect={(id) => setSelectedSensor((prev) => ({ ...prev, camera: id }))}
+                />
+              </>
             )}
 
             <div className="flex items-center gap-4">
@@ -323,21 +389,22 @@ const UpdateFloorModel = ({
                 text="Save"
                 width="w-[120px]"
                 onClick={() => {
-                  sensorInfoSubmitHandler(
-                    polygonName,
-                    polygons,
-                    selectedPolygon,
-                    selectedSensor,
-                    color,
-                    setPolygons,
-                    setSensorPopup,
-                    isBuilding,
-                    setSelectedSensor,
-                    newPolygons,
-                    setNewPolygons,
-                    dispatch
-                  );
-                  dispatch(removeFromAvailableSensors(selectedSensor));
+                  // sensorInfoSubmitHandler(
+                  //   polygonName,
+                  //   polygons,
+                  //   selectedPolygon,
+                  //   selectedSensor,
+                  //   color,
+                  //   setPolygons,
+                  //   setSensorPopup,
+                  //   isBuilding,
+                  //   setSelectedSensor,
+                  //   newPolygons,
+                  //   setNewPolygons,
+                  //   dispatch
+                  // );
+                  // dispatch(removeFromAvailableSensors(selectedSensor));
+                  handleSavePolygon();
                 }}
               />
             </div>

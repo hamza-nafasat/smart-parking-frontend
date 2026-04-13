@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { RxCross2 } from "react-icons/rx";
+import { RxCross2 } from 'react-icons/rx';
 
 const Modal = ({ title, onClose, children, width, headingIcon, border, notClose = false }) => {
   return (
@@ -8,8 +8,8 @@ const Modal = ({ title, onClose, children, width, headingIcon, border, notClose 
       onClick={notClose ? null : onClose}
     >
       <div
-        className={`bg-white rounded-[12px] shadow-lg p-4 md:p-6 overflow-y-auto custom-scroll h-fit max-h-full ${border?border:""} ${
-          width ? width : "w-[300px] md:w-[400px] lg:w-[700px] xl:w-[900px]"
+        className={`bg-white rounded-[12px] shadow-lg p-4 md:p-6 overflow-y-auto custom-scroll h-fit max-h-full ${border ? border : ''} ${
+          width ? width : 'w-[300px] md:w-[400px] lg:w-[700px] xl:w-[900px]'
         }`}
         onClick={(e) => e.stopPropagation()}
       >

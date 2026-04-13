@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
-import { IoChevronForwardOutline, IoLogOutOutline } from "react-icons/io5";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from 'react';
+import { IoChevronForwardOutline, IoLogOutOutline } from 'react-icons/io5';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   RingIcon,
   HeaderChevronIcon,
@@ -8,19 +8,19 @@ import {
   BuildingIcon,
   BookedIcon,
   FreeSlotsIcon,
-} from "../../assets/svgs/Icon";
-import Aside from "../aside/Aside";
-import Notification from "./Notification";
-import { useLogoutMutation } from "../../redux/apis/authApis";
-import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
-import { userNotExist } from "../../redux/slices/authSlice";
+} from '../../assets/svgs/Icon';
+import Aside from '../aside/Aside';
+import Notification from './Notification';
+import { useLogoutMutation } from '../../redux/apis/authApis';
+import toast from 'react-hot-toast';
+import { useDispatch, useSelector } from 'react-redux';
+import { userNotExist } from '../../redux/slices/authSlice';
 
 const Header = () => {
   const { pathname } = useLocation();
-  const pathSplit = pathname.split("/");
+  const pathSplit = pathname.split('/');
   const page = pathSplit[pathSplit.length - 1];
-  const pageName = page.split("-").join(" ");
+  const pageName = page.split('-').join(' ');
   const profileRef = useRef();
   const notificationRef = useRef();
   const [mobileNav, setMobileNav] = useState(false);
@@ -50,9 +50,9 @@ const Header = () => {
         setIsProfileOpen(false);
       }
     };
-    document.addEventListener("click", handleClickOutside);
+    document.addEventListener('click', handleClickOutside);
     return () => {
-      document.removeEventListener("click", handleClickOutside);
+      document.removeEventListener('click', handleClickOutside);
     };
   }, [notificationRef, profileRef]);
 
@@ -77,35 +77,28 @@ const Header = () => {
             </div>
             <div
               className={`absolute top-[35px] right-0 z-[1000] w-[320px] overflow-y-scroll border-2 border-[#e4e4e43b] shadow-md bg-white rounded-lg custom-scroll transition-all duration-700 ${
-                isNotificationOpen ? "h-[300px] opacity-100" : "h-0 invisible opacity-0"
+                isNotificationOpen ? 'h-[300px] opacity-100' : 'h-0 invisible opacity-0'
               }`}
             >
               <Notification />
             </div>
           </div>
           <div className="bg-[#FFFFFF80] py-2 px-5 rounded-lg flex items-center justify-center gap-2 relative">
-            <img
-              src={
-                user?.image?.url ||
-                `https://placehold.co/600x400/white/18bc9c?text=${user?.firstName[0].toUpperCase()}${user?.lastName[0].toUpperCase()}`
-              }
-              alt="image"
-              className="w-6 h-6 rounded-full object-cover"
-            />
+            <img src={user?.image?.url} alt="image" className="w-6 h-6 rounded-full object-cover" />
             <div
               className="flex items-center gap-2 text-white text-xs font-semibold cursor-pointer"
               onClick={profileOpenHandler}
               ref={profileRef}
             >
               {user?.firstName} {user?.lastName}
-              <div className={`transition-all duration-400 ${isProfileOpen ? "rotate-180" : "rotate-0"}`}>
+              <div className={`transition-all duration-400 ${isProfileOpen ? 'rotate-180' : 'rotate-0'}`}>
                 <HeaderChevronIcon />
               </div>
             </div>
             <div
               onClick={profileOpenHandler}
               className={`absolute top-[45px] right-0 border-2 border-[#e4e4e43b] w-[150px] shadow-md rounded-lg custom-scroll transition-all duration-400 ${
-                isProfileOpen ? "h-[76px] opacity-100" : "h-0 invisible opacity-0"
+                isProfileOpen ? 'h-[76px] opacity-100' : 'h-0 invisible opacity-0'
               }`}
             >
               <Profile />
@@ -115,19 +108,19 @@ const Header = () => {
       </div>
       <div className="flex flex-wrap items-center gap-4">
         <h2 className="text-lg md:text-2xl text-white font-semibold capitalize basis-[30%]">
-          {["admin", "manager", "user"].includes(pageName) ? "Dashboard" : pageName}
+          {['admin', 'manager', 'user'].includes(pageName) ? 'Dashboard' : pageName}
         </h2>
         <HeaderData />
       </div>
       <div
         className={`block xl:hidden fixed w-full h-full inset-0 bg-[#00000071] z-50 transition-all duration-500 ${
-          mobileNav ? "visible opacity-100" : "invisible opacity-0 pointer-events-none"
+          mobileNav ? 'visible opacity-100' : 'invisible opacity-0 pointer-events-none'
         }`}
         onClick={() => setMobileNav(false)}
       >
         <div
           className={`absolute top-3 left-3 h-full transition-transform duration-500 ${
-            mobileNav ? "translate-x-0" : "-translate-x-full"
+            mobileNav ? 'translate-x-0' : '-translate-x-full'
           }`}
         >
           <Aside />
@@ -149,10 +142,10 @@ const Profile = () => {
       const res = await logout().unwrap();
       toast.success(res?.message);
       await dispatch(userNotExist());
-      return navigate("/login");
+      return navigate('/login');
     } catch (error) {
-      toast.error(error?.data?.message || "Something went wrong");
-      console.log("error in logout handler", error);
+      toast.error(error?.data?.message || 'Something went wrong');
+      console.log('error in logout handler', error);
     }
   };
   return (
@@ -167,7 +160,7 @@ const Profile = () => {
       <div
         onClick={logoutHandler}
         className={`flex items-center justify-between gap-4 px-2 py-2 cursor-pointer bg-white rounded-b-md hover:bg-[#b6feef] ${
-          isLoading && "cursor-not-allowed pointer-events-none opacity-50"
+          isLoading && 'cursor-not-allowed pointer-events-none opacity-50'
         }`}
       >
         <h6 className={`text-[13px] font-medium `}>Logout</h6>
