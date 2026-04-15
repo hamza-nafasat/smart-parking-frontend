@@ -72,25 +72,26 @@ function App() {
   const dispatch = useDispatch();
   const [checkLogin] = useCheckLoginMutation();
   const [isLoading, setIsLoading] = useState(true);
+
   // hooks
   useFetchAndMakeSensorSlice();
   useDisableNumberInputScroll();
 
-  const checkUserLogin = useCallback(async () => {
-    try {
-      const res = await checkLogin().unwrap();
-      if (res) dispatch(userExist(res?.data));
-    } catch (error) {
-      console.log('Error while checking user login', error);
-      dispatch(userNotExist());
-    } finally {
-      setIsLoading(false);
-    }
-  }, [checkLogin, dispatch]);
-
   useEffect(() => {
+    const checkUserLogin = async () => {
+      try {
+        const res = await checkLogin().unwrap();
+        dispatch(userExist(res?.data));
+      } catch (error) {
+        console.log('Error while checking user login', error);
+        dispatch(userNotExist());
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
     checkUserLogin();
-  }, [checkUserLogin]);
+  }, [checkLogin, dispatch]);
   useEffect(() => {
     if (document.cookie.includes('loggedInViaGoogle')) {
       console.log('cookie exist');

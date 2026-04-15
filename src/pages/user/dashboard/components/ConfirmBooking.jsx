@@ -10,13 +10,76 @@ import { useCreatePaymentIntentMutation } from '../../../../redux/apis/paymentAp
 import { removeBookingInDetails } from '../../../../redux/slices/bookingSlice';
 import { timeFormate } from '../../../../utils/features';
 import { useState } from 'react';
+import { useUpdateMyProfileMutation } from '../../../../redux/apis/authApis';
 
 const ConfirmBooking = () => {
   const dispatch = useDispatch();
   const [createBooking] = useCreateBookingMutation();
   const [deleteBooking] = useDeleteSingleBookingMutation();
   const { booking } = useSelector((state) => state?.booking);
+  const [updateProfile, { isLoading: isUpdatingProfile }] = useUpdateMyProfileMutation();
 
+  const { user } = useSelector((state) => state?.auth);
+  console.log('booking', booking);
+  console.log('user', user);
+  const calculateOvertimeFee = (minutes) => {
+    if (!minutes || minutes <= 0) {
+      return 0;
+    }
+    // Under 60 minutes
+    if (minutes <= 60) {
+      return 10;
+    }
+
+    // Between 61 and 120 minutes
+    if (minutes <= 120) {
+      return 20;
+    }
+
+    // Above 120 minutes
+    const extraMinutes = minutes - 120;
+
+    // Count every partial hour as full hour
+    const extraHours = Math.ceil(extraMinutes / 60);
+
+    return 20 + extraHours * 10;
+  };
+
+  const getMinutesDifference = (startTime, endTime) => {
+    let start = new Date(startTime);
+    let end = new Date(endTime);
+
+    console.log('start', start);
+    console.log('end before fix', end);
+
+    // If end is before start → fix AM/PM issue (add 12 hours instead of 24)
+    if (end < start) {
+      const diffHours = (start - end) / (1000 * 60 * 60);
+
+      if (diffHours <= 12) {
+        // Likely AM/PM mistake → add 12 hours
+        end.setHours(end.getHours() + 12);
+      } else {
+        // Real overnight case → add 24 hours
+        end.setDate(end.getDate() + 1);
+      }
+    }
+
+    console.log('end after fix', end);
+
+    const diffMinutes = Math.floor((end - start) / (1000 * 60));
+    return diffMinutes;
+  };
+  const minutes = getMinutesDifference(booking?.startTime, booking?.endTime);
+
+  console.log('minutes', minutes);
+  const overtimeFee = calculateOvertimeFee(user.overtime);
+  const actualTimeFee = calculateOvertimeFee(minutes);
+  console.log('overtimeFee', overtimeFee);
+  console.log('actualTimeFee', actualTimeFee);
+  const subtotal = overtimeFee + actualTimeFee;
+  const tax = subtotal * 0.1; // 10%
+  const totalFee = subtotal + tax;
   const stripe = useStripe();
   const elements = useElements();
   const [createPaymentIntent] = useCreatePaymentIntentMutation();
@@ -38,7 +101,7 @@ const ConfirmBooking = () => {
         let bookingId = res?.data?._id;
         try {
           const data = await createPaymentIntent({
-            amount: 3000, // $30.00
+            amount: totalFee * 100,
             currency: 'usd',
             bookingId: res?.data?._id,
           }).unwrap();
@@ -57,6 +120,18 @@ const ConfirmBooking = () => {
           else if (paymentIntent && paymentIntent.status == 'succeeded') {
             toast.success(res?.message);
             dispatch(removeBookingInDetails());
+            //here i want to remove the overtime from user profile if there is any also handle the error
+            if (user.overtime > 0) {
+              try {
+                const formData = new FormData();
+                formData.append('overtime', 0);
+
+                await updateProfile(formData).unwrap();
+              } catch (error) {
+                console.error(error);
+                toast.error(error?.data?.message || 'Failed to reset overtime');
+              }
+            }
             navigate('/user');
           } else throw new Error('Something went wrong');
         } catch (error) {
@@ -131,8 +206,10 @@ const ConfirmBooking = () => {
             />
             <List list={{ title: 'Spot', value: booking?.slotName }} />
             <div className="border-y-[2px] border-[#00000070] py-2 my-2">
-              <List list={{ title: 'Sub total', value: '27.00 USD' }} />
-              <List list={{ title: 'Service fee (10%)', value: '3.00 USD' }} />
+              <List list={{ title: 'OVER TIME', value: `${overtimeFee.toFixed(2)} USD` }} />
+              <List list={{ title: 'Sub total', value: `${actualTimeFee.toFixed(2)} USD` }} />
+              <List list={{ title: 'Service fee (10%)', value: `${tax.toFixed(2)} USD` }} />
+              <List list={{ title: 'Total', value: `${totalFee.toFixed(2)} USD` }} />
             </div>
           </div>
         </div>
