@@ -1,20 +1,5 @@
 'use client';
-// import Modal from '@/components/global/Modal';
-// import Button from '@/components/global/small/Button';
-// import Dropdown from '@/components/global/small/Dropdown';
-// import Input from '@/components/global/small/Input';
-// import { adminApi } from '@/features/admin/adminApi';
-// import { alertsApi } from '@/features/alerts/alertsApi';
-// import { authApi, useUpdateProfileMutation } from '@/features/auth/authApi';
-// import { setUser } from '@/features/auth/authSlice';
-// import { buildingApis } from '@/features/building/buildingApi';
-// import { inspectionApis } from '@/features/inspection/inspectionApi';
-// import { reportsApi } from '@/features/reports/reportsApi';
-// import { restroomApis } from '@/features/restroom/restroomApi';
-// import { ruleEngineApi } from '@/features/ruleEngine/ruleEngine';
-// import { sensorApi } from '@/features/sensor/sensorApi';
-// import { subscriptionApis } from '@/features/subscription/subscriptionApi';
-// import { superAdminApis } from '@/features/superAdmin/superAdminApi';
+
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
@@ -86,7 +71,7 @@ const Configuration = () => {
     setModal(false);
   };
 
-  console.log('formvalue', formValues);
+  console.log('hasSubscription', hasSubscription);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -133,19 +118,6 @@ const Configuration = () => {
       if (response?.success) {
         toast.success(response?.message);
         dispatch(setUser(response?.data));
-
-        // 🔄 Reset all API caches to force re-fetch from new DB
-        // dispatch(authApi.util.resetApiState());
-        // dispatch(sensorApi.util.resetApiState());
-        // dispatch(buildingApis.util.resetApiState());
-        // dispatch(restroomApis.util.resetApiState());
-        // dispatch(reportsApi.util.resetApiState());
-        // dispatch(adminApi.util.resetApiState());
-        // dispatch(alertsApi.util.resetApiState());
-        // dispatch(inspectionApis.util.resetApiState());
-        // dispatch(subscriptionApis.util.resetApiState());
-        // dispatch(superAdminApis.util.resetApiState());
-        // dispatch(ruleEngineApi.util.resetApiState());
       }
     } catch (error) {
       toast.error(error?.data?.message || 'Error while updating profile');

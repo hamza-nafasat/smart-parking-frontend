@@ -12,6 +12,7 @@ import bookingApis from './apis/bookingApis';
 import bookingSlice from './slices/bookingSlice';
 import paymentApis from './apis/paymentApis';
 import { notificationApis } from './apis/notificationApis';
+import userApis from './apis/userApis';
 
 const store = configureStore({
   reducer: {
@@ -24,6 +25,7 @@ const store = configureStore({
     [bookingApis.reducerPath]: bookingApis.reducer,
     [paymentApis.reducerPath]: paymentApis.reducer,
     [notificationApis.reducerPath]: notificationApis.reducer,
+    [userApis.reducerPath]: userApis.reducer,
     // slices
     [authSlice.name]: authSlice.reducer,
     [buildingSlice.name]: buildingSlice.reducer,
@@ -40,7 +42,8 @@ const store = configureStore({
       .concat(sensorApis.middleware)
       .concat(paymentApis.middleware)
       .concat(bookingApis.middleware)
-      .concat(notificationApis.middleware);
+      .concat(notificationApis.middleware)
+      .concat(userApis.middleware);
   },
 });
 

@@ -16,6 +16,7 @@ import Loader from './components/shared/small/Loader';
 import useFetchAndMakeSensorSlice from './components/hooks/useFetchAndMakeSensorSlice';
 import useDisableNumberInputScroll from './components/hooks/useDisableNumberInputScroll';
 import Settings from './pages/manager/settings/Settings';
+import Managers from './pages/admin/managers/Managers';
 
 // Lazy-loaded Components
 const LandingPage = lazy(() => import('./pages/landing/LandingPage'));
@@ -157,6 +158,7 @@ function App() {
                 <Route path="wallet" element={<Wallet />} />
                 <Route path="wallet-transactions-detail" element={<WalletTransactionsDetail />} />
                 <Route path="view-slip/:id" element={<ViewSlipAdmin />} />
+                <Route path="all-managers" element={<Managers />} />
               </Route>
             </Route>
 
@@ -177,6 +179,7 @@ function App() {
                 <Route path="add-parking" element={<AddParking />} />
                 <Route path="view-slip/:id" element={<ViewSlipManager />} />
                 <Route path="setting" element={<Settings />} />
+                <Route path="notifications" element={<Notifications />} />
               </Route>
             </Route>
 

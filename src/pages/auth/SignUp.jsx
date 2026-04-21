@@ -1,15 +1,15 @@
-import { useState } from "react";
-import toast from "react-hot-toast";
-import { VscEye, VscEyeClosed } from "react-icons/vsc";
-import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
-import { GoogleIcon } from "../../assets/svgs/Icon";
-import Button from "../../components/shared/small/Button";
-import Input from "../../components/shared/small/Input";
-import { useRegisterMutation } from "../../redux/apis/authApis";
-import { userExist } from "../../redux/slices/authSlice";
-import AuthLayout from "./AuthLayout";
-import getEnv from "../../configs/config";
+import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { VscEye, VscEyeClosed } from 'react-icons/vsc';
+import { useDispatch } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { GoogleIcon } from '../../assets/svgs/Icon';
+import Button from '../../components/shared/small/Button';
+import Input from '../../components/shared/small/Input';
+import { useRegisterMutation } from '../../redux/apis/authApis';
+import { userExist } from '../../redux/slices/authSlice';
+import AuthLayout from './AuthLayout';
+import getEnv from '../../configs/config';
 
 const SignUp = () => {
   const dispatch = useDispatch();
@@ -17,11 +17,11 @@ const SignUp = () => {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [registerUser, { isLoading }] = useRegisterMutation();
   const [form, setForm] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+    fullName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
   });
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
@@ -30,24 +30,24 @@ const SignUp = () => {
 
   const registerHandler = async (e) => {
     e.preventDefault();
-    if (!form.firstName || !form.lastName || !form.email || !form.password || !form.confirmPassword)
-      return toast.error("Please Select All Fields");
-    if (!form.password == form.confirmPassword) return toast.error("Password and Confirm Password does not match");
+    if (!form.fullName || !form.lastName || !form.email || !form.password || !form.confirmPassword)
+      return toast.error('Please Select All Fields');
+    if (!form.password == form.confirmPassword) return toast.error('Password and Confirm Password does not match');
     try {
       const response = await registerUser(form).unwrap();
       toast.success(response?.message);
-      setForm({ firstName: "", lastName: "", email: "", password: "", confirmPassword: "" });
+      setForm({ fullName: '', lastName: '', email: '', password: '', confirmPassword: '' });
       await dispatch(userExist(response?.data));
       return navigate(`/${response?.data?.role?.toLowerCase()}`);
     } catch (error) {
-      toast.error(error?.data?.message || "Something went wrong");
-      console.log("Error in registerHandler:", error);
+      toast.error(error?.data?.message || 'Something went wrong');
+      console.log('Error in registerHandler:', error);
     }
   };
 
   const loginWithGoogle = () => {
     setGoogleLoading(true);
-    window.location.href = `${getEnv("SERVER_URL")}/api/auth/google`;
+    window.location.href = `${getEnv('SERVER_URL')}/api/auth/google`;
   };
   return (
     <AuthLayout>
@@ -70,8 +70,8 @@ const SignUp = () => {
               <Input
                 type="text"
                 placeholder="First name"
-                value={form.firstName}
-                onChange={(e) => setForm({ ...form, firstName: e.target.value })}
+                value={form.fullName}
+                onChange={(e) => setForm({ ...form, fullName: e.target.value })}
               />
               <Input
                 type="text"
@@ -88,7 +88,7 @@ const SignUp = () => {
             />
             <div className="relative my-4">
               <Input
-                type={isPasswordVisible ? "text" : "password"}
+                type={isPasswordVisible ? 'text' : 'password'}
                 placeholder="Password"
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
@@ -103,7 +103,7 @@ const SignUp = () => {
             </div>
             <div className="relative mb-4">
               <Input
-                type={isConfirmPasswordVisible ? "text" : "password"}
+                type={isConfirmPasswordVisible ? 'text' : 'password'}
                 placeholder="Confirm Password"
                 value={form.confirmPassword}
                 onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })}
@@ -128,7 +128,7 @@ const SignUp = () => {
               width="w-full"
               height="h-[45px] sm:h-[57px]"
               disabled={isLoading}
-              className={`${isLoading ? " opacity-30 !cursor-not-allowed" : ""}`}
+              className={`${isLoading ? ' opacity-30 !cursor-not-allowed' : ''}`}
             />
           </form>
         </div>
@@ -138,9 +138,9 @@ const SignUp = () => {
             onClick={loginWithGoogle}
             disabled={googleLoading}
             className={`border border-[#E0E0E9] p-3 md:p-5 rounded-[15px] cursor-pointer ${
-              googleLoading ? "opacity-30 !cursor-not-allowed" : ""
+              googleLoading ? 'opacity-30 !cursor-not-allowed' : ''
             }`}
-            style={{ boxShadow: "0px 4px 12px 0px #18BC9C0F" }}
+            style={{ boxShadow: '0px 4px 12px 0px #18BC9C0F' }}
           >
             <GoogleIcon />
           </button>
