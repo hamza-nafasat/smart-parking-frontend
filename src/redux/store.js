@@ -13,6 +13,7 @@ import bookingSlice from './slices/bookingSlice';
 import paymentApis from './apis/paymentApis';
 import { notificationApis } from './apis/notificationApis';
 import userApis from './apis/userApis';
+import alertApis from './apis/alertApis';
 
 const store = configureStore({
   reducer: {
@@ -26,6 +27,7 @@ const store = configureStore({
     [paymentApis.reducerPath]: paymentApis.reducer,
     [notificationApis.reducerPath]: notificationApis.reducer,
     [userApis.reducerPath]: userApis.reducer,
+    [alertApis.reducerPath]: alertApis.reducer,
     // slices
     [authSlice.name]: authSlice.reducer,
     [buildingSlice.name]: buildingSlice.reducer,
@@ -43,7 +45,8 @@ const store = configureStore({
       .concat(paymentApis.middleware)
       .concat(bookingApis.middleware)
       .concat(notificationApis.middleware)
-      .concat(userApis.middleware);
+      .concat(userApis.middleware)
+      .concat(alertApis.middleware);
   },
 });
 

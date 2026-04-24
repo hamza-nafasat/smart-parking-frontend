@@ -67,4 +67,11 @@ export const pages = [
     icon: <WalletIcon />,
     filledIcon: <WalletFilledIcon />,
   },
+  {
+    id: 9,
+    title: 'Alerts',
+    link: ['/admin/alerts', '/manager/alerts'],
+    icon: <WalletIcon />,
+    filledIcon: <WalletFilledIcon />,
+  },
 ];

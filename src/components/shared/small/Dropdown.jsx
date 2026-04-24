@@ -1,10 +1,19 @@
 import { useEffect, useRef, useState } from "react";
 import { GoChevronDown } from "react-icons/go";
 
-const Dropdown = ({ options, defaultText = "Select", onSelect, label, labelWeight, className = "" }) => {
+const Dropdown = ({ options, defaultText = "Select", onSelect, label, labelWeight, className = "", value }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState(null);
   const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    if (value !== undefined && value !== null) {
+      const option = options.find((opt) => opt.value === value);
+      if (option) setSelected(option);
+    } else {
+      setSelected(null);
+    }
+  }, [value, options]);
 
   const selectHandler = (option) => {
     setSelected(option);

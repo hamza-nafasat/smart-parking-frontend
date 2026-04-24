@@ -36,6 +36,7 @@ const Wallet = lazy(() => import('./pages/admin/wallet/Wallet'));
 const ViewSlipAdmin = lazy(() => import('./pages/admin/dashboard/components/ViewSlip'));
 const WalletTransactionsDetail = lazy(() => import('./pages/admin/wallet/components/WalletTransactonsDetails'));
 const BuildingView = lazy(() => import('./pages/admin/buildingInfo/components/BuildingView'));
+const AlertsPage = lazy(() => import('./pages/admin/alerts/AlertsPage'));
 
 // Manager
 const Manager = lazy(() => import('./pages/manager/index'));
@@ -159,6 +160,7 @@ function App() {
                 <Route path="wallet-transactions-detail" element={<WalletTransactionsDetail />} />
                 <Route path="view-slip/:id" element={<ViewSlipAdmin />} />
                 <Route path="all-managers" element={<Managers />} />
+                <Route path="alerts" element={<AlertsPage />} />
               </Route>
             </Route>
 
@@ -180,6 +182,7 @@ function App() {
                 <Route path="view-slip/:id" element={<ViewSlipManager />} />
                 <Route path="setting" element={<Settings />} />
                 <Route path="notifications" element={<Notifications />} />
+                <Route path="alerts" element={<AlertsPage />} />
               </Route>
             </Route>
 
